@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2005 MySQL AB & Alexey Botchkov
+/*
+   Copyright (c) 2002, 2010, Oracle and/or its affiliates. All rights reserved.
    
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 #include "myisamdef.h"
 
@@ -178,18 +180,13 @@ static int split_rtree_node(SplitStruct *node, int n_entries,
                    double **d_buffer, int n_dim)
 {
   SplitStruct *cur;
-  SplitStruct *a;
-  SplitStruct *b;
+  SplitStruct *UNINIT_VAR(a), *UNINIT_VAR(b);
   double *g1 = reserve_coords(d_buffer, n_dim);
   double *g2 = reserve_coords(d_buffer, n_dim);
-  SplitStruct *next;
-  int next_node;
+  SplitStruct *UNINIT_VAR(next);
+  int UNINIT_VAR(next_node);
   int i;
   SplitStruct *end = node + n_entries;
-  LINT_INIT(a);
-  LINT_INIT(b);
-  LINT_INIT(next);
-  LINT_INIT(next_node);
 
   if (all_size < min_size * 2)
   {
@@ -255,7 +252,6 @@ int rtree_split_page(MI_INFO *info, MI_KEYDEF *keyinfo, uchar *page, uchar *key,
   SplitStruct *stop;
   double *coord_buf;
   double *next_coord;
-  double *old_coord;
   int n_dim;
   uchar *source_cur, *cur1, *cur2;
   uchar *new_page= info->buff;
@@ -292,8 +288,6 @@ int rtree_split_page(MI_INFO *info, MI_KEYDEF *keyinfo, uchar *page, uchar *key,
   cur->coords = reserve_coords(&next_coord, n_dim);
   rtree_d_mbr(keyinfo->seg, key, key_length, cur->coords);
   cur->key = key;
-
-  old_coord = next_coord;
 
   if (split_rtree_node(task, max_keys + 1,
        mi_getint(page) + full_length + 2, full_length, 

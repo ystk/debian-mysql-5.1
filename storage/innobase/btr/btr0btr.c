@@ -464,6 +464,16 @@ btr_page_free_low(
 	page_no = buf_frame_get_page_no(page);
 
 	fseg_free_page(seg_header, space, page_no, mtr);
+
+	/* The page was marked free in the allocation bitmap, but it
+	should remain buffer-fixed until mtr_commit(mtr) or until it
+	is explicitly freed from the mini-transaction. */
+	ut_ad(mtr_memo_contains(mtr, buf_block_align(page),
+				MTR_MEMO_PAGE_X_FIX));
+	/* TODO: Discard any operations on the page from the redo log
+	and remove the block from the flush list and the buffer pool.
+	This would free up buffer pool earlier and reduce writes to
+	both the tablespace and the redo log. */
 }
 
 /******************************************************************
@@ -479,6 +489,7 @@ btr_page_free(
 {
 	ulint		level;
 
+	ut_ad(fil_page_get_type(page) == FIL_PAGE_INDEX);
 	ut_ad(mtr_memo_contains(mtr, buf_block_align(page),
 				MTR_MEMO_PAGE_X_FIX));
 	level = btr_page_get_level(page, mtr);
@@ -610,7 +621,7 @@ btr_page_get_father_for_rec(
 		      "InnoDB: corruption. If the crash happens at "
 		      "the database startup, see\n"
 		      "InnoDB: http://dev.mysql.com/doc/refman/5.1/en/"
-		      "forcing-recovery.html about\n"
+		      "forcing-innodb-recovery.html about\n"
 		      "InnoDB: forcing recovery. "
 		      "Then dump + drop + reimport.\n", stderr);
 	}
@@ -2060,7 +2071,6 @@ btr_compress(
 	ulint		n_recs;
 	ulint		max_ins_size;
 	ulint		max_ins_size_reorg;
-	ulint		level;
 	ulint		comp;
 
 	page = btr_cur_get_page(cursor);
@@ -2072,7 +2082,6 @@ btr_compress(
 				MTR_MEMO_X_LOCK));
 	ut_ad(mtr_memo_contains(mtr, buf_block_align(page),
 				MTR_MEMO_PAGE_X_FIX));
-	level = btr_page_get_level(page, mtr);
 	space = dict_index_get_space(index);
 
 	left_page_no = btr_page_get_prev(page, mtr);

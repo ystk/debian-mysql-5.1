@@ -1,19 +1,18 @@
-# Copyright (C) 2000-2006 MySQL AB
+# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 #
-# This library is free software; you can redistribute it and/or
+# This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Library General Public
 # License as published by the Free Software Foundation; version 2
 # of the License.
 #
-# This library is distributed in the hope that it will be useful,
+# This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # Library General Public License for more details.
 #
-# You should have received a copy of the GNU Library General Public
-# License along with this library; if not, write to the Free
-# Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-# MA 02111-1307, USA
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 ## Process this file with automake to create Makefile.in
 
@@ -81,7 +80,6 @@ TEST_DIRS = t r include std_data std_data/parts collections \
 	std_data/funcs_1 \
 	extra/binlog_tests/ extra/rpl_tests \
 	suite/binlog suite/binlog/t suite/binlog/r suite/binlog/std_data \
-	suite/bugs suite/bugs/data suite/bugs/t suite/bugs/r \
 	suite/federated \
 	suite/funcs_1 suite/funcs_1/bitdata \
 	suite/funcs_1/include suite/funcs_1/lib suite/funcs_1/r \
@@ -100,7 +98,8 @@ TEST_DIRS = t r include std_data std_data/parts collections \
 	suite/rpl_ndb suite/rpl_ndb/t suite/rpl_ndb/r \
 	suite/parts suite/parts/t suite/parts/r suite/parts/inc \
 	suite/innodb suite/innodb/t suite/innodb/r suite/innodb/include \
-	suite/innodb_plugin suite/innodb_plugin/t suite/innodb_plugin/r suite/innodb_plugin/include \
+	suite/innodb_plugin suite/innodb_plugin/t suite/innodb_plugin/r \
+	suite/innodb_plugin/include \
 	suite/engines suite/engines/funcs suite/engines/iuds suite/engines/rr_trx \
 	suite/engines/funcs/r suite/engines/funcs/t suite/engines/iuds/r \
 	suite/engines/iuds/t suite/engines/rr_trx/include suite/engines/rr_trx/r \

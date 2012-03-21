@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2000-2007 MySQL AB
+   Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,9 +11,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING. If not, write to the
-   Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-   MA  02110-1301  USA.
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
 /* C++ based on Wei Dai's aes.cpp from CryptoPP */
@@ -51,7 +50,7 @@ void AES::Process(byte* out, const byte* in, word32 sz)
             out += BLOCK_SIZE;
             in  += BLOCK_SIZE;
         }
-    else if (mode_ == CBC)    
+    else if (mode_ == CBC) {
         if (dir_ == ENCRYPTION)
             while (blocks--) {
                 r_[0] ^= *(word32*)in;
@@ -78,6 +77,7 @@ void AES::Process(byte* out, const byte* in, word32 sz)
                 out += BLOCK_SIZE;
                 in  += BLOCK_SIZE;
             }
+    }
 }
 
 #endif // DO_AES_ASM

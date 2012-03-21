@@ -35,9 +35,7 @@ msgstr "Existeix un fitxer anomenat /var/lib/mysql/debian-*.flag al sistema."
 msgid ""
 "Such a file is an indication that a mysql-server package with a higher "
 "version has been installed previously."
-msgstr ""
-"Aquest fitxer indica que anteriorment s'ha instaŀlat un paquet mysql-server "
-"amb una versió posterior."
+msgstr "Aquest fitxer indica que anteriorment s'ha instaŀlat un paquet mysql-server amb una versió posterior."
 
 #. Type: boolean
 #. Description
@@ -45,9 +43,7 @@ msgstr ""
 msgid ""
 "There is no guarantee that the version you're currently installing will be "
 "able to use the current databases."
-msgstr ""
-"No hi ha cap garantia que la versió que esteu instaŀlant actualment puga "
-"emprar les bases de dades actuals."
+msgstr "No hi ha cap garantia que la versió que esteu instaŀlant actualment puga emprar les bases de dades actuals."
 
 #. Type: note
 #. Description
@@ -61,9 +57,7 @@ msgstr "Nota important pels usuaris de NIS/YP"
 msgid ""
 "Using MySQL under NIS/YP requires a mysql user account to be added on the "
 "local system with:"
-msgstr ""
-"Si empreu MySQL sota NIS/YP, heu d'afegir un compte d'usuari mysql al "
-"sistema local amb:"
+msgstr "Si empreu MySQL sota NIS/YP, heu d'afegir un compte d'usuari mysql al sistema local amb:"
 
 #. Type: note
 #. Description
@@ -71,9 +65,7 @@ msgstr ""
 msgid ""
 "You should also check the permissions and ownership of the /var/lib/mysql "
 "directory:"
-msgstr ""
-"També hauríeu de comprovar els permisos i propietaris del directori /var/"
-"lib/mysql:"
+msgstr "També hauríeu de comprovar els permisos i propietaris del directori /var/lib/mysql:"
 
 #. Type: boolean
 #. Description
@@ -87,9 +79,7 @@ msgstr "Voleu suprimir totes les bases de dades del MySQL?"
 msgid ""
 "The /var/lib/mysql directory which contains the MySQL databases is about to "
 "be removed."
-msgstr ""
-"El directori /var/lib/mysql que conté les bases de dades de MySQL està a "
-"punt deser suprimit."
+msgstr "El directori /var/lib/mysql que conté les bases de dades de MySQL està a punt deser suprimit."
 
 #. Type: boolean
 #. Description
@@ -98,10 +88,7 @@ msgid ""
 "If you're removing the MySQL package in order to later install a more recent "
 "version or if a different mysql-server package is already using it, the data "
 "should be kept."
-msgstr ""
-"Si esteu suprimint el paquet MySQL per a posteriorment instaŀlar una versió "
-"més recent, o si un paquet mysql-server diferent ja l'està emprant, les "
-"dades s'haurien de mantenir."
+msgstr "Si esteu suprimint el paquet MySQL per a posteriorment instaŀlar una versió més recent, o si un paquet mysql-server diferent ja l'està emprant, les dades s'haurien de mantenir."
 
 #. Type: boolean
 #. Description
@@ -115,9 +102,7 @@ msgstr "Voleu que el servidor de MySQL s'inicie en arrencar?"
 msgid ""
 "The MySQL server can be launched automatically at boot time or manually with "
 "the '/etc/init.d/mysql start' command."
-msgstr ""
-"El MySQL es pot executar automàticament a l'arrencada o manualment amb "
-"l'ordre «/etc/init.d/mysql start»."
+msgstr "El MySQL es pot executar automàticament a l'arrencada o manualment amb l'ordre «/etc/init.d/mysql start»."
 
 #. Type: password
 #. Description
@@ -131,9 +116,7 @@ msgstr "Contrasenya nova per a l'usuari «root» del MySQL:"
 msgid ""
 "While not mandatory, it is highly recommended that you set a password for "
 "the MySQL administrative \"root\" user."
-msgstr ""
-"Tot i que no és requerida, és molt recomanable que establiu una "
-"contrasenya per a «root», l'usuari administratiu del MySQL."
+msgstr "Tot i que no és requerida, és molt recomanable que establiu una contrasenya per a «root», l'usuari administratiu del MySQL."
 
 #. Type: password
 #. Description
@@ -160,18 +143,13 @@ msgid ""
 "An error occurred while setting the password for the MySQL administrative "
 "user. This may have happened because the account already has a password, or "
 "because of a communication problem with the MySQL server."
-msgstr ""
-"S'ha produït un error en establir la contrasenya de l'usuari administratiu "
-"del MySQL. Això pot haver passat perquè el compte ja té una una "
-"contrasenya, o per un problema de comunicació amb el servidor de MySQL."
+msgstr "S'ha produït un error en establir la contrasenya de l'usuari administratiu del MySQL. Això pot haver passat perquè el compte ja té una una contrasenya, o per un problema de comunicació amb el servidor de MySQL."
 
 #. Type: error
 #. Description
 #: ../mysql-server-5.1.templates:8001
 msgid "You should check the account's password after the package installation."
-msgstr ""
-"Hauríeu de comprovar la contrasenya del compte després de la instaŀlació "
-"del paquet."
+msgstr "Hauríeu de comprovar la contrasenya del compte després de la instaŀlació del paquet."
 
 #. Type: error
 #. Description
@@ -179,9 +157,7 @@ msgstr ""
 msgid ""
 "Please read the /usr/share/doc/mysql-server-5.1/README.Debian file for more "
 "information."
-msgstr ""
-"Llegiu el fitxer /usr/share/doc/mysql-server-5.1/README.Debian per a obtenir "
-"més informació."
+msgstr "Llegiu el fitxer /usr/share/doc/mysql-server-5.1/README.Debian per a obtenir més informació."
 
 #. Type: error
 #. Description
@@ -193,8 +169,7 @@ msgstr "Error d'entrada de la contrasenya"
 #. Description
 #: ../mysql-server-5.1.templates:9001
 msgid "The two passwords you entered were not the same. Please try again."
-msgstr ""
-"Les dos contrasenyes que heu introduït no són la mateixa. Proveu-ho de nou."
+msgstr "Les dos contrasenyes que heu introduït no són la mateixa. Proveu-ho de nou."
 
 #. Type: error
 #. Description
@@ -209,7 +184,4 @@ msgid ""
 "MySQL-5.1 no longer provides NDB Cluster support. Please migrate to the new "
 "mysql-cluster package and remove all lines starting with \"ndb\" from all "
 "config files below /etc/mysql/."
-msgstr ""
-"El MySQL-5.1 ja no implementa el clúster NDB. Migreu al nou paquet mysql-"
-"cluster i suprimiu totes les línies que comencen per «ndb» de tots els "
-"fitxers de configuració sota /etc/mysql/."
+msgstr "El MySQL-5.1 ja no implementa el clúster NDB. Migreu al nou paquet mysql-cluster i suprimiu totes les línies que comencen per «ndb» de tots els fitxers de configuració sota /etc/mysql/."

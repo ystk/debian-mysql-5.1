@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (C) 2002 MySQL AB and Jeremy Cole
+# Copyright (c) 2002, 2010, Oracle and/or its affiliates. All rights reserved.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,10 +13,11 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 config=".my.cnf.$$"
 command=".mysql.$$"
+mysql_client=""
 
 trap "interrupt" 2
 
@@ -37,10 +38,26 @@ prepare() {
     chmod 600 $config $command
 }
 
+find_mysql_client()
+{
+  for n in ./bin/mysql mysql
+  do  
+    $n --no-defaults --help > /dev/null 2>&1
+    status=$?
+    if test $status -eq 0
+    then
+      mysql_client=$n
+      return
+    fi  
+  done
+  echo "Can't find a 'mysql' client in PATH or ./bin"
+  exit 1
+}
+
 do_query() {
     echo "$1" >$command
     #sed 's,^,> ,' < $command  # Debugging
-    mysql --defaults-file=$config <$command
+    $mysql_client --defaults-file=$config <$command
     return $?
 }
 
@@ -147,7 +164,7 @@ remove_anonymous_users() {
 }
 
 remove_remote_root() {
-    do_query "DELETE FROM mysql.user WHERE User='root' AND Host!='localhost';"
+    do_query "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
     if [ $? -eq 0 ]; then
 	echo " ... Success!"
     else
@@ -204,6 +221,7 @@ cleanup() {
 # The actual script starts here
 
 prepare
+find_mysql_client
 set_echo_compat
 
 echo

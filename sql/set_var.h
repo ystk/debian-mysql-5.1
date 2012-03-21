@@ -1,4 +1,4 @@
-/* Copyright (C) 2002-2006 MySQL AB
+/* Copyright (c) 2002, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -196,6 +196,7 @@ public:
 		       sys_after_update_func func)
     :sys_var(name_arg,func), value(value_ptr_arg)
   { chain_sys_var(chain); }
+  bool check(THD *thd, set_var *var);
   bool update(THD *thd, set_var *var);
   void set_default(THD *thd, enum_var_type type);
   SHOW_TYPE show_type() { return SHOW_LONGLONG; }
@@ -442,6 +443,7 @@ public:
 		      sys_after_update_func func)
     :sys_var_thd(name_arg,func), offset(offset_arg)
   { chain_sys_var(chain); }
+  bool check(THD *thd, set_var *var);
   bool update(THD *thd, set_var *var);
   void set_default(THD *thd, enum_var_type type);
   SHOW_TYPE show_type() { return SHOW_HA_ROWS; }
@@ -854,6 +856,7 @@ public:
     :sys_var_key_cache_param(chain, name_arg,
                              offsetof(KEY_CACHE, param_buff_size))
   {}
+  bool check(THD *thd, set_var *var);
   bool update(THD *thd, set_var *var);
   SHOW_TYPE show_type() { return SHOW_LONGLONG; }
 };
@@ -865,6 +868,7 @@ public:
   sys_var_key_cache_long(sys_var_chain *chain, const char *name_arg, size_t offset_arg)
     :sys_var_key_cache_param(chain, name_arg, offset_arg)
   {}
+  bool check(THD *thd, set_var *var);
   bool update(THD *thd, set_var *var);
   SHOW_TYPE show_type() { return SHOW_LONG; }
 };
@@ -1446,7 +1450,7 @@ sys_var *find_sys_var(THD *thd, const char *str, uint length=0);
 int sql_set_variables(THD *thd, List<set_var_base> *var_list);
 bool not_all_support_one_shot(List<set_var_base> *var_list);
 void fix_delay_key_write(THD *thd, enum_var_type type);
-void fix_slave_exec_mode(enum_var_type type);
+void fix_slave_exec_mode(void);
 ulong fix_sql_mode(ulong sql_mode);
 extern sys_var_const_str sys_charset_system;
 extern sys_var_str sys_init_connect;

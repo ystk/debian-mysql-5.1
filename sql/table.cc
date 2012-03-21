@@ -1,4 +1,5 @@
-/* Copyright 2000-2008 MySQL AB, 2008 Sun Microsystems, Inc.
+/*
+   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 
 /* Some general useful functions */
@@ -425,6 +427,11 @@ void free_table_share(TABLE_SHARE *share)
       key_info->flags= 0;
     }
   }
+  if (share->ha_data_destroy)
+  {
+    share->ha_data_destroy(share->ha_data);
+    share->ha_data_destroy= NULL;
+  }
   /* We must copy mem_root from share because share is allocated through it */
   memcpy((char*) &mem_root, (char*) &share->mem_root, sizeof(mem_root));
   free_root(&mem_root, MYF(0));                 // Free's share
@@ -534,7 +541,7 @@ int open_table_def(THD *thd, TABLE_SHARE *share, uint db_flags)
   int error, table_type;
   bool error_given;
   File file;
-  uchar head[288], *disk_buff;
+  uchar head[288];
   char	path[FN_REFLEN];
   MEM_ROOT **root_ptr, *old_root;
   DBUG_ENTER("open_table_def");
@@ -543,7 +550,6 @@ int open_table_def(THD *thd, TABLE_SHARE *share, uint db_flags)
 
   error= 1;
   error_given= 0;
-  disk_buff= NULL;
 
   strxmov(path, share->normalized_path.str, reg_ext, NullS);
   if ((file= my_open(path, O_RDONLY | O_SHARE, MYF(0))) < 0)
@@ -1617,6 +1623,11 @@ static int open_binary_frm(THD *thd, TABLE_SHARE *share, uchar *head,
   delete crypted;
   delete handler_file;
   hash_free(&share->name_hash);
+  if (share->ha_data_destroy)
+  {
+    share->ha_data_destroy(share->ha_data);
+    share->ha_data_destroy= NULL;
+  }
 
   open_table_error(share, error, share->open_errno, errarg);
   DBUG_RETURN(error);
@@ -1858,8 +1869,8 @@ int open_table_from_share(THD *thd, TABLE_SHARE *share, const char *alias,
     {
       if (work_part_info_used)
         tmp= fix_partition_func(thd, outparam, is_create_table);
-      outparam->part_info->item_free_list= part_func_arena.free_list;
     }
+    outparam->part_info->item_free_list= part_func_arena.free_list;
 partititon_err:
     if (tmp)
     {
@@ -2256,7 +2267,7 @@ void open_table_error(TABLE_SHARE *share, int error, int db_errno, int errarg)
   default:				/* Better wrong error than none */
   case 4:
     strxmov(buff, share->normalized_path.str, reg_ext, NullS);
-    my_error(ER_NOT_FORM_FILE, errortype, buff, 0);
+    my_error(ER_NOT_FORM_FILE, errortype, buff);
     break;
   }
   DBUG_VOID_RETURN;
@@ -2826,7 +2837,8 @@ Table_check_intact::check(TABLE *table, const TABLE_FIELD_DEF *table_def)
       report_error(ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE,
                    ER(ER_COL_COUNT_DOESNT_MATCH_PLEASE_UPDATE),
                    table->alias, table_def->count, table->s->fields,
-                   table->s->mysql_version, MYSQL_VERSION_ID);
+                   static_cast<int>(table->s->mysql_version),
+                   MYSQL_VERSION_ID);
       DBUG_RETURN(TRUE);
     }
     else if (MYSQL_VERSION_ID == table->s->mysql_version)

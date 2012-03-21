@@ -1,4 +1,4 @@
-/* Copyright 2000-2008 MySQL AB, 2008 Sun Microsystems, Inc.
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -55,7 +55,6 @@ typedef struct st_order {
   struct st_order *next;
   Item	 **item;			/* Point at item in select fields */
   Item	 *item_ptr;			/* Storage for initial item */
-  Item   **item_copy;			/* For SPs; the original item ptr */
   int    counter;                       /* position in SELECT list, correct
                                            only if counter_used is true*/
   bool	 asc;				/* true if ascending */
@@ -442,7 +441,7 @@ typedef struct st_table_share
 #ifdef WITH_PARTITION_STORAGE_ENGINE
   /** @todo: Move into *ha_data for partitioning */
   bool auto_partitioned;
-  const char *partition_info;
+  char *partition_info;
   uint  partition_info_len;
   uint  partition_info_buffer_size;
   const char *part_state;
@@ -464,6 +463,7 @@ typedef struct st_table_share
 
   /** place to store storage engine specific data */
   void *ha_data;
+  void (*ha_data_destroy)(void *); /* An optional destructor for ha_data. */
 
 
   /*

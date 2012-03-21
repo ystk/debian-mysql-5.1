@@ -1,12 +1,11 @@
-/* Copyright (C) 2000-2004 MySQL AB
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation.
 
    There are special exceptions to the terms and conditions of the GPL as it
-   is applied to this software. View the full text of the exception in file
-   EXCEPTIONS-CLIENT in the directory of this software distribution.
+   is applied to this software.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -15,7 +14,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include <my_global.h>
 #include <my_sys.h>
@@ -131,8 +130,8 @@ int STDCALL mysql_server_init(int argc __attribute__((unused)),
       mysql_port = MYSQL_PORT;
 #ifndef MSDOS
       {
-	struct servent *serv_ptr;
-	char	*env;
+        char *env;
+        struct servent *serv_ptr __attribute__((unused));
 
         /*
           if builder specifically requested a default port, use that
@@ -2503,6 +2502,8 @@ static my_bool execute(MYSQL_STMT *stmt, char *packet, ulong length)
       set_stmt_errmsg(stmt, net);
     DBUG_RETURN(1);
   }
+  else if (mysql->status == MYSQL_STATUS_GET_RESULT)
+    stmt->mysql->status= MYSQL_STATUS_STATEMENT_GET_RESULT;
   DBUG_RETURN(0);
 }
 
@@ -2641,7 +2642,7 @@ static int stmt_read_row_unbuffered(MYSQL_STMT *stmt, unsigned char **row)
     set_stmt_error(stmt, CR_SERVER_LOST, unknown_sqlstate, NULL);
     return 1;
   }
-  if (mysql->status != MYSQL_STATUS_GET_RESULT)
+  if (mysql->status != MYSQL_STATUS_STATEMENT_GET_RESULT)
   {
     set_stmt_error(stmt, stmt->unbuffered_fetch_cancelled ?
                    CR_FETCH_CANCELED : CR_COMMANDS_OUT_OF_SYNC,
@@ -4421,10 +4422,10 @@ static my_bool setup_one_fetch_function(MYSQL_BIND *param, MYSQL_FIELD *field)
   case MYSQL_TYPE_TIME:
     field->max_length= 15;                    /* 19:23:48.123456 */
     param->skip_result= skip_result_with_length;
+    break;
   case MYSQL_TYPE_DATE:
     field->max_length= 10;                    /* 2003-11-11 */
     param->skip_result= skip_result_with_length;
-    break;
     break;
   case MYSQL_TYPE_DATETIME:
   case MYSQL_TYPE_TIMESTAMP:
@@ -4847,7 +4848,7 @@ int STDCALL mysql_stmt_store_result(MYSQL_STMT *stmt)
       DBUG_RETURN(1);
     }
   }
-  else if (mysql->status != MYSQL_STATUS_GET_RESULT)
+  else if (mysql->status != MYSQL_STATUS_STATEMENT_GET_RESULT)
   {
     set_stmt_error(stmt, CR_COMMANDS_OUT_OF_SYNC, unknown_sqlstate, NULL);
     DBUG_RETURN(1);

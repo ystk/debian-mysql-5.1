@@ -1,4 +1,4 @@
-/* Copyright (C) 2000-2006 MySQL AB
+/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -577,6 +577,7 @@ private:
   */
   bool implicit_grouping; 
   bool make_simple_join(JOIN *join, TABLE *tmp_table);
+  void cleanup_item_list(List<Item> &items) const;
 };
 
 
@@ -601,7 +602,7 @@ bool setup_copy_fields(THD *thd, TMP_TABLE_PARAM *param,
 		       List<Item> &new_list1, List<Item> &new_list2,
 		       uint elements, List<Item> &fields);
 void copy_fields(TMP_TABLE_PARAM *param);
-void copy_funcs(Item **func_ptr);
+bool copy_funcs(Item **func_ptr, const THD *thd);
 bool create_myisam_from_heap(THD *thd, TABLE *table, TMP_TABLE_PARAM *param,
 			     int error, bool ignore_last_dupp_error);
 uint find_shortest_key(TABLE *table, const key_map *usable_keys);
@@ -611,7 +612,8 @@ Field* create_tmp_field_from_field(THD *thd, Field* org_field,
                                                                       
 /* functions from opt_sum.cc */
 bool simple_pred(Item_func *func_item, Item **args, bool *inv_order);
-int opt_sum_query(TABLE_LIST *tables, List<Item> &all_fields,COND *conds);
+int opt_sum_query(THD* thd,
+                  TABLE_LIST *tables, List<Item> &all_fields, COND *conds);
 
 /* from sql_delete.cc, used by opt_range.cc */
 extern "C" int refpos_order_cmp(void* arg, const void *a,const void *b);

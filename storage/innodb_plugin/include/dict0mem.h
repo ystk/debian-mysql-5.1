@@ -112,6 +112,21 @@ ROW_FORMAT=REDUNDANT. */
 						in table->flags. */
 /* @} */
 
+/** Tables could be chained together with Foreign key constraint. When
+first load the parent table, we would load all of its descedents.
+This could result in rescursive calls and out of stack error eventually.
+DICT_FK_MAX_RECURSIVE_LOAD defines the maximum number of recursive loads,
+when exceeded, the child table will not be loaded. It will be loaded when
+the foreign constraint check needs to be run. */
+#define DICT_FK_MAX_RECURSIVE_LOAD	250
+
+/** Similarly, when tables are chained together with foreign key constraints
+with on cascading delete/update clause, delete from parent table could
+result in recursive cascading calls. This defines the maximum number of
+such cascading deletes/updates allowed. When exceeded, the delete from
+parent table will fail, and user has to drop excessive foreign constraint
+before proceeds. */
+#define FK_MAX_CASCADE_DEL		300
 
 /**********************************************************************//**
 Creates a table memory object.
@@ -306,6 +321,12 @@ struct dict_index_struct{
 				dict_get_n_unique(index); we
 				periodically calculate new
 				estimates */
+	ib_int64_t*	stat_n_non_null_key_vals;
+				/* approximate number of non-null key values
+				for this index, for each column where
+				n < dict_get_n_unique(index); This
+				is used when innodb_stats_method is
+				"nulls_ignored". */
 	ulint		stat_index_size;
 				/*!< approximate index size in
 				database pages */
@@ -319,6 +340,13 @@ struct dict_index_struct{
 				index, or 0 if the index existed
 				when InnoDB was started up */
 #endif /* !UNIV_HOTBACKUP */
+#ifdef UNIV_BLOB_DEBUG
+	mutex_t		blobs_mutex;
+				/*!< mutex protecting blobs */
+	void*		blobs;	/*!< map of (page_no,heap_no,field_no)
+				to first_blob_page_no; protected by
+				blobs_mutex; @see btr_blob_dbg_t */
+#endif /* UNIV_BLOB_DEBUG */
 #ifdef UNIV_DEBUG
 	ulint		magic_n;/*!< magic number */
 /** Value of dict_index_struct::magic_n */
@@ -434,6 +462,12 @@ struct dict_table_struct{
 				NOT allowed until this count gets to zero;
 				MySQL does NOT itself check the number of
 				open handles at drop */
+	unsigned	fk_max_recusive_level:8;
+				/*!< maximum recursive level we support when
+				loading tables chained together with FK
+				constraints. If exceeds this level, we will
+				stop loading child table into memory along with
+				its parent table */
 	ulint		n_foreign_key_checks_running;
 				/*!< count of how many foreign key check
 				operations are currently being performed

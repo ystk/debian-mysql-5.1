@@ -1,5 +1,5 @@
 /*
-   Copyright (C) 2000-2007 MySQL AB
+   Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,9 +11,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING. If not, write to the
-   Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-   MA  02110-1301  USA.
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
 
@@ -283,21 +282,23 @@ DWord() {}
     word GetHighHalfAsBorrow() const {return 0-halfs_.high;}
 
 private:
+    struct dword_struct
+    {
+    #ifdef LITTLE_ENDIAN_ORDER
+        word low;
+        word high;
+    #else
+        word high;
+        word low;
+    #endif
+    };
+
     union
     {
     #ifdef TAOCRYPT_NATIVE_DWORD_AVAILABLE
         dword whole_;
     #endif
-        struct
-        {
-        #ifdef LITTLE_ENDIAN_ORDER
-            word low;
-            word high;
-        #else
-            word high;
-            word low;
-        #endif
-        } halfs_;
+        struct dword_struct halfs_;
     };
 };
 
@@ -1214,20 +1215,24 @@ public:
     #define AS1(x) #x ";"
     #define AS2(x, y) #x ", " #y ";"
     #define AddPrologue \
+        word res; \
         __asm__ __volatile__ \
         ( \
             "push %%ebx;"	/* save this manually, in case of -fPIC */ \
-            "mov %2, %%ebx;" \
+            "mov %3, %%ebx;" \
             ".intel_syntax noprefix;" \
             "push ebp;"
     #define AddEpilogue \
             "pop ebp;" \
             ".att_syntax prefix;" \
             "pop %%ebx;" \
-                    : \
+            "mov %%eax, %0;" \
+                    : "=g" (res) \
                     : "c" (C), "d" (A), "m" (B), "S" (N) \
                     : "%edi", "memory", "cc" \
-        );
+        ); \
+        return res;
+
     #define MulPrologue \
         __asm__ __volatile__ \
         ( \

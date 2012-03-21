@@ -463,7 +463,6 @@ io_handler_thread(
 			the aio array */
 {
 	ulint	segment;
-	ulint	i;
 
 	segment = *((ulint*)arg);
 
@@ -471,15 +470,13 @@ io_handler_thread(
 	fprintf(stderr, "Io handler thread %lu starts, id %lu\n", segment,
 		os_thread_pf(os_thread_get_curr_id()));
 #endif
-	for (i = 0;; i++) {
+	while (srv_shutdown_state != SRV_SHUTDOWN_EXIT_THREADS) {
 		fil_aio_wait(segment);
 
 		mutex_enter(&ios_mutex);
 		ios++;
 		mutex_exit(&ios_mutex);
 	}
-
-	thr_local_free(os_thread_get_curr_id());
 
 	/* We count the number of threads in os_thread_exit(). A created
 	thread should always use that to exit and not use return() to exit.
@@ -1064,6 +1061,12 @@ innobase_start_or_create_for_mysql(void)
 		);
 #endif
 
+#ifdef UNIV_BLOB_DEBUG
+	fprintf(stderr,
+		"InnoDB: !!!!!!!! UNIV_BLOB_DEBUG switched on !!!!!!!!!\n"
+		"InnoDB: Server restart may fail with UNIV_BLOB_DEBUG\n");
+#endif /* UNIV_BLOB_DEBUG */
+
 #ifdef UNIV_SYNC_DEBUG
 	fprintf(stderr,
 		"InnoDB: !!!!!!!! UNIV_SYNC_DEBUG switched on !!!!!!!!!\n");
@@ -1289,7 +1292,24 @@ innobase_start_or_create_for_mysql(void)
 	fil_init(srv_file_per_table ? 50000 : 5000,
 		 srv_max_n_open_files);
 
+	/* Print time to initialize the buffer pool */
+	ut_print_timestamp(stderr);
+	fprintf(stderr,
+		"  InnoDB: Initializing buffer pool, size =");
+
+	if (srv_buf_pool_size >= 1024 * 1024 * 1024) {
+		fprintf(stderr,
+			" %.1fG\n",
+			((double) srv_buf_pool_size) / (1024 * 1024 * 1024));
+	} else {
+		fprintf(stderr,
+			" %.1fM\n",
+			((double) srv_buf_pool_size) / (1024 * 1024));
+	}
+
 	ret = buf_pool_init();
+
+	ut_print_timestamp(stderr);
 
 	if (ret == NULL) {
 		fprintf(stderr,
@@ -1298,6 +1318,9 @@ innobase_start_or_create_for_mysql(void)
 
 		return(DB_ERROR);
 	}
+
+	fprintf(stderr,
+		"  InnoDB: Completed initialization of buffer pool\n");
 
 #ifdef UNIV_DEBUG
 	/* We have observed deadlocks with a 5MB buffer pool but
@@ -1894,7 +1917,7 @@ innobase_shutdown_for_mysql(void)
 #ifdef __NETWARE__
 	if (!panic_shutdown)
 #endif
-		logs_empty_and_mark_files_at_shutdown();
+	logs_empty_and_mark_files_at_shutdown();
 
 	if (srv_conc_n_threads != 0) {
 		fprintf(stderr,
@@ -2018,8 +2041,12 @@ innobase_shutdown_for_mysql(void)
 	pars_lexer_close();
 	log_mem_free();
 	buf_pool_free();
-	ut_free_all_mem();
 	mem_close();
+
+	/* ut_free_all_mem() frees all allocated memory not freed yet
+	in shutdown, and it will also free the ut_list_mutex, so it
+	should be the last one for all operation */
+	ut_free_all_mem();
 
 	if (os_thread_count != 0
 	    || os_event_count != 0

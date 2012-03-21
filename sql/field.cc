@@ -1,4 +1,5 @@
-/* Copyright (c) 2000, 2010 Oracle and/or its affiliates. All rights reserved.
+/*
+   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,8 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
-
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /**
   @file
@@ -1535,7 +1536,7 @@ void Field::make_field(Send_field *field)
   }
   else
     field->org_table_name= field->db_name= "";
-  if (orig_table)
+  if (orig_table && orig_table->alias)
   {
     field->table_name= orig_table->alias;
     field->org_col_name= field_name;
@@ -2277,7 +2278,7 @@ int Field_decimal::store(double nr)
   snprintf(buff,sizeof(buff)-1, "%.*f",(int) dec,nr);
   length= strlen(buff);
 #else
-  length= my_sprintf(buff,(buff,"%.*f",dec,nr));
+  length= sprintf(buff, "%.*f", dec, nr);
 #endif
 
   if (length > field_length)
@@ -2583,7 +2584,7 @@ bool Field_new_decimal::store_value(const my_decimal *decimal_value)
   DBUG_ENTER("Field_new_decimal::store_value");
 #ifndef DBUG_OFF
   {
-    char dbug_buff[DECIMAL_MAX_STR_LENGTH+1];
+    char dbug_buff[DECIMAL_MAX_STR_LENGTH+2];
     DBUG_PRINT("enter", ("value: %s", dbug_decimal_as_string(dbug_buff, decimal_value)));
   }
 #endif
@@ -2598,7 +2599,7 @@ bool Field_new_decimal::store_value(const my_decimal *decimal_value)
   }
 #ifndef DBUG_OFF
   {
-    char dbug_buff[DECIMAL_MAX_STR_LENGTH+1];
+    char dbug_buff[DECIMAL_MAX_STR_LENGTH+2];
     DBUG_PRINT("info", ("saving with precision %d  scale: %d  value %s",
                         (int)precision, (int)dec,
                         dbug_decimal_as_string(dbug_buff, decimal_value)));
@@ -2673,7 +2674,7 @@ int Field_new_decimal::store(const char *from, uint length,
   }
 
 #ifndef DBUG_OFF
-  char dbug_buff[DECIMAL_MAX_STR_LENGTH+1];
+  char dbug_buff[DECIMAL_MAX_STR_LENGTH+2];
   DBUG_PRINT("enter", ("value: %s",
                        dbug_decimal_as_string(dbug_buff, &decimal_value)));
 #endif
@@ -4259,7 +4260,7 @@ String *Field_float::val_str(String *val_buffer,
     snprintf(to,to_length-1,"%.*f",dec,nr);
     to=strend(to);
 #else
-    to+= my_sprintf(to,(to,"%.*f",dec,nr));
+    to+= sprintf(to, "%.*f", dec, nr);
 #endif
 #endif
   }
@@ -4561,7 +4562,7 @@ String *Field_double::val_str(String *val_buffer,
 #endif
     doubleget(nr,ptr);
 
-  uint to_length=max(field_length, DOUBLE_TO_STRING_CONVERSION_BUFFER_SIZE);
+  uint to_length= DOUBLE_TO_STRING_CONVERSION_BUFFER_SIZE;
   val_buffer->alloc(to_length);
   char *to=(char*) val_buffer->ptr();
 
@@ -4617,7 +4618,7 @@ String *Field_double::val_str(String *val_buffer,
     snprintf(to,to_length-1,"%.*f",dec,nr);
     to=strend(to);
 #else
-    to+= my_sprintf(to,(to,"%.*f",dec,nr));
+    to+= sprintf(to, "%.*f", dec, nr);
 #endif
 #endif
   }
@@ -5467,6 +5468,7 @@ double Field_year::val_real(void)
 longlong Field_year::val_int(void)
 {
   ASSERT_COLUMN_MARKED_FOR_READ;
+  DBUG_ASSERT(field_length == 2 || field_length == 4);
   int tmp= (int) ptr[0];
   if (field_length != 4)
     tmp%=100;					// Return last 2 char
@@ -5479,6 +5481,7 @@ longlong Field_year::val_int(void)
 String *Field_year::val_str(String *val_buffer,
 			    String *val_ptr __attribute__((unused)))
 {
+  DBUG_ASSERT(field_length < 5);
   val_buffer->alloc(5);
   val_buffer->length(field_length);
   char *to=(char*) val_buffer->ptr();
@@ -5541,7 +5544,6 @@ int Field_date::store(const char *from, uint len,CHARSET_INFO *cs)
 int Field_date::store(double nr)
 {
   longlong tmp;
-  int error= 0;
   if (nr >= 19000000000000.0 && nr <= 99991231235959.0)
     nr=floor(nr/1000000.0);			// Timestamp to date
   if (nr < 0.0 || nr > 99991231.0)
@@ -5550,7 +5552,6 @@ int Field_date::store(double nr)
     set_datetime_warning(MYSQL_ERROR::WARN_LEVEL_WARN,
                          ER_WARN_DATA_OUT_OF_RANGE,
                          nr, MYSQL_TIMESTAMP_DATE);
-    error= 1;
   }
   else
     tmp= (longlong) rint(nr);
@@ -6461,7 +6462,7 @@ int Field_str::store(double nr)
   /* Limit precision to DBL_DIG to avoid garbage past significant digits */
   set_if_smaller(digits, DBL_DIG);
   
-  length= (uint) my_sprintf(buff, (buff, "%-.*g", digits, nr));
+  length= (uint) sprintf(buff, "%-.*g", digits, nr);
 
 #ifdef __WIN__
   /*
@@ -8691,7 +8692,13 @@ int Field_set::store(longlong nr, bool unsigned_val)
 {
   ASSERT_COLUMN_MARKED_FOR_WRITE;
   int error= 0;
-  ulonglong max_nr= set_bits(ulonglong, typelib->count);
+  ulonglong max_nr;
+
+  if (sizeof(ulonglong)*8 <= typelib->count)
+    max_nr= ULONGLONG_MAX;
+  else
+    max_nr= (ULL(1) << typelib->count) - 1;
+
   if ((ulonglong) nr > max_nr)
   {
     nr&= max_nr;
@@ -9472,6 +9479,7 @@ void Create_field::create_length_to_internal_length(void)
   case MYSQL_TYPE_MEDIUM_BLOB:
   case MYSQL_TYPE_LONG_BLOB:
   case MYSQL_TYPE_BLOB:
+  case MYSQL_TYPE_GEOMETRY:
   case MYSQL_TYPE_VAR_STRING:
   case MYSQL_TYPE_STRING:
   case MYSQL_TYPE_VARCHAR:
@@ -9578,7 +9586,7 @@ bool Create_field::init(THD *thd, char *fld_name, enum_field_types fld_type,
   if (decimals >= NOT_FIXED_DEC)
   {
     my_error(ER_TOO_BIG_SCALE, MYF(0), decimals, fld_name,
-             NOT_FIXED_DEC-1);
+             static_cast<ulong>(NOT_FIXED_DEC - 1));
     DBUG_RETURN(TRUE);
   }
 
@@ -9648,8 +9656,8 @@ bool Create_field::init(THD *thd, char *fld_name, enum_field_types fld_type,
     my_decimal_trim(&length, &decimals);
     if (length > DECIMAL_MAX_PRECISION)
     {
-      my_error(ER_TOO_BIG_PRECISION, MYF(0), length, fld_name,
-               DECIMAL_MAX_PRECISION);
+      my_error(ER_TOO_BIG_PRECISION, MYF(0), static_cast<int>(length),
+               fld_name, static_cast<ulong>(DECIMAL_MAX_PRECISION));
       DBUG_RETURN(TRUE);
     }
     if (length < decimals)
@@ -9874,7 +9882,7 @@ bool Create_field::init(THD *thd, char *fld_name, enum_field_types fld_type,
       if (length > MAX_BIT_FIELD_LENGTH)
       {
         my_error(ER_TOO_BIG_DISPLAYWIDTH, MYF(0), fld_name,
-                 MAX_BIT_FIELD_LENGTH);
+                 static_cast<ulong>(MAX_BIT_FIELD_LENGTH));
         DBUG_RETURN(TRUE);
       }
       pack_length= (length + 7) / 8;
@@ -10413,7 +10421,7 @@ Field::set_datetime_warning(MYSQL_ERROR::enum_warning_level level, uint code,
   {
     /* DBL_DIG is enough to print '-[digits].E+###' */
     char str_nr[DBL_DIG + 8];
-    uint str_len= my_sprintf(str_nr, (str_nr, "%g", nr));
+    uint str_len= sprintf(str_nr, "%g", nr);
     make_truncated_value_warning(thd, level, str_nr, str_len, ts_type,
                                  field_name);
   }

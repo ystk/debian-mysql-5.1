@@ -1,4 +1,4 @@
-/* Copyright 2000-2008 MySQL AB, 2008 Sun Microsystems, Inc.
+/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1335,7 +1335,7 @@ int QUICK_RANGE_SELECT::init_ror_merged_scan(bool reuse_handler)
   }
 
   thd= head->in_use;
-  if (!(file= head->file->clone(thd->mem_root)))
+  if (!(file= head->file->clone(head->s->normalized_path.str, thd->mem_root)))
   {
     /* 
       Manually set the error flag. Note: there seems to be quite a few
@@ -5526,7 +5526,11 @@ static SEL_TREE *get_mm_tree(RANGE_OPT_PARAM *param,COND *cond)
         SEL_TREE *tmp= get_full_func_mm_tree(param, cond_func, 
                                     field_item, (Item*)(intptr)i, inv);
         if (inv)
+        {
           tree= !tree ? tmp : tree_or(param, tree, tmp);
+          if (tree == NULL)
+            break;
+        }
         else 
           tree= tree_and(param, tree, tmp);
       }
@@ -7619,7 +7623,7 @@ check_quick_keys(PARAM *param, uint idx, SEL_ARG *key_tree,
 
   if (unlikely(param->thd->killed != 0))
     return HA_POS_ERROR;
-  
+
   keynr=param->real_keynr[idx];
   param->range_count++;
   if (!tmp_min_flag && ! tmp_max_flag &&
@@ -8447,9 +8451,14 @@ int QUICK_RANGE_SELECT::reset()
   in_range= FALSE;
   cur_range= (QUICK_RANGE**) ranges.buffer;
 
-  if (file->inited == handler::NONE && (error= file->ha_index_init(index,1)))
-    DBUG_RETURN(error);
- 
+  if (file->inited == handler::NONE)
+  {
+    if (in_ror_merged_scan)
+      head->column_bitmaps_set_no_signal(&column_bitmap, &column_bitmap);
+    if ((error= file->ha_index_init(index,1)))
+        DBUG_RETURN(error);
+  }
+
   /* Do not allocate the buffers twice. */
   if (multi_range_length)
   {

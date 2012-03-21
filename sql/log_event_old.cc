@@ -1,3 +1,17 @@
+/* Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; version 2 of the License.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA */
 
 #include "mysql_priv.h"
 #ifndef MYSQL_CLIENT
@@ -441,7 +455,7 @@ copy_extra_record_fields(TABLE *table,
 
  DBUG_ASSERT(master_reclength <= table->s->reclength);
   if (master_reclength < table->s->reclength)
-    bmove_align(table->record[0] + master_reclength,
+    memcpy(table->record[0] + master_reclength,
                 table->record[1] + master_reclength,
                 table->s->reclength - master_reclength);
     
@@ -720,7 +734,7 @@ static int find_and_fetch_row(TABLE *table, uchar *key)
       rnd_pos() returns the record in table->record[0], so we have to
       move it to table->record[1].
      */
-    bmove_align(table->record[1], table->record[0], table->s->reclength);
+    memcpy(table->record[1], table->record[0], table->s->reclength);
     DBUG_RETURN(error);
   }
 
@@ -1213,7 +1227,7 @@ int Update_rows_log_event_old::do_exec_row(TABLE *table)
     overwriting the default values that where put there by the
     unpack_row() function.
   */
-  bmove_align(table->record[0], m_after_image, table->s->reclength);
+  memcpy(table->record[0], m_after_image, table->s->reclength);
   copy_extra_record_fields(table, m_master_reclength, m_width);
 
   /*

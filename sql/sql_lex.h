@@ -1,4 +1,5 @@
-/* Copyright 2000-2008 MySQL AB, 2008 Sun Microsystems, Inc.
+/*
+   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /**
   @defgroup Semantic_Analysis Semantic Analysis
@@ -713,16 +715,7 @@ public:
     joins on the right.
   */
   List<String> *prev_join_using;
-  /*
-    Bitmap used in the ONLY_FULL_GROUP_BY_MODE to prevent mixture of aggregate
-    functions and non aggregated fields when GROUP BY list is absent.
-    Bits:
-      0 - non aggregated fields are used in this select,
-          defined as NON_AGG_FIELD_USED.
-      1 - aggregate functions are used in this select,
-          defined as SUM_FUNC_USED.
-  */
-  uint8 full_group_by_flag;
+
   void init_query();
   void init_select();
   st_select_lex_unit* master_unit();
@@ -830,7 +823,22 @@ public:
 
   void clear_index_hints(void) { index_hints= NULL; }
 
-private:  
+  /*
+    For MODE_ONLY_FULL_GROUP_BY we need to maintain two flags:
+     - Non-aggregated fields are used in this select.
+     - Aggregate functions are used in this select.
+    In MODE_ONLY_FULL_GROUP_BY only one of these may be true.
+  */
+  bool non_agg_field_used() const { return m_non_agg_field_used; }
+  bool agg_func_used()      const { return m_agg_func_used; }
+
+  void set_non_agg_field_used(bool val) { m_non_agg_field_used= val; }
+  void set_agg_func_used(bool val)      { m_agg_func_used= val; }
+
+private:
+  bool m_non_agg_field_used;
+  bool m_agg_func_used;
+
   /* current index hint kind. used in filling up index_hints */
   enum index_hint_type current_index_hint_type;
   index_clause_map current_index_hint_clause;
@@ -1180,7 +1188,7 @@ public:
      @retval FALSE OK
      @retval TRUE  Error
   */
-  bool init(THD *thd, const char *buff, unsigned int length);
+  bool init(THD *thd, char *buff, unsigned int length);
   /**
     Set the echo mode.
 
@@ -1292,6 +1300,20 @@ public:
       m_cpp_ptr += n;
     }
     m_ptr += n;
+  }
+
+  /**
+    Puts a character back into the stream, canceling
+    the effect of the last yyGet() or yySkip().
+    Note that the echo mode should not change between calls
+    to unput, get, or skip from the stream.
+  */
+  char *yyUnput(char ch)
+  {
+    *--m_ptr= ch;
+    if (m_echo)
+      m_cpp_ptr--;
+    return m_ptr;
   }
 
   /**
@@ -1440,7 +1462,7 @@ public:
 
 private:
   /** Pointer to the current position in the raw input stream. */
-  const char *m_ptr;
+  char *m_ptr;
 
   /** Starting position of the last token parsed, in the raw buffer. */
   const char *m_tok_start;
@@ -1701,14 +1723,8 @@ typedef struct st_lex : public Query_tables_list
   bool verbose, no_write_to_binlog;
 
   bool tx_chain, tx_release;
-  /*
-    Special JOIN::prepare mode: changing of query is prohibited.
-    When creating a view, we need to just check its syntax omitting
-    any optimizations: afterwards definition of the view will be
-    reconstructed by means of ::print() methods and written to
-    to an .frm file. We need this definition to stay untouched.
-  */
-  bool view_prepare_mode;
+
+  uint8 context_analysis_only;
   bool safe_to_cache_query;
   bool subqueries, ignore;
   st_parsing_options parsing_options;
@@ -1803,6 +1819,33 @@ typedef struct st_lex : public Query_tables_list
   */
   bool protect_against_global_read_lock;
 
+  /*
+    The following three variables are used in 'CREATE TABLE IF NOT EXISTS ...
+    SELECT' statement. They are used to binlog the statement.
+
+    create_select_start_with_brace will be set if there is a '(' before
+    the first SELECT clause
+
+    create_select_pos records the relative position of the SELECT clause
+    in the whole statement.
+
+    create_select_in_comment will be set if SELECT keyword is in conditional
+    comment.
+   */
+  bool create_select_start_with_brace;
+  uint create_select_pos;
+  bool create_select_in_comment;
+
+  /*
+    The set of those tables whose fields are referenced in all subqueries
+    of the query.
+    TODO: possibly this it is incorrect to have used tables in LEX because
+    with subquery, it is not clear what does the field mean. To fix this
+    we should aggregate used tables information for selected expressions
+    into the select_lex.
+  */
+  table_map  used_tables;
+
   st_lex();
 
   virtual ~st_lex()
@@ -1810,6 +1853,13 @@ typedef struct st_lex : public Query_tables_list
     destroy_query_tables_list();
     plugin_unlock_list(NULL, (plugin_ref *)plugins.buffer, plugins.elements);
     delete_dynamic(&plugins);
+  }
+
+  inline bool is_ps_or_view_context_analysis()
+  {
+    return (context_analysis_only &
+            (CONTEXT_ANALYSIS_ONLY_PREPARE |
+             CONTEXT_ANALYSIS_ONLY_VIEW));
   }
 
   inline void uncacheable(uint8 cause)
@@ -1972,7 +2022,7 @@ public:
      @retval FALSE OK
      @retval TRUE  Error
   */
-  bool init(THD *thd, const char *buff, unsigned int length)
+  bool init(THD *thd, char *buff, unsigned int length)
   {
     return m_lip.init(thd, buff, length);
   }

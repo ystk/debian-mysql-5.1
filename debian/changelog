@@ -1,3 +1,20 @@
+mysql-5.1 (5.1.61-0+squeeze1) stable-security; urgency=high
+
+  * SECURITY UPDATE: Unspecified vulnerabilities identified by Oracle.
+    in all versions of MySQL 5.1 earlier than 5.1.61. CVE list is as
+    follows: CVE-2011-2262 CVE-2012-0075 CVE-2012-0087 CVE-2012-0101
+    CVE-2012-0102 CVE-2012-0112 CVE-2012-0113 CVE-2012-0114 CVE-2012-0115
+    CVE-2012-0116 CVE-2012-0118 CVE-2012-0119 CVE-2012-0120 CVE-2012-0484
+    CVE-2012-0485 CVE-2012-0490 CVE-2012-0492. (Closes: #659687)
+  * d/patches/61_CVE* - Removed as the new upstream version carries all of
+    these fixes.
+  * d/patches/99_fix_testsuite_for_installed_env.dpatch: Superseded
+    upstream.
+  * Upstream removed the file file EXCEPTIONS-CLIENT from their tarballs,
+    however the exception is still granted.
+
+ -- Clint Byrum <clint@ubuntu.com>  Sat, 03 Mar 2012 08:21:27 -0800
+
 mysql-5.1 (5.1.49-3) unstable; urgency=high
 
   * SECURITY UPDATE: denial of service via incorrect propagation of type

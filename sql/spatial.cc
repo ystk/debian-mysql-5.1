@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 MySQL AB
+/*
+   Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 #include "mysql_priv.h"
 
@@ -53,7 +55,7 @@ static Geometry::Class_info **ci_collection_end=
                                 Geometry::ci_collection+Geometry::wkb_last + 1;
 
 Geometry::Class_info::Class_info(const char *name, int type_id,
-					 void(*create_func)(void *)):
+                                 create_geom_t create_func):
   m_type_id(type_id), m_create_func(create_func)
 {
   m_name.str= (char *) name;
@@ -62,39 +64,39 @@ Geometry::Class_info::Class_info(const char *name, int type_id,
   ci_collection[type_id]= this;
 }
 
-static void create_point(void *buffer)
+static Geometry *create_point(char *buffer)
 {
-  new(buffer) Gis_point;
+  return new (buffer) Gis_point;
 }
 
-static void create_linestring(void *buffer)
+static Geometry *create_linestring(char *buffer)
 {
-  new(buffer) Gis_line_string;
+  return new (buffer) Gis_line_string;
 }
 
-static void create_polygon(void *buffer)
+static Geometry *create_polygon(char *buffer)
 {
-  new(buffer) Gis_polygon;
+  return new (buffer) Gis_polygon;
 }
 
-static void create_multipoint(void *buffer)
+static Geometry *create_multipoint(char *buffer)
 {
-  new(buffer) Gis_multi_point;
+  return new (buffer) Gis_multi_point;
 }
 
-static void create_multipolygon(void *buffer)
+static Geometry *create_multipolygon(char *buffer)
 {
-  new(buffer) Gis_multi_polygon;
+  return new (buffer) Gis_multi_polygon;
 }
 
-static void create_multilinestring(void *buffer)
+static Geometry *create_multilinestring(char *buffer)
 {
-  new(buffer) Gis_multi_line_string;
+  return new (buffer) Gis_multi_line_string;
 }
 
-static void create_geometrycollection(void *buffer)
+static Geometry *create_geometrycollection(char *buffer)
 {
-  new(buffer) Gis_geometry_collection;
+  return new (buffer) Gis_geometry_collection;
 }
 
 
@@ -145,16 +147,24 @@ Geometry::Class_info *Geometry::find_class(const char *name, uint32 len)
 }
 
 
+Geometry *Geometry::create_by_typeid(Geometry_buffer *buffer, int type_id)
+{
+  Class_info *ci;
+  if (!(ci= find_class(type_id)))
+    return NULL;
+  return (*ci->m_create_func)(buffer->data);
+}
+
+
 Geometry *Geometry::construct(Geometry_buffer *buffer,
                               const char *data, uint32 data_len)
 {
   uint32 geom_type;
   Geometry *result;
-  char byte_order;
 
   if (data_len < SRID_SIZE + WKB_HEADER_SIZE)   // < 4 + (1 + 4)
     return NULL;
-  byte_order= data[SRID_SIZE];
+  /* + 1 to skip the byte order (stored in position SRID_SIZE). */
   geom_type= uint4korr(data + SRID_SIZE + 1);
   if (!(result= create_by_typeid(buffer, (int) geom_type)))
     return NULL;
@@ -179,9 +189,7 @@ Geometry *Geometry::create_from_wkt(Geometry_buffer *buffer,
   if (!(ci= find_class(name.str, name.length)) ||
       wkt->reserve(1 + 4, 512))
     return NULL;
-  (*ci->m_create_func)((void *)buffer);
-  Geometry *result= (Geometry *)buffer;
-  
+  Geometry *result= (*ci->m_create_func)(buffer->data);
   wkt->q_append((char) wkb_ndr);
   wkt->q_append((uint32) result->get_class_info()->m_type_id);
   if (trs->check_next_symbol('(') ||
@@ -522,7 +530,7 @@ uint Gis_line_string::init_from_wkb(const char *wkb, uint len,
   n_points= wkb_get_uint(wkb, bo);
   proper_length= 4 + n_points * POINT_DATA_SIZE;
 
-  if (len < proper_length || res->reserve(proper_length))
+  if (!n_points || len < proper_length || res->reserve(proper_length))
     return 0;
 
   res->q_append(n_points);
@@ -740,7 +748,9 @@ uint Gis_polygon::init_from_wkb(const char *wkb, uint len, wkbByteOrder bo,
   if (len < 4)
     return 0;
 
-  n_linear_rings= wkb_get_uint(wkb, bo);
+  if (!(n_linear_rings= wkb_get_uint(wkb, bo)))
+    return 0;
+
   if (res->reserve(4, 512))
     return 0;
   wkb+= 4;

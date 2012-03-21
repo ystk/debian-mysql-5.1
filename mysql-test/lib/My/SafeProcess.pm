@@ -1,14 +1,15 @@
 # -*- cperl -*-
-# Copyright (C) 2004-2006 MySQL AB
+# Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; version 2 of the License.
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; version 2
+# of the License.
 #
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
@@ -60,11 +61,12 @@ use My::Platform;
 
 my %running;
 my $_verbose= 0;
+my $start_exit= 0;
 
 END {
   # Kill any children still running
   for my $proc (values %running){
-    if ( $proc->is_child($$) ){
+    if ( $proc->is_child($$) and ! $start_exit){
       #print "Killing: $proc\n";
       if ($proc->wait_one(0)){
 	$proc->kill();
@@ -149,6 +151,11 @@ sub new {
 
   push(@safe_args, "--");
   push(@safe_args, $path); # The program safe_process should execute
+
+  if ($start_exit) {	 # Bypass safe_process instead, start program directly
+    @safe_args= ();
+    $safe_path= $path;
+  }
   push(@safe_args, @$$args);
 
   print "### safe_path: ", $safe_path, " ", join(" ", @safe_args), "\n"
@@ -528,6 +535,13 @@ sub wait_all {
   }
 }
 
+#
+# Set global flag to tell all safe_process to exit after starting child
+#
+
+sub start_exit {
+  $start_exit= 1;
+}
 
 #
 # Check if any process has exited, but don't wait.

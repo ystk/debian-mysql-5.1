@@ -1,4 +1,5 @@
-/* Copyright (C) 2001-2004 MySQL AB
+/*
+   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /* 
 
@@ -34,6 +36,7 @@
 #include "mysql_priv.h" 
 #include "log_event.h"
 #include "sql_common.h"
+#include <welcome_copyright_notice.h> // ORACLE_WELCOME_COPYRIGHT_NOTICE
 
 #define BIN_LOG_HEADER_SIZE	4
 #define PROBE_HEADER_LEN	(EVENT_LEN_OFFSET+4)
@@ -437,7 +440,7 @@ Exit_status Load_log_processor::process_first_event(const char *bname,
   ptr= fname + target_dir_name_len;
   memcpy(ptr,bname,blen);
   ptr+= blen;
-  ptr+= my_sprintf(ptr, (ptr, "-%x", file_id));
+  ptr+= sprintf(ptr, "-%x", file_id);
 
   if ((file= create_unique_file(fname,ptr)) < 0)
   {
@@ -705,10 +708,18 @@ Exit_status process_event(PRINT_EVENT_INFO *print_event_info, Log_event *ev,
       */
       start_datetime= 0;
       offset= 0; // print everything and protect against cycling rec_count
+      /*
+        Skip events according to the --server-id flag.  However, don't
+        skip format_description or rotate events, because they they
+        are really "global" events that are relevant for the entire
+        binlog, even if they have a server_id.  Also, we have to read
+        the format_description event so that we can parse subsequent
+        events.
+      */
+      if (ev_type != ROTATE_EVENT &&
+          server_id && (server_id != ev->server_id))
+        goto end;
     }
-    if (server_id && (server_id != ev->server_id))
-      /* skip just this event, continue processing the log. */
-      goto end;
     if (((my_time_t)(ev->when) >= stop_datetime)
         || (pos >= stop_position_mot))
     {
@@ -943,7 +954,8 @@ Exit_status process_event(PRINT_EVENT_INFO *print_event_info, Log_event *ev,
         passed --short-form, because --short-form disables printing
         row events.
       */
-      if (!print_event_info->printed_fd_event && !short_form)
+      if (!print_event_info->printed_fd_event && !short_form &&
+          opt_base64_output_mode != BASE64_OUTPUT_DECODE_ROWS)
       {
         const char* type_str= ev->get_type_str();
         if (opt_base64_output_mode == BASE64_OUTPUT_NEVER)
@@ -1238,10 +1250,7 @@ static void print_version()
 static void usage()
 {
   print_version();
-  puts("By Monty and Sasha, for your professional use\n\
-This software comes with NO WARRANTY:  This is free software,\n\
-and you are welcome to modify and redistribute it under the GPL license.\n");
-
+  puts(ORACLE_WELCOME_COPYRIGHT_NOTICE("2000, 2011"));
   printf("\
 Dumps a MySQL binary log in a format usable for viewing or for piping to\n\
 the mysql command line client.\n\n");

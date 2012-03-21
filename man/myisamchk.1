@@ -2,12 +2,12 @@
 .\"     Title: \fBmyisamchk\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
-.\"      Date: 07/06/2010
+.\"      Date: 12/16/2011
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBMYISAMCHK\FR" "1" "07/06/2010" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBMYISAMCHK\FR" "1" "12/16/2011" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -37,6 +37,16 @@ tables (tables that have
 and
 \&.MYI
 files for storing data and indexes)\&.
+.PP
+You can also use the
+CHECK TABLE
+and
+REPAIR TABLE
+statements to check and repair
+MyISAM
+tables\&. See
+Section\ \&12.7.2.3, \(lqCHECK TABLE Syntax\(rq, and
+Section\ \&12.7.2.6, \(lqREPAIR TABLE Syntax\(rq\&.
 .PP
 The use of
 \fBmyisamchk\fR
@@ -98,7 +108,7 @@ You can name several tables on the
 \fBmyisamchk\fR
 command line if you wish\&. You can also specify a table by naming its index file (the file with the
 \&.MYI
-suffix)\&. This allows you to specify all tables in a directory by using the pattern
+suffix)\&. This enables you to specify all tables in a directory by using the pattern
 *\&.MYI\&. For example, if you are in a database directory, you can check all the
 MyISAM
 tables in that directory like this:
@@ -171,6 +181,10 @@ shell> \fBmyisamchk \-\-silent \-\-force \-\-fast \-\-update\-state \e\fR
 This command assumes that you have more than 64MB free\&. For more information about memory allocation with
 \fBmyisamchk\fR, see
 the section called \(lqMYISAMCHK MEMORY USAGE\(rq\&.
+.PP
+For additional information about using
+\fBmyisamchk\fR, see
+Section\ \&6.6, \(lqMyISAM Table Maintenance and Crash Recovery\(rq\&.
 .if n \{\
 .sp
 .\}
@@ -219,14 +233,14 @@ CHECK TABLE
 instead of
 \fBmyisamchk\fR
 to check tables\&. See
-Section\ \&12.4.2.3, \(lqCHECK TABLE Syntax\(rq\&.
+Section\ \&12.7.2.3, \(lqCHECK TABLE Syntax\(rq\&.
 .sp .5v
 .RE
 .PP
 \fBmyisamchk\fR
 supports the following options, which can be specified on the command line or in the
 [myisamchk]
-option file group\&.
+group of an option file\&.
 \fBmyisamchk\fR
 also supports the options for processing option files described at
 Section\ \&4.2.3.3.1, \(lqCommand-Line Options that Affect Option-File Handling\(rq\&.
@@ -383,7 +397,13 @@ syntax:
 .\" write_buffer_size myisamchk variable
 .TS
 allbox tab(:);
-l l
+lB lB.
+T{
+Variable
+T}:T{
+Default Value
+T}
+.T&
 l l
 l l
 l l
@@ -395,11 +415,6 @@ l l
 l l
 l l
 l l.
-T{
-\fBVariable\fR
-T}:T{
-\fBDefault Value\fR
-T}
 T{
 decode_bits
 T}:T{
@@ -524,8 +539,8 @@ myisam_stats_method
 system variable\&. For more information, see the description of
 myisam_stats_method
 in
-Section\ \&5.1.4, \(lqServer System Variables\(rq, and
-Section\ \&7.4.7, \(lqMyISAM Index Statistics Collection\(rq\&.
+Section\ \&5.1.3, \(lqServer System Variables\(rq, and
+Section\ \&7.5.4, \(lqInnoDB and MyISAM Index Statistics Collection\(rq\&.
 .PP
 ft_min_word_len
 and
@@ -656,6 +671,8 @@ If you are using
 and have plenty of memory, setting the
 key_buffer_size
 variable to a large value helps the repair operation run faster\&.
+.sp
+See also the description of this option under table repair options\&.
 .sp
 For a description of the output format, see
 the section called \(lqOBTAINING TABLE INFORMATION WITH MYISAMCHK\(rq\&.
@@ -866,6 +883,8 @@ The maximum length of the data file (when re\-creating data file when it is
 \fB\-e\fR
 .sp
 Do a repair that tries to recover every possible row from the data file\&. Normally, this also finds a lot of garbage rows\&. Do not use this option unless you are desperate\&.
+.sp
+See also the description of this option under table checking options\&.
 .sp
 For a description of the output format, see
 the section called \(lqOBTAINING TABLE INFORMATION WITH MYISAMCHK\(rq\&.
@@ -2052,8 +2071,7 @@ Key:  2:  Keyblocks used:  99%  Packed:   97%  Max levels:  3
 \- check data record references index: 3
 Key:  3:  Keyblocks used:  98%  Packed:  \-14%  Max levels:  3
 Total:    Keyblocks used:  98%  Packed:   89%
-\- check records and index references
-\fI*** LOTS OF ROW NUMBERS DELETED ***\fR
+\- check records and index references\fI*** LOTS OF ROW NUMBERS DELETED ***\fR
 Records:            306688  M\&.recordlength:       25  Packed:            83%
 Recordspace used:       97% Empty space:           2% Blocks/Record:   1\&.00
 Record blocks:      306688  Delete blocks:         0
@@ -2327,16 +2345,16 @@ uses no more memory than its memory\-related variables are set to\&. If you are 
 \fBmyisamchk\fR
 on very large tables, you should first decide how much memory you want it to use\&. The default is to use only about 3MB to perform repairs\&. By using larger values, you can get
 \fBmyisamchk\fR
-to operate faster\&. For example, if you have more than 32MB RAM, you could use options such as these (in addition to any other options you might specify):
+to operate faster\&. For example, if you have more than 512MB RAM available, you could use options such as these (in addition to any other options you might specify):
 .sp
 .if n \{\
 .RS 4
 .\}
 .nf
-shell> \fBmyisamchk \-\-sort_buffer_size=16M \e\fR
-           \fB\-\-key_buffer_size=16M \e\fR
-           \fB\-\-read_buffer_size=1M \e\fR
-           \fB\-\-write_buffer_size=1M \&.\&.\&.\fR
+shell> \fBmyisamchk \-\-sort_buffer_size=256M \e\fR
+           \fB\-\-key_buffer_size=512M \e\fR
+           \fB\-\-read_buffer_size=64M \e\fR
+           \fB\-\-write_buffer_size=64M \&.\&.\&.\fR
 .fi
 .if n \{\
 .RE
@@ -2344,7 +2362,7 @@ shell> \fBmyisamchk \-\-sort_buffer_size=16M \e\fR
 .PP
 Using
 \fB\-\-sort_buffer_size=16M\fR
-should probably be enough for most cases\&.
+is probably enough for most cases\&.
 .PP
 Be aware that
 \fBmyisamchk\fR
@@ -2444,7 +2462,7 @@ instead of
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2011, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

@@ -1,4 +1,4 @@
-/* Copyright (c) 2000, 2010 Oracle and/or its affiliates. All rights reserved.
+/* Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /**
   @file
@@ -534,7 +535,11 @@ void Protocol::end_partial_result_set(THD *thd_arg)
 bool Protocol::flush()
 {
 #ifndef EMBEDDED_LIBRARY
-  return net_flush(&thd->net);
+  bool error;
+  thd->main_da.can_overwrite_status= TRUE;
+  error= net_flush(&thd->net);
+  thd->main_da.can_overwrite_status= FALSE;
+  return error;
 #else
   return 0;
 #endif
@@ -574,7 +579,8 @@ bool Protocol::send_fields(List<Item> *list, uint flags)
   if (flags & SEND_NUM_ROWS)
   {				// Packet with number of elements
     uchar *pos= net_store_length(buff, list->elements);
-    (void) my_net_write(&thd->net, buff, (size_t) (pos-buff));
+    if (my_net_write(&thd->net, buff, (size_t) (pos-buff)))
+      DBUG_RETURN(1);
   }
 
 #ifndef DBUG_OFF
@@ -698,7 +704,7 @@ bool Protocol::send_fields(List<Item> *list, uint flags)
     if (flags & SEND_DEFAULTS)
       item->send(&prot, &tmp);			// Send default value
     if (prot.write())
-      break;					/* purecov: inspected */
+      DBUG_RETURN(1);
 #ifndef DBUG_OFF
     field_types[count++]= field.type;
 #endif
@@ -711,7 +717,9 @@ bool Protocol::send_fields(List<Item> *list, uint flags)
       to show that there is no cursor.
       Send no warning information, as it will be sent at statement end.
     */
-    write_eof_packet(thd, &thd->net, thd->server_status, thd->total_warn_count);
+    if (write_eof_packet(thd, &thd->net, thd->server_status,
+                         thd->total_warn_count))
+      DBUG_RETURN(1);
   }
   DBUG_RETURN(prepare_for_send(list));
 
@@ -849,8 +857,8 @@ bool Protocol_text::store(const char *from, size_t length,
 {
   CHARSET_INFO *tocs= this->thd->variables.character_set_results;
 #ifndef DBUG_OFF
-  DBUG_PRINT("info", ("Protocol_text::store field %u (%u): %s", field_pos,
-                      field_count, (length == 0? "" : from)));
+  DBUG_PRINT("info", ("Protocol_text::store field %u (%u): %.*s", field_pos,
+                      field_count, (int) length, (length == 0 ? "" : from)));
   DBUG_ASSERT(field_pos < field_count);
   DBUG_ASSERT(field_types == 0 ||
 	      field_types[field_pos] == MYSQL_TYPE_DECIMAL ||
@@ -1003,16 +1011,12 @@ bool Protocol_text::store(MYSQL_TIME *tm)
 #endif
   char buff[40];
   uint length;
-  length= my_sprintf(buff,(buff, "%04d-%02d-%02d %02d:%02d:%02d",
-			   (int) tm->year,
-			   (int) tm->month,
-			   (int) tm->day,
-			   (int) tm->hour,
-			   (int) tm->minute,
-			   (int) tm->second));
+  length= sprintf(buff, "%04d-%02d-%02d %02d:%02d:%02d",
+                  (int) tm->year, (int) tm->month,
+                  (int) tm->day, (int) tm->hour,
+                  (int) tm->minute, (int) tm->second);
   if (tm->second_part)
-    length+= my_sprintf(buff+length,(buff+length, ".%06d",
-                                     (int)tm->second_part));
+    length+= sprintf(buff+length, ".%06d", (int) tm->second_part);
   return net_store_data((uchar*) buff, length);
 }
 
@@ -1046,13 +1050,11 @@ bool Protocol_text::store_time(MYSQL_TIME *tm)
   char buff[40];
   uint length;
   uint day= (tm->year || tm->month) ? 0 : tm->day;
-  length= my_sprintf(buff,(buff, "%s%02ld:%02d:%02d",
-			   tm->neg ? "-" : "",
-			   (long) day*24L+(long) tm->hour,
-			   (int) tm->minute,
-			   (int) tm->second));
+  length= sprintf(buff, "%s%02ld:%02d:%02d", tm->neg ? "-" : "",
+                  (long) day*24L+(long) tm->hour, (int) tm->minute,
+                  (int) tm->second);
   if (tm->second_part)
-    length+= my_sprintf(buff+length,(buff+length, ".%06d", (int)tm->second_part));
+    length+= sprintf(buff+length, ".%06d", (int) tm->second_part);
   return net_store_data((uchar*) buff, length);
 }
 
