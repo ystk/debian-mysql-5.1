@@ -1,4 +1,5 @@
-/* Copyright 2000-2008 MySQL AB, 2008 Sun Microsystems, Inc.
+/*
+   Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /*
   Description of the query cache:
@@ -1239,8 +1241,8 @@ def_week_frmt: %lu, in_trans: %d, autocommit: %d",
     /* Key is query + database + flag */
     if (thd->db_length)
     {
-      memcpy(thd->query() + thd->query_length() + 1, thd->db, 
-        thd->db_length);
+      memcpy(thd->query() + thd->query_length() + 1 + sizeof(size_t), 
+             thd->db, thd->db_length);
       DBUG_PRINT("qcache", ("database: %s  length: %u",
 			    thd->db, (unsigned) thd->db_length)); 
     }
@@ -1249,7 +1251,7 @@ def_week_frmt: %lu, in_trans: %d, autocommit: %d",
       DBUG_PRINT("qcache", ("No active database"));
     }
     tot_length= thd->query_length() + thd->db_length + 1 +
-      QUERY_CACHE_FLAGS_SIZE;
+      sizeof(size_t) + QUERY_CACHE_FLAGS_SIZE;
     /*
       We should only copy structure (don't use it location directly)
       because of alignment issue
@@ -1328,6 +1330,57 @@ def_week_frmt: %lu, in_trans: %d, autocommit: %d",
 end:
   DBUG_VOID_RETURN;
 }
+
+
+#ifndef EMBEDDED_LIBRARY
+/**
+  Send a single memory block from the query cache.
+
+  Respects the client/server protocol limits for the
+  size of the network packet, and splits a large block
+  in pieces to ensure that individual piece doesn't exceed
+  the maximal allowed size of the network packet (16M).
+
+  @param[in] net NET handler
+  @param[in] packet packet to send
+  @param[in] len packet length
+
+  @return Operation status
+    @retval FALSE On success
+    @retval TRUE On error
+*/
+static bool
+send_data_in_chunks(NET *net, const uchar *packet, ulong len)
+{
+  /*
+    On the client we may require more memory than max_allowed_packet
+    to keep, both, the truncated last logical packet, and the
+    compressed next packet.  This never (or in practice never)
+    happens without compression, since without compression it's very
+    unlikely that a) a truncated logical packet would remain on the
+    client when it's time to read the next packet b) a subsequent
+    logical packet that is being read would be so large that
+    size-of-new-packet + size-of-old-packet-tail >
+    max_allowed_packet.  To remedy this issue, we send data in 1MB
+    sized packets, that's below the current client default of 16MB
+    for max_allowed_packet, but large enough to ensure there is no
+    unnecessary overhead from too many syscalls per result set.
+  */
+  static const ulong MAX_CHUNK_LENGTH= 1024*1024;
+
+  while (len > MAX_CHUNK_LENGTH)
+  {
+    if (net_real_write(net, packet, MAX_CHUNK_LENGTH))
+      return TRUE;
+    packet+= MAX_CHUNK_LENGTH;
+    len-= MAX_CHUNK_LENGTH;
+  }
+  if (len && net_real_write(net, packet, len))
+    return TRUE;
+
+  return FALSE;
+}
+#endif
 
 
 /*
@@ -1409,7 +1462,29 @@ Query_cache::send_result_to_client(THD *thd, char *sql, uint query_length)
       goto err;
     }
   }
+  {
+    /*
+      We have allocated buffer space (in alloc_query) to hold the
+      SQL statement(s) + the current database name + a flags struct.
+      If the database name has changed during execution, which might
+      happen if there are multiple statements, we need to make
+      sure the new current database has a name with the same length
+      as the previous one.
+    */
+    size_t db_len;
+    memcpy((char *) &db_len, (sql + query_length + 1), sizeof(size_t));
+    if (thd->db_length != db_len)
+    {
+      /*
+        We should probably reallocate the buffer in this case,
+        but for now we just leave it uncached
+      */
 
+      DBUG_PRINT("qcache", 
+                 ("Current database has changed since start of query"));
+      goto err;
+    }
+  }
   /*
     Try to obtain an exclusive lock on the query cache. If the cache is
     disabled or if a full cache flush is in progress, the attempt to
@@ -1431,10 +1506,12 @@ Query_cache::send_result_to_client(THD *thd, char *sql, uint query_length)
 
   Query_cache_block *query_block;
 
-  tot_length= query_length + thd->db_length + 1 + QUERY_CACHE_FLAGS_SIZE;
+  tot_length= query_length + 1 + sizeof(size_t) + 
+              thd->db_length + QUERY_CACHE_FLAGS_SIZE;
+
   if (thd->db_length)
   {
-    memcpy(sql+query_length+1, thd->db, thd->db_length);
+    memcpy(sql + query_length + 1 + sizeof(size_t), thd->db, thd->db_length);
     DBUG_PRINT("qcache", ("database: '%s'  length: %u",
 			  thd->db, (unsigned)thd->db_length));
   }
@@ -1635,11 +1712,11 @@ def_week_frmt: %lu, in_trans: %d, autocommit: %d",
                                    ALIGN_SIZE(sizeof(Query_cache_result)))));
     
     Query_cache_result *result = result_block->result();
-    if (net_real_write(&thd->net, result->data(),
-		       result_block->used -
-		       result_block->headers_len() -
-		       ALIGN_SIZE(sizeof(Query_cache_result))))
-      break;					// Client aborted
+    if (send_data_in_chunks(&thd->net, result->data(),
+                            result_block->used -
+                            result_block->headers_len() -
+                            ALIGN_SIZE(sizeof(Query_cache_result))))
+      break;                                    // Client aborted
     result_block = result_block->next;
     thd->net.pkt_nr= query->last_pkt_nr; // Keep packet number updated
   } while (result_block != first_result_block);
@@ -1653,7 +1730,8 @@ def_week_frmt: %lu, in_trans: %d, autocommit: %d",
 
   thd->limit_found_rows = query->found_rows();
   thd->status_var.last_query_cost= 0.0;
-  thd->main_da.disable_status();
+  if (!thd->main_da.is_set())
+    thd->main_da.disable_status();
 
   BLOCK_UNLOCK_RD(query_block);
   DBUG_RETURN(1);				// Result sent to client

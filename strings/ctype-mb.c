@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2002, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 #include <my_global.h>
 #include "m_ctype.h"
@@ -498,7 +499,9 @@ static void my_hash_sort_mb_bin(CHARSET_INFO *cs __attribute__((unused)),
   DESCRIPTION
       Write max key:
       - for non-Unicode character sets:
-        just set to 255.
+        just bfill using max_sort_char if max_sort_char is one byte.
+        In case when max_sort_char is two bytes, fill with double-byte pairs
+        and optionally pad with a single space character.
       - for Unicode character set (utf-8):
         create a buffer with multibyte representation of the max_sort_char
         character, and copy it into max_str in a loop. 
@@ -510,12 +513,20 @@ static void pad_max_char(CHARSET_INFO *cs, char *str, char *end)
   
   if (!(cs->state & MY_CS_UNICODE))
   {
-    bfill(str, end - str, 255);
-    return;
+    if (cs->max_sort_char <= 255)
+    {
+      bfill(str, end - str, cs->max_sort_char);
+      return;
+    }
+    buf[0]= cs->max_sort_char >> 8;
+    buf[1]= cs->max_sort_char & 0xFF;
+    buflen= 2;
   }
-  
-  buflen= cs->cset->wc_mb(cs, cs->max_sort_char, (uchar*) buf,
-                          (uchar*) buf + sizeof(buf));
+  else
+  {
+    buflen= cs->cset->wc_mb(cs, cs->max_sort_char, (uchar*) buf,
+                            (uchar*) buf + sizeof(buf));
+  }
   
   DBUG_ASSERT(buflen > 0);
   do

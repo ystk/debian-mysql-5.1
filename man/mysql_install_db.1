@@ -2,12 +2,12 @@
 .\"     Title: \fBmysql_install_db\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
-.\"      Date: 07/06/2010
+.\"      Date: 12/16/2011
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBMYSQL_INSTALL_DB\" "1" "07/06/2010" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBMYSQL_INSTALL_DB\" "1" "12/16/2011" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -80,18 +80,42 @@ with the
 \fB\-\-bootstrap\fR
 and
 \fB\-\-skip\-grant\-tables\fR
-options (see
-Section\ \&2.3.2, \(lqTypical configure Options\(rq)\&. If MySQL was configured with the
+options\&. If MySQL was configured with the
 \fB\-\-disable\-grant\-options\fR
 option,
 \fB\-\-bootstrap\fR
 and
 \fB\-\-skip\-grant\-tables\fR
-will be disabled\&. To handle this, set the
+will be disabled (see
+Section\ \&2.11.4, \(lqMySQL Source-Configuration Options\(rq)\&. To handle this, set the
 MYSQLD_BOOTSTRAP
 environment variable to the full path name of a server that has all options enabled\&.
 \fBmysql_install_db\fR
 will use that server\&.
+.if n \{\
+.sp
+.\}
+.RS 4
+.it 1 an-trap
+.nr an-no-space-flag 1
+.nr an-break-flag 1
+.br
+.ps +1
+\fBNote\fR
+.ps -1
+.br
+.PP
+If you have set a custom
+TMPDIR
+variable when performing the installation, and the specified directory is not accessible, the execution of
+\fBmysql_install_db\fR
+may fail\&. You should unset
+TMPDIR, or set
+TMPDIR
+to point to the system temporary directory (usually
+/tmp)\&.
+.sp .5v
+.RE
 .PP
 \fBmysql_install_db\fR
 supports the following options, which can be specified on the command line or in the
@@ -99,7 +123,12 @@ supports the following options, which can be specified on the command line or in
 and (if they are common to
 \fBmysqld\fR)
 [mysqld]
-option file groups\&.
+groups of an option file\&. Other options are passed to
+\fBmysqld\fR\&. For information about option files, see
+Section\ \&4.2.3.3, \(lqUsing Option Files\(rq\&.
+\fBmysql_install_db\fR
+also supports the options for processing option files described at
+Section\ \&4.2.3.3.1, \(lqCommand-Line Options that Affect Option-File Handling\(rq\&.
 .sp
 .RS 4
 .ie n \{\
@@ -252,7 +281,7 @@ For internal use\&. This option is used for creating Windows distributions\&.
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2011, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

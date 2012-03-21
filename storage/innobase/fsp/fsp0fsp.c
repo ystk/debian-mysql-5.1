@@ -293,14 +293,14 @@ fseg_alloc_free_page_low(
 				/* out: the allocated page number, FIL_NULL
 				if no page could be allocated */
 	ulint		space,	/* in: space */
-	fseg_inode_t*	seg_inode, /* in: segment inode */
+	fseg_inode_t*	seg_inode, /* in/out: segment inode */
 	ulint		hint,	/* in: hint of which page would be desirable */
 	byte		direction, /* in: if the new page is needed because
 				of an index page split, and records are
 				inserted there in order, into which
 				direction they go alphabetically: FSP_DOWN,
 				FSP_UP, FSP_NO_DIR */
-	mtr_t*		mtr);	/* in: mtr handle */
+	mtr_t*		mtr);	/* in/out: mini-transaction */
 
 
 /**************************************************************************
@@ -1381,7 +1381,7 @@ fsp_alloc_free_page(
 			be allocated */
 	ulint	space,	/* in: space id */
 	ulint	hint,	/* in: hint of which page would be desirable */
-	mtr_t*	mtr)	/* in: mtr handle */
+	mtr_t*	mtr)	/* in/out: mini-transaction */
 {
 	fsp_header_t*	header;
 	fil_addr_t	first;
@@ -1441,6 +1441,7 @@ fsp_alloc_free_page(
 	if (free == ULINT_UNDEFINED) {
 
 		ut_print_buf(stderr, ((byte*)descr) - 500, 1000);
+		putc('\n', stderr);
 
 		ut_error;
 	}
@@ -2331,14 +2332,14 @@ fseg_alloc_free_page_low(
 				/* out: the allocated page number, FIL_NULL
 				if no page could be allocated */
 	ulint		space,	/* in: space */
-	fseg_inode_t*	seg_inode, /* in: segment inode */
+	fseg_inode_t*	seg_inode, /* in/out: segment inode */
 	ulint		hint,	/* in: hint of which page would be desirable */
 	byte		direction, /* in: if the new page is needed because
 				of an index page split, and records are
 				inserted there in order, into which
 				direction they go alphabetically: FSP_DOWN,
 				FSP_UP, FSP_NO_DIR */
-	mtr_t*		mtr)	/* in: mtr handle */
+	mtr_t*		mtr)	/* in/out: mini-transaction */
 {
 	fsp_header_t*	space_header;
 	ulint		space_size;
@@ -2554,8 +2555,6 @@ fseg_alloc_free_page_low(
 		fseg_mark_page_used(seg_inode, space, ret_page, mtr);
 	}
 
-	buf_reset_check_index_page_at_flush(space, ret_page);
-
 	return(ret_page);
 }
 
@@ -2569,7 +2568,7 @@ fseg_alloc_free_page_general(
 /*=========================*/
 				/* out: allocated page offset, FIL_NULL if no
 				page could be allocated */
-	fseg_header_t*	seg_header,/* in: segment header */
+	fseg_header_t*	seg_header,/* in/out: segment header */
 	ulint		hint,	/* in: hint of which page would be desirable */
 	byte		direction,/* in: if the new page is needed because
 				of an index page split, and records are
@@ -2581,7 +2580,7 @@ fseg_alloc_free_page_general(
 				with fsp_reserve_free_extents, then there
 				is no need to do the check for this individual
 				page */
-	mtr_t*		mtr)	/* in: mtr handle */
+	mtr_t*		mtr)	/* in/out: mini-transaction */
 {
 	fseg_inode_t*	inode;
 	ulint		space;
@@ -2842,11 +2841,60 @@ fsp_get_available_space_in_free_extents(
 
 	ut_ad(!mutex_own(&kernel_mutex));
 
+	/* The convoluted mutex acquire is to overcome latching order
+	issues: The problem is that the fil_mutex is at a lower level
+	than the tablespace latch and the buffer pool mutex. We have to
+	first prevent any operations on the file system by acquiring the
+	dictionary mutex. Then acquire the tablespace latch to obey the
+	latching order and then release the dictionary mutex. That way we
+	ensure that the tablespace instance can't be freed while we are
+	examining its contents (see fil_space_free()).
+
+	However, there is one further complication, we release the fil_mutex
+	when we need to invalidate the the pages in the buffer pool and we
+	reacquire the fil_mutex when deleting and freeing the tablespace
+	instance in fil0fil.c. Here we need to account for that situation
+	too. */
+
+	dict_mutex_enter_for_mysql();
+
+	/* At this stage there is no guarantee that the tablespace even
+	exists in the cache. */
+
+	if (fil_tablespace_deleted_or_being_deleted_in_mem(space, -1)) {
+
+		dict_mutex_exit_for_mysql();
+
+		return(ULLINT_UNDEFINED);
+	}
+
 	mtr_start(&mtr);
 
 	latch = fil_space_get_latch(space);
 
+	/* This should ensure that the tablespace instance can't be freed
+	by another thread. However, the tablespace pages can still be freed
+	from the buffer pool. We need to check for that again. */
+
 	mtr_x_lock(latch, &mtr);
+
+	dict_mutex_exit_for_mysql();
+
+	/* At this point it is possible for the tablespace to be deleted and
+	its pages removed from the buffer pool. We need to check for that
+	situation. However, the tablespace instance can't be deleted because
+	our latching above should ensure that. */
+
+	if (fil_tablespace_is_being_deleted(space)) {
+
+		mtr_commit(&mtr);
+
+		return(ULLINT_UNDEFINED);
+	}
+
+	/* From here on even if the user has dropped the tablespace, the
+	pages _must_ still exist in the buffer pool and the tablespace
+	instance _must be in the file system hash table. */
 
 	space_header = fsp_get_space_header(space, &mtr);
 
@@ -2997,7 +3045,7 @@ fseg_free_page_low(
 crash:
 		fputs("InnoDB: Please refer to\n"
 		      "InnoDB: http://dev.mysql.com/doc/refman/5.1/en/"
-		      "forcing-recovery.html\n"
+		      "forcing-innodb-recovery.html\n"
 		      "InnoDB: about forcing recovery.\n", stderr);
 		ut_error;
 	}

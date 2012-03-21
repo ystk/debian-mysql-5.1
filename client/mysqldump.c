@@ -1,4 +1,5 @@
-/* Copyright 2000-2008 MySQL AB, 2008, 2009 Sun Microsystems, Inc.
+/*
+   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /* mysqldump.c  - Dump a tables contents and format to an ASCII file
 **
@@ -51,6 +53,8 @@
 #include "mysql_version.h"
 #include "mysqld_error.h"
 #include "../sql/ha_ndbcluster_tables.h"
+
+#include <welcome_copyright_notice.h> /* ORACLE_WELCOME_COPYRIGHT_NOTICE */
 
 /* Exit codes */
 
@@ -567,8 +571,7 @@ static void short_usage_sub(void)
 static void usage(void)
 {
   print_version();
-  puts("By Igor Romanenko, Monty, Jani & Sinisa.");
-  puts("This software comes with ABSOLUTELY NO WARRANTY. This is free software,\nand you are welcome to modify and redistribute it under the GPL license.\n");
+  puts(ORACLE_WELCOME_COPYRIGHT_NOTICE("2000, 2011"));
   puts("Dumping structure and contents of MySQL databases and tables.");
   short_usage_sub();
   print_defaults("my",load_default_groups);
@@ -1134,6 +1137,9 @@ static int switch_db_collation(FILE *sql_file,
 {
   if (strcmp(current_db_cl_name, required_db_cl_name) != 0)
   {
+    char quoted_db_buf[NAME_LEN * 2 + 3];
+    char *quoted_db_name= quote_name(db_name, quoted_db_buf, FALSE);
+
     CHARSET_INFO *db_cl= get_charset_by_name(required_db_cl_name, MYF(0));
 
     if (!db_cl)
@@ -1141,7 +1147,7 @@ static int switch_db_collation(FILE *sql_file,
 
     fprintf(sql_file,
             "ALTER DATABASE %s CHARACTER SET %s COLLATE %s %s\n",
-            (const char *) db_name,
+            (const char *) quoted_db_name,
             (const char *) db_cl->csname,
             (const char *) db_cl->name,
             (const char *) delimiter);
@@ -1162,6 +1168,9 @@ static int restore_db_collation(FILE *sql_file,
                                 const char *delimiter,
                                 const char *db_cl_name)
 {
+  char quoted_db_buf[NAME_LEN * 2 + 3];
+  char *quoted_db_name= quote_name(db_name, quoted_db_buf, FALSE);
+
   CHARSET_INFO *db_cl= get_charset_by_name(db_cl_name, MYF(0));
 
   if (!db_cl)
@@ -1169,7 +1178,7 @@ static int restore_db_collation(FILE *sql_file,
 
   fprintf(sql_file,
           "ALTER DATABASE %s CHARACTER SET %s COLLATE %s %s\n",
-          (const char *) db_name,
+          (const char *) quoted_db_name,
           (const char *) db_cl->csname,
           (const char *) db_cl->name,
           (const char *) delimiter);
@@ -2247,6 +2256,15 @@ static uint get_table_structure(char *table, char *db, char *table_type,
   const char *insert_option;
   char	     name_buff[NAME_LEN+3],table_buff[NAME_LEN*2+3];
   char       table_buff2[NAME_LEN*2+3], query_buff[QUERY_LENGTH];
+  const char *show_fields_stmt= "SELECT `COLUMN_NAME` AS `Field`, "
+                                "`COLUMN_TYPE` AS `Type`, "
+                                "`IS_NULLABLE` AS `Null`, "
+                                "`COLUMN_KEY` AS `Key`, "
+                                "`COLUMN_DEFAULT` AS `Default`, "
+                                "`EXTRA` AS `Extra`, "
+                                "`COLUMN_COMMENT` AS `Comment` "
+                                "FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE "
+                                "TABLE_SCHEMA = '%s' AND TABLE_NAME = '%s'";
   FILE       *sql_file= md_result_file;
   int        len;
   MYSQL_RES  *result;
@@ -2514,8 +2532,8 @@ static uint get_table_structure(char *table, char *db, char *table_type,
     verbose_msg("%s: Warning: Can't set SQL_QUOTE_SHOW_CREATE option (%s)\n",
                 my_progname, mysql_error(mysql));
 
-    my_snprintf(query_buff, sizeof(query_buff), "show fields from %s",
-                result_table);
+    my_snprintf(query_buff, sizeof(query_buff), show_fields_stmt, db, table);
+
     if (mysql_query_with_error_report(mysql, &result, query_buff))
       DBUG_RETURN(0);
 

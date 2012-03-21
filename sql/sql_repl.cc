@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2006 MySQL AB & Sasha
+/*
+   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 #include "mysql_priv.h"
 #ifdef HAVE_REPLICATION
@@ -21,6 +23,7 @@
 #include "log_event.h"
 #include "rpl_filter.h"
 #include <my_dir.h>
+#include "debug_sync.h"
 
 int max_binlog_dump_events = 0; // unlimited
 my_bool opt_sporadic_binlog_dump_fail = 0;
@@ -218,8 +221,7 @@ bool log_in_use(const char* log_name)
     if ((linfo = tmp->current_linfo))
     {
       pthread_mutex_lock(&linfo->lock);
-      result = !bcmp((uchar*) log_name, (uchar*) linfo->log_file_name,
-                     log_name_len);
+      result = !memcmp(log_name, linfo->log_file_name, log_name_len);
       pthread_mutex_unlock(&linfo->lock);
       if (result)
 	break;
@@ -357,6 +359,7 @@ void mysql_binlog_send(THD* thd, char* log_ident, my_off_t pos,
 #ifndef DBUG_OFF
   int left_events = max_binlog_dump_events;
 #endif
+  int old_max_allowed_packet= thd->variables.max_allowed_packet;
   DBUG_ENTER("mysql_binlog_send");
   DBUG_PRINT("enter",("log_ident: '%s'  pos: %ld", log_ident, (long) pos));
 
@@ -544,8 +547,10 @@ impossible position";
 
   while (!net->error && net->vio != 0 && !thd->killed)
   {
+    my_off_t prev_pos= pos;
     while (!(error = Log_event::read_log_event(&log, packet, log_lock)))
     {
+      prev_pos= my_b_tell(&log);
 #ifndef DBUG_OFF
       if (max_binlog_dump_events && !left_events--)
       {
@@ -555,6 +560,20 @@ impossible position";
 	goto err;
       }
 #endif
+
+      DBUG_EXECUTE_IF("dump_thread_wait_before_send_xid",
+                      {
+                        if ((*packet)[EVENT_TYPE_OFFSET+1] == XID_EVENT)
+                        {
+                          net_flush(net);
+                          const char act[]=
+                            "now "
+                            "wait_for signal.continue";
+                          DBUG_ASSERT(opt_debug_sync_timeout > 0);
+                          DBUG_ASSERT(!debug_sync_set_action(current_thd,
+                                                             STRING_WITH_LEN(act)));
+                        }
+                      });
 
       if ((*packet)[EVENT_TYPE_OFFSET+1] == FORMAT_DESCRIPTION_EVENT)
       {
@@ -571,6 +590,14 @@ impossible position";
 	my_errno= ER_UNKNOWN_ERROR;
 	goto err;
       }
+
+      DBUG_EXECUTE_IF("dump_thread_wait_before_send_xid",
+                      {
+                        if ((*packet)[EVENT_TYPE_OFFSET+1] == XID_EVENT)
+                        {
+                          net_flush(net);
+                        }
+                      });
 
       DBUG_PRINT("info", ("log event code %d",
 			  (*packet)[LOG_EVENT_OFFSET+1] ));
@@ -590,8 +617,13 @@ impossible position";
       here we were reading binlog that was not closed properly (as a result
       of a crash ?). treat any corruption as EOF
     */
-    if (binlog_can_be_corrupted && error != LOG_READ_MEM)
+    if (binlog_can_be_corrupted &&
+        error != LOG_READ_MEM && error != LOG_READ_EOF)
+    {
+      my_b_seek(&log, prev_pos);
       error=LOG_READ_EOF;
+    }
+
     /*
       TODO: now that we are logging the offset, check to make sure
       the recorded offset and the actual match.
@@ -762,6 +794,7 @@ end:
   pthread_mutex_lock(&LOCK_thread_count);
   thd->current_linfo = 0;
   pthread_mutex_unlock(&LOCK_thread_count);
+  thd->variables.max_allowed_packet= old_max_allowed_packet;
   DBUG_VOID_RETURN;
 
 err:
@@ -779,6 +812,7 @@ err:
   pthread_mutex_unlock(&LOCK_thread_count);
   if (file >= 0)
     (void) my_close(file, MYF(MY_WME));
+  thd->variables.max_allowed_packet= old_max_allowed_packet;
 
   my_message(my_errno, errmsg, MYF(0));
   DBUG_VOID_RETURN;
@@ -1169,12 +1203,9 @@ bool change_master(THD* thd, Master_info* mi)
   /*
     Before processing the command, save the previous state.
   */
-  char *pos;
-  pos= strmake(saved_host, mi->host, HOSTNAME_LENGTH);
-  pos= '\0';
+  strmake(saved_host, mi->host, HOSTNAME_LENGTH);
   saved_port= mi->port;
-  pos= strmake(saved_log_name, mi->master_log_name, FN_REFLEN - 1);
-  pos= '\0';
+  strmake(saved_log_name, mi->master_log_name, FN_REFLEN - 1);
   saved_log_pos= mi->master_log_pos;
 
   /*
@@ -1422,6 +1453,7 @@ bool mysql_show_binlog_events(THD* thd)
   bool ret = TRUE;
   IO_CACHE log;
   File file = -1;
+  int old_max_allowed_packet= thd->variables.max_allowed_packet;
   DBUG_ENTER("mysql_show_binlog_events");
 
   Log_event::init_show_field_list(&field_list);
@@ -1560,6 +1592,7 @@ err:
   pthread_mutex_lock(&LOCK_thread_count);
   thd->current_linfo = 0;
   pthread_mutex_unlock(&LOCK_thread_count);
+  thd->variables.max_allowed_packet= old_max_allowed_packet;
   DBUG_RETURN(ret);
 }
 

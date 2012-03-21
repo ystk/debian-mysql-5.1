@@ -104,7 +104,8 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(top_srcdir)/storage/ndb/config/type_ndbapitest.mk.am
 subdir = storage/ndb/test/ndbapi
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/config/ac-macros/alloca.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/config/ac-macros/maintainer.m4 \
+	$(top_srcdir)/config/ac-macros/alloca.m4 \
 	$(top_srcdir)/config/ac-macros/check_cpu.m4 \
 	$(top_srcdir)/config/ac-macros/character_sets.m4 \
 	$(top_srcdir)/config/ac-macros/compiler_flag.m4 \
@@ -573,6 +574,8 @@ ABI_CHECK = @ABI_CHECK@
 ACLOCAL = @ACLOCAL@
 ALLOCA = @ALLOCA@
 AMTAR = @AMTAR@
+AM_CFLAGS = @AM_CFLAGS@
+AM_CXXFLAGS = $(NDB_AM_CXXFLAGS) $(NDB_CXXFLAGS)
 AR = @AR@
 ARFLAGS = @ARFLAGS@
 AS = @AS@
@@ -824,8 +827,6 @@ plugin_ftexample_shared_target = @plugin_ftexample_shared_target@
 plugin_ftexample_static_target = @plugin_ftexample_static_target@
 plugin_heap_shared_target = @plugin_heap_shared_target@
 plugin_heap_static_target = @plugin_heap_static_target@
-plugin_ibmdb2i_shared_target = @plugin_ibmdb2i_shared_target@
-plugin_ibmdb2i_static_target = @plugin_ibmdb2i_static_target@
 plugin_innobase_shared_target = @plugin_innobase_shared_target@
 plugin_innobase_static_target = @plugin_innobase_static_target@
 plugin_innodb_plugin_shared_target = @plugin_innodb_plugin_shared_target@
@@ -841,8 +842,6 @@ plugin_partition_static_target = @plugin_partition_static_target@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
-pstack_dir = @pstack_dir@
-pstack_libs = @pstack_libs@
 readline_basedir = @readline_basedir@
 readline_dir = @readline_dir@
 readline_h_ln_cmd = @readline_h_ln_cmd@
@@ -946,7 +945,6 @@ LDADD = $(LDADD_LOC) $(top_builddir)/storage/ndb/test/src/libNDBT.a \
 	$(top_builddir)/strings/libmystrings.a @NDB_SCI_LIBS@
 NDB_CXXFLAGS = @ndb_cxxflags_fix@ $(NDB_CXXFLAGS_LOC) 
 NDB_AM_CXXFLAGS := $(AM_CXXFLAGS)
-AM_CXXFLAGS = $(NDB_AM_CXXFLAGS) $(NDB_CXXFLAGS)
 NdbRepStress_INCLUDES = $(INCLUDES) -I$(top_srcdir)/ndb/test/include -I$(top_srcdir)/include
 testBackup_LDADD = $(LDADD) bank/libbank.a
 testSRBank_LDADD = bank/libbank.a $(LDADD) 

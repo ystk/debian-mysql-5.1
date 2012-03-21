@@ -1,4 +1,5 @@
-/* Copyright (C) 2006 MySQL AB
+/*
+   Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 #ifdef __GNUC__
 #pragma interface				/* gcc class implementation */
@@ -78,7 +80,7 @@ void get_full_part_id_from_key(const TABLE *table, uchar *buf,
                                KEY *key_info,
                                const key_range *key_spec,
                                part_id_range *part_spec);
-bool mysql_unpack_partition(THD *thd, const char *part_buf,
+bool mysql_unpack_partition(THD *thd, char *part_buf,
                             uint part_info_len,
                             const char *part_state, uint part_state_len,
                             TABLE *table, bool is_create_table_ind,

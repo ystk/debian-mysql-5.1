@@ -1,4 +1,5 @@
-/* Copyright (C) 2002-2006 MySQL AB
+/*
+   Copyright (c) 2002, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 #include <my_global.h>
 #include <m_string.h>
@@ -30,7 +32,7 @@ my_error_reporter my_getopt_error_reporter= &default_reporter;
 
 static int findopt(char *optpat, uint length,
 		   const struct my_option **opt_res,
-		   char **ffname);
+		   const char **ffname);
 my_bool getopt_compare_strings(const char *s,
 			       const char *t,
 			       uint length);
@@ -112,16 +114,15 @@ int handle_options(int *argc, char ***argv,
 		   const struct my_option *longopts,
                    my_get_one_option get_one_option)
 {
-  uint opt_found, argvpos= 0, length;
+  uint UNINIT_VAR(opt_found), argvpos= 0, length;
   my_bool end_of_options= 0, must_be_var, set_maximum_value,
           option_is_loose;
-  char **pos, **pos_end, *optend, *UNINIT_VAR(prev_found),
-       *opt_str, key_name[FN_REFLEN];
+  char **pos, **pos_end, *optend, *opt_str, key_name[FN_REFLEN];
+  const char *UNINIT_VAR(prev_found);
   const struct my_option *optp;
   void *value;
   int error, i;
 
-  LINT_INIT(opt_found);
   /* handle_options() assumes arg0 (program name) always exists */
   DBUG_ASSERT(argc && *argc >= 1);
   DBUG_ASSERT(argv && *argv);
@@ -225,7 +226,6 @@ int handle_options(int *argc, char ***argv,
 	  Find first the right option. Return error in case of an ambiguous,
 	  or unknown option
 	*/
-        LINT_INIT(prev_found);
 	optp= longopts;
 	if (!(opt_found= findopt(opt_str, length, &optp, &prev_found)))
 	{
@@ -657,17 +657,21 @@ static int setval(const struct my_option *opts, void *value, char *argument,
 	return EXIT_OUT_OF_MEMORY;
       break;
     case GET_ENUM:
-      if (((*(int*)result_pos)=
-             find_type(argument, opts->typelib, 2) - 1) < 0)
       {
-        /*
-          Accept an integer representation of the enumerated item.
-        */
-        char *endptr;
-        unsigned int arg= (unsigned int) strtol(argument, &endptr, 10);
-        if (*endptr || arg >= opts->typelib->count)
-          return EXIT_ARGUMENT_INVALID;
-        *(int*)result_pos= arg;
+        int type= find_type(argument, opts->typelib, 2);
+        if (type < 1)
+        {
+          /*
+            Accept an integer representation of the enumerated item.
+          */
+          char *endptr;
+          ulong arg= strtoul(argument, &endptr, 10);
+          if (*endptr || arg >= opts->typelib->count)
+            return EXIT_ARGUMENT_INVALID;
+          *((ulong*) result_pos)= arg;
+        }
+        else
+          *((ulong*) result_pos)= type - 1;
       }
       break;
     case GET_SET:
@@ -709,10 +713,10 @@ static int setval(const struct my_option *opts, void *value, char *argument,
 
 static int findopt(char *optpat, uint length,
 		   const struct my_option **opt_res,
-		   char **ffname)
+		   const char **ffname)
 {
   uint count;
-  struct my_option *opt= (struct my_option *) *opt_res;
+  const struct my_option *opt= *opt_res;
 
   for (count= 0; opt->name; opt++)
   {
@@ -723,8 +727,9 @@ static int findopt(char *optpat, uint length,
 	return 1;
       if (!count)
       {
+        /* We only need to know one prev */
 	count= 1;
-	*ffname= (char *) opt->name;	/* We only need to know one prev */
+	*ffname= opt->name;
       }
       else if (strcmp(*ffname, opt->name))
       {
@@ -1004,7 +1009,7 @@ static void init_one_value(const struct my_option *option, void *variable,
     *((int*) variable)= (int) getopt_ll_limit_value((int) value, option, NULL);
     break;
   case GET_ENUM:
-    *((uint*) variable)= (uint) value;
+    *((ulong*) variable)= (ulong) value;
     break;
   case GET_UINT:
     *((uint*) variable)= (uint) getopt_ull_limit_value((uint) value, option, NULL);
@@ -1244,7 +1249,7 @@ void my_print_variables(const struct my_option *options)
 	}
 	break;
       case GET_ENUM:
-        printf("%s\n", get_type(optp->typelib, *(uint*) value));
+        printf("%s\n", get_type(optp->typelib, *(ulong*) value));
 	break;
       case GET_STR:
       case GET_STR_ALLOC:                    /* fall through */

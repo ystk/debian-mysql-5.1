@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2006 MySQL AB
+/*
+   Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /**
   @addtogroup Replication
@@ -264,7 +266,8 @@ struct sql_ex_info
                                    1 + 2          /* type, lc_time_names_number */ + \
                                    1 + 2          /* type, charset_database_number */ + \
                                    1 + 8          /* type, table_map_for_update */ + \
-                                   1 + 4          /* type, master_data_written */)
+                                   1 + 4          /* type, master_data_written */ + \
+                                   1 + 16 + 1 + 60/* type, user_len, user, host_len, host */)
 #define MAX_LOG_EVENT_HEADER   ( /* in order of Query_log_event::write */ \
   LOG_EVENT_HEADER_LEN + /* write_header */ \
   QUERY_HEADER_LEN     + /* write_data */   \
@@ -332,6 +335,8 @@ struct sql_ex_info
 #define Q_TABLE_MAP_FOR_UPDATE_CODE 9
 
 #define Q_MASTER_DATA_WRITTEN_CODE 10
+
+#define Q_INVOKER 11
 
 /* Intvar event post-header */
 
@@ -976,9 +981,9 @@ public:
     return (void*) my_malloc((uint)size, MYF(MY_WME|MY_FAE));
   }
 
-  static void operator delete(void *ptr, size_t size)
+  static void operator delete(void *ptr, size_t)
   {
-    my_free((uchar*) ptr, MYF(MY_WME|MY_ALLOW_ZERO_PTR));
+    my_free(ptr, MYF(MY_WME|MY_ALLOW_ZERO_PTR));
   }
 
   /* Placement version of the above operators */
@@ -1546,6 +1551,8 @@ protected:
 */
 class Query_log_event: public Log_event
 {
+  LEX_STRING user;
+  LEX_STRING host;
 protected:
   Log_event::Byte* data_buf;
 public:
@@ -1777,7 +1784,9 @@ public:
   void print(FILE* file, PRINT_EVENT_INFO* print_event_info);
 #endif
 
-  Slave_log_event(const char* buf, uint event_len);
+  Slave_log_event(const char* buf,
+                  uint event_len,
+                  const Format_description_log_event *description_event);
   ~Slave_log_event();
   int get_data_size();
   bool is_valid() const { return master_host != 0; }
@@ -3576,16 +3585,13 @@ protected:
   int write_row(const Relay_log_info *const, const bool);
 
   // Unpack the current row into m_table->record[0]
-  int unpack_current_row(const Relay_log_info *const rli,
-                         const bool abort_on_warning= TRUE)
-  { 
+  int unpack_current_row(const Relay_log_info *const rli)
+  {
     DBUG_ASSERT(m_table);
 
-    bool first_row= (m_curr_row == m_rows_buf);
     ASSERT_OR_RETURN_ERROR(m_curr_row < m_rows_end, HA_ERR_CORRUPT_EVENT);
     int const result= ::unpack_row(rli, m_table, m_width, m_curr_row, &m_cols,
-                                   &m_curr_row_end, &m_master_reclength,
-                                   abort_on_warning, first_row);
+                                   &m_curr_row_end, &m_master_reclength);
     if (m_curr_row_end > m_rows_end)
       my_error(ER_SLAVE_CORRUPT_EVENT, MYF(0));
     ASSERT_OR_RETURN_ERROR(m_curr_row_end <= m_rows_end, HA_ERR_CORRUPT_EVENT);

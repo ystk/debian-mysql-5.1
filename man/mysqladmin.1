@@ -2,12 +2,12 @@
 .\"     Title: \fBmysqladmin\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.75.2 <http://docbook.sf.net/>
-.\"      Date: 07/06/2010
+.\"      Date: 12/16/2011
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBMYSQLADMIN\FR" "1" "07/06/2010" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBMYSQLADMIN\FR" "1" "12/16/2011" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * set default formatting
 .\" -----------------------------------------------------------------
@@ -75,7 +75,7 @@ debug
 Tell the server to write debug information to the error log\&.
 .sp
 Beginning with MySQL 5\&.1\&.12, this includes information about the Event Scheduler\&. See
-Section\ \&19.4.5, \(lqEvent Scheduler Status\(rq\&.
+Section\ \&18.4.5, \(lqEvent Scheduler Status\(rq\&.
 .RE
 .sp
 .RS 4
@@ -282,7 +282,7 @@ command to change the password\&.
 .\}
 ping
 .sp
-Check whether the server is alive\&. The return status from
+Check whether the server is available\&. The return status from
 \fBmysqladmin\fR
 is 0 if the server is running, 1 if it is not\&. This is 0 even in case of an error such as
 Access denied, because this means that the server is running but refused the connection, which is different from the server not running\&.
@@ -304,7 +304,7 @@ statement\&. If the
 \fB\-\-verbose\fR
 option is given, the output is like that of
 SHOW FULL PROCESSLIST\&. (See
-Section\ \&12.4.5.31, \(lqSHOW PROCESSLIST Syntax\(rq\&.)
+Section\ \&12.7.5.31, \(lqSHOW PROCESSLIST Syntax\(rq\&.)
 .RE
 .sp
 .RS 4
@@ -590,7 +590,7 @@ supports the following options, which can be specified on the command line or in
 [mysqladmin]
 and
 [client]
-option file groups\&.
+groups of an option file\&.
 \fBmysqladmin\fR
 also supports the options for processing option files described at
 Section\ \&4.2.3.3.1, \(lqCommand-Line Options that Affect Option-File Handling\(rq\&.
@@ -609,6 +609,25 @@ Section\ \&4.2.3.3.1, \(lqCommand-Line Options that Affect Option-File Handling\
 \fB\-?\fR
 .sp
 Display a help message and exit\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+.\" mysqladmin: bind-address option
+.\" bind-address option: mysqladmin
+\fB\-\-bind\-address=\fR\fB\fIip_address\fR\fR
+.sp
+On a computer having multiple network interfaces, this option can be used to select which interface is employed when connecting to the MySQL server\&.
+.sp
+This option is supported only in the version of
+\fBmysqladmin\fR
+that is supplied with MySQL Cluster, beginning with MySQL Cluster NDB 6\&.3\&.4\&. It is not available in standard MySQL 5\&.1 releases\&.
 .RE
 .sp
 .RS 4
@@ -821,7 +840,7 @@ Section\ \&5.3.2.2, \(lqEnd-User Guidelines for Password Security\(rq\&. You can
 \fB\-\-pipe\fR,
 \fB\-W\fR
 .sp
-On Windows, connect to the server via a named pipe\&. This option applies only if the server supports named\-pipe connections\&.
+On Windows, connect to the server using a named pipe\&. This option applies only if the server supports named\-pipe connections\&.
 .RE
 .sp
 .RS 4
@@ -852,7 +871,7 @@ The TCP/IP port number to use for the connection\&.
 .\" protocol option: mysqladmin
 \fB\-\-protocol={TCP|SOCKET|PIPE|MEMORY}\fR
 .sp
-The connection protocol to use for connecting to the server\&. It is useful when the other connection parameters normally would cause a protocol to be used other than the one you want\&. For details on the allowable values, see
+The connection protocol to use for connecting to the server\&. It is useful when the other connection parameters normally would cause a protocol to be used other than the one you want\&. For details on the permissible values, see
 Section\ \&4.2.2, \(lqConnecting to the MySQL Server\(rq\&.
 .RE
 .sp
@@ -871,7 +890,7 @@ Section\ \&4.2.2, \(lqConnecting to the MySQL Server\(rq\&.
 .sp
 Show the difference between the current and previous values when used with the
 \fB\-\-sleep\fR
-option\&. Currently, this option works only with the
+option\&. This option works only with the
 extended\-status
 command\&.
 .RE
@@ -947,7 +966,7 @@ localhost, the Unix socket file to use, or, on Windows, the name of the named pi
 .sp
 Options that begin with
 \fB\-\-ssl\fR
-specify whether to connect to the server via SSL and indicate where to find SSL keys and certificates\&. See
+specify whether to connect to the server using SSL and indicate where to find SSL keys and certificates\&. See
 Section\ \&5.5.6.3, \(lqSSL Command Options\(rq\&.
 .RE
 .sp
@@ -1072,7 +1091,7 @@ The maximum number of seconds to wait for server shutdown\&. The default value i
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2010, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2011, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2003 MySQL AB
+/*
+   Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /*
  * Memory sub-system, written by Bjorn Benson
@@ -163,7 +165,7 @@ void *_mymalloc(size_t size, const char *filename, uint lineno, myf MyFlags)
       my_message(EE_OUTOFMEMORY, buff, MYF(ME_BELL+ME_WAITTANG+ME_NOREFRESH));
     }
     DBUG_PRINT("error",("Out of memory, in use: %ld at line %d, '%s'",
-			sf_malloc_max_memory,lineno, filename));
+			(ulong) sf_malloc_max_memory, lineno, filename));
     DBUG_EXECUTE_IF("simulate_out_of_memory",
                     DBUG_SET("-d,simulate_out_of_memory"););
     if (MyFlags & MY_FAE)

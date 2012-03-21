@@ -88,6 +88,8 @@ memory is read outside the allocated blocks. */
 #if 0
 #define UNIV_DEBUG_VALGRIND			/* Enable extra
 						Valgrind instrumentation */
+#define UNIV_BLOB_LIGHT_DEBUG			/* Enable off-page column
+						debugging without UNIV_DEBUG */
 #define UNIV_DEBUG				/* Enable ut_ad() assertions */
 #define UNIV_LIST_DEBUG				/* debug UT_LIST_ macros */
 #define UNIV_MEM_DEBUG				/* detect memory leaks etc */
@@ -233,6 +235,12 @@ typedef unsigned long long int	ullint;
 
 /* Maximum value for a ulint */
 #define ULINT_MAX		((ulint)(-2))
+
+/* THe 'undefined' value for ullint */
+#define ULLINT_UNDEFINED        ((ullint)(-1))
+
+/* Maximum value for a ullint */
+#define ULLINT_MAX		((ullint)(-2))
 
 /* This 'ibool' type is used within Innobase. Remember that different included
 headers may define 'bool' differently. Do not assume that 'bool' is a ulint! */

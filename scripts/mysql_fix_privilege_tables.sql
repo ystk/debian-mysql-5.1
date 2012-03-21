@@ -1,3 +1,19 @@
+-- Copyright (c) 2007, 2008 MySQL AB, 2009 Sun Microsystems, Inc.
+-- Use is subject to license terms.
+-- 
+-- This program is free software; you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation; version 2 of the License.
+-- 
+-- This program is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+-- 
+-- You should have received a copy of the GNU General Public License
+-- along with this program; if not, write to the Free Software
+-- Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
 --
 -- The system tables of MySQL Server
 --
@@ -85,6 +101,21 @@ CREATE TABLE IF NOT EXISTS event ( db char(64) CHARACTER SET utf8 COLLATE utf8_b
 
 CREATE TABLE IF NOT EXISTS ndb_binlog_index (Position BIGINT UNSIGNED NOT NULL, File VARCHAR(255) NOT NULL, epoch BIGINT UNSIGNED NOT NULL, inserts BIGINT UNSIGNED NOT NULL, updates BIGINT UNSIGNED NOT NULL, deletes BIGINT UNSIGNED NOT NULL, schemaops BIGINT UNSIGNED NOT NULL, PRIMARY KEY(epoch)) ENGINE=MYISAM;
 
+# Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+
 # This part converts any old privilege tables to privilege tables suitable
 # for current version of MySQL
 
@@ -145,7 +176,7 @@ ALTER TABLE tables_priv
     COLLATE utf8_general_ci DEFAULT '' NOT NULL,
   MODIFY Table_priv set('Select','Insert','Update','Delete','Create',
                         'Drop','Grant','References','Index','Alter',
-                        'Create View','Show view')
+                        'Create View','Show view','Trigger')
     COLLATE utf8_general_ci DEFAULT '' NOT NULL,
   COMMENT='Table privileges';
 
@@ -670,8 +701,6 @@ ALTER TABLE host MODIFY Trigger_priv enum('N','Y') COLLATE utf8_general_ci DEFAU
 
 ALTER TABLE db ADD Trigger_priv enum('N','Y') COLLATE utf8_general_ci DEFAULT 'N' NOT NULL;
 ALTER TABLE db MODIFY Trigger_priv enum('N','Y') COLLATE utf8_general_ci DEFAULT 'N' NOT NULL;
-
-ALTER TABLE tables_priv MODIFY Table_priv set('Select','Insert','Update','Delete','Create','Drop','Grant','References','Index','Alter','Create View','Show view','Trigger') COLLATE utf8_general_ci DEFAULT '' NOT NULL;
 
 UPDATE user SET Trigger_priv=Super_priv WHERE @hadTriggerPriv = 0;
 

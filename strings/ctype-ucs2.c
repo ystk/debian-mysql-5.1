@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 MySQL AB
+/* Copyright (c) 2003, 2010, Oracle and/or its affiliates. All rights reserved.
    
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -12,8 +12,9 @@
    
    You should have received a copy of the GNU Library General Public
    License along with this library; if not, write to the Free
-   Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-   MA 02111-1307, USA */
+   Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+   MA 02110-1301, USA
+*/
 
 /* UCS2 support. Written by Alexander Barkov <bar@mysql.com> */
 
@@ -203,7 +204,7 @@ static int my_strnncoll_ucs2(CHARSET_INFO *cs,
                              my_bool t_is_prefix)
 {
   int s_res,t_res;
-  my_wc_t UNINIT_VAR(s_wc),t_wc;
+  my_wc_t UNINIT_VAR(s_wc), UNINIT_VAR(t_wc);
   const uchar *se=s+slen;
   const uchar *te=t+tlen;
   MY_UNICASE_INFO **uni_plane= cs->caseinfo;
@@ -317,7 +318,7 @@ static int my_strncasecmp_ucs2(CHARSET_INFO *cs,
 			       const char *s, const char *t,  size_t len)
 {
   int s_res,t_res;
-  my_wc_t UNINIT_VAR(s_wc),t_wc;
+  my_wc_t UNINIT_VAR(s_wc), UNINIT_VAR(t_wc);
   const char *se=s+len;
   const char *te=t+len;
   MY_UNICASE_INFO **uni_plane= cs->caseinfo;
@@ -1384,7 +1385,7 @@ int my_strnncoll_ucs2_bin(CHARSET_INFO *cs,
                           my_bool t_is_prefix)
 {
   int s_res,t_res;
-  my_wc_t UNINIT_VAR(s_wc),t_wc;
+  my_wc_t UNINIT_VAR(s_wc), UNINIT_VAR(t_wc);
   const uchar *se=s+slen;
   const uchar *te=t+tlen;
 

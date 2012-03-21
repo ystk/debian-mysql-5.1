@@ -1,5 +1,5 @@
 /*
-   Copyright 2000-2008 MySQL AB, 2008 Sun Microsystems, Inc.
+   Copyright (c) 2005, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,9 +11,8 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; see the file COPYING. If not, write to the
-   Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-   MA  02110-1301  USA.
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 */
 
 
@@ -308,7 +307,7 @@ SSL::SSL(SSL_CTX* ctx)
             SetError(YasslError(err));
             return;
         }
-        else if (serverSide) {
+        else if (serverSide && !(ctx->GetCiphers().setSuites_)) {
             // remove RSA or DSA suites depending on cert key type
             ProtocolVersion pv = secure_.get_connection().version_;
             

@@ -1,9 +1,5 @@
-stop slave;
-drop table if exists t1,t2,t3,t4,t5,t6,t7,t8,t9;
-reset master;
-reset slave;
-drop table if exists t1,t2,t3,t4,t5,t6,t7,t8,t9;
-start slave;
+include/master-slave.inc
+[connection master]
 DROP DATABASE IF EXISTS mysqltest;
 CREATE DATABASE IF NOT EXISTS mysqltest;
 USE mysqltest;
@@ -65,3 +61,13 @@ c1
 DROP TABLE t1;
 DROP TABLE t2;
 DROP TABLE t3;
+
+# Bug#55616 Killing thread or query during CREATE IF NOT EXISTS makes
+# slave SQL thread abort
+
+CREATE TABLE t1 ( i INT );
+CREATE TABLE IF NOT EXISTS t1
+AS SELECT SLEEP(3);
+KILL QUERY master1;
+DROP TABLE t1;
+include/rpl_end.inc

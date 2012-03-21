@@ -1,4 +1,4 @@
-/* Copyright (c) 2000, 2010 Oracle and/or its affiliates. All rights reserved.
+/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -247,10 +247,10 @@ bool Item_sum::check_sum_func(THD *thd, Item **ref)
           in_sum_func->outer_fields.push_back(field);
         }
         else
-          sel->full_group_by_flag|= NON_AGG_FIELD_USED;
+          sel->set_non_agg_field_used(true);
       }
       if (sel->nest_level > aggr_level &&
-          (sel->full_group_by_flag & SUM_FUNC_USED) &&
+          (sel->agg_func_used()) &&
           !sel->group_list.elements)
       {
         my_message(ER_MIX_OF_GROUP_FUNC_AND_FIELDS,
@@ -259,7 +259,7 @@ bool Item_sum::check_sum_func(THD *thd, Item **ref)
       }
     }
   }
-  aggr_sel->full_group_by_flag|= SUM_FUNC_USED;
+  aggr_sel->set_agg_func_used(true);
   update_used_tables();
   thd->lex->in_sum_func= in_sum_func;
   return FALSE;
@@ -414,26 +414,6 @@ void Item_sum::mark_as_sum_func()
   cur_select->n_sum_items++;
   cur_select->with_sum_func= 1;
   with_sum_func= 1;
-}
-
-
-void Item_sum::make_field(Send_field *tmp_field)
-{
-  if (args[0]->type() == Item::FIELD_ITEM && keep_field_type())
-  {
-    ((Item_field*) args[0])->field->make_field(tmp_field);
-    /* For expressions only col_name should be non-empty string. */
-    char *empty_string= (char*)"";
-    tmp_field->db_name= empty_string;
-    tmp_field->org_table_name= empty_string;
-    tmp_field->table_name= empty_string;
-    tmp_field->org_col_name= empty_string;
-    tmp_field->col_name= name;
-    if (maybe_null)
-      tmp_field->flags&= ~NOT_NULL_FLAG;
-  }
-  else
-    init_make_field(tmp_field, field_type());
 }
 
 
@@ -632,16 +612,12 @@ Item_sum_hybrid::fix_fields(THD *thd, Item **ref)
 
   switch (hybrid_type= item->result_type()) {
   case INT_RESULT:
-    max_length= 20;
-    break;
   case DECIMAL_RESULT:
+  case STRING_RESULT:
     max_length= item->max_length;
     break;
   case REAL_RESULT:
     max_length= float_length(decimals);
-    break;
-  case STRING_RESULT:
-    max_length= item->max_length;
     break;
   case ROW_RESULT:
   default:
@@ -686,8 +662,10 @@ void Item_sum_hybrid::setup_hybrid(Item *item, Item *value_arg)
   value= Item_cache::get_cache(item);
   value->setup(item);
   value->store(value_arg);
+  arg_cache= Item_cache::get_cache(item);
+  arg_cache->setup(item);
   cmp= new Arg_comparator();
-  cmp->set_cmp_func(this, args, (Item**)&value, FALSE);
+  cmp->set_cmp_func(this, (Item**)&arg_cache, (Item**)&value, FALSE);
   collation.set(item->collation);
 }
 
@@ -1659,11 +1637,11 @@ Item *Item_sum_min::copy_or_same(THD* thd)
 bool Item_sum_min::add()
 {
   /* args[0] < value */
-  int res= cmp->compare();
-  if (!args[0]->null_value &&
-      (null_value || res < 0))
+  arg_cache->cache_value();
+  if (!arg_cache->null_value &&
+      (null_value || cmp->compare() < 0))
   {
-    value->store(args[0]);
+    value->store(arg_cache);
     value->cache_value();
     null_value= 0;
   }
@@ -1682,11 +1660,11 @@ Item *Item_sum_max::copy_or_same(THD* thd)
 bool Item_sum_max::add()
 {
   /* args[0] > value */
-  int res= cmp->compare();
-  if (!args[0]->null_value &&
-      (null_value || res > 0))
+  arg_cache->cache_value();
+  if (!arg_cache->null_value &&
+      (null_value || cmp->compare() > 0))
   {
-    value->store(args[0]);
+    value->store(arg_cache);
     value->cache_value();
     null_value= 0;
   }
@@ -2556,7 +2534,8 @@ bool Item_sum_count_distinct::add()
   if (always_null)
     return 0;
   copy_fields(tmp_table_param);
-  copy_funcs(tmp_table_param->items_to_copy);
+  if (copy_funcs(tmp_table_param->items_to_copy, table->in_use))
+    return TRUE;
 
   for (Field **field=table->field ; *field ; field++)
     if ((*field)->is_real_null(0))
@@ -3022,6 +3001,7 @@ Item_func_group_concat(Name_resolution_context *context_arg,
       order_item->item= arg_ptr++;
     }
   }
+  memcpy(orig_args, args, sizeof(Item*) * arg_count);
 }
 
 
@@ -3034,7 +3014,6 @@ Item_func_group_concat::Item_func_group_concat(THD *thd,
   tree(item->tree),
   unique_filter(item->unique_filter),
   table(item->table),
-  order(item->order),
   context(item->context),
   arg_count_order(item->arg_count_order),
   arg_count_field(item->arg_count_field),
@@ -3047,6 +3026,24 @@ Item_func_group_concat::Item_func_group_concat(THD *thd,
 {
   quick_group= item->quick_group;
   result.set_charset(collation.collation);
+
+  /*
+    Since the ORDER structures pointed to by the elements of the 'order' array
+    may be modified in find_order_in_list() called from
+    Item_func_group_concat::setup(), create a copy of those structures so that
+    such modifications done in this object would not have any effect on the
+    object being copied.
+  */
+  ORDER *tmp;
+  if (!(order= (ORDER **) thd->alloc(sizeof(ORDER *) * arg_count_order +
+                                     sizeof(ORDER) * arg_count_order)))
+    return;
+  tmp= (ORDER *)(order + arg_count_order);
+  for (uint i= 0; i < arg_count_order; i++, tmp++)
+  {
+    memcpy(tmp, item->order[i], sizeof(ORDER));
+    order[i]= tmp;
+  }
 }
 
 
@@ -3128,7 +3125,8 @@ bool Item_func_group_concat::add()
   if (always_null)
     return 0;
   copy_fields(tmp_table_param);
-  copy_funcs(tmp_table_param->items_to_copy);
+  if (copy_funcs(tmp_table_param->items_to_copy, table->in_use))
+    return TRUE;
 
   for (uint i= 0; i < arg_count_field; i++)
   {
@@ -3234,7 +3232,6 @@ Item_func_group_concat::fix_fields(THD *thd, Item **ref)
   if (check_sum_func(thd, ref))
     return TRUE;
 
-  memcpy (orig_args, args, sizeof (Item *) * arg_count);
   fixed= 1;
   return FALSE;
 }
@@ -3402,8 +3399,6 @@ String* Item_func_group_concat::val_str(String* str)
 
 void Item_func_group_concat::print(String *str, enum_query_type query_type)
 {
-  /* orig_args is not filled with valid values until fix_fields() */
-  Item **pargs= fixed ? orig_args : args;
   str->append(STRING_WITH_LEN("group_concat("));
   if (distinct)
     str->append(STRING_WITH_LEN("distinct "));
@@ -3411,7 +3406,7 @@ void Item_func_group_concat::print(String *str, enum_query_type query_type)
   {
     if (i)
       str->append(',');
-    pargs[i]->print(str, query_type);
+    orig_args[i]->print(str, query_type);
   }
   if (arg_count_order)
   {
@@ -3420,7 +3415,7 @@ void Item_func_group_concat::print(String *str, enum_query_type query_type)
     {
       if (i)
         str->append(',');
-      pargs[i + arg_count_field]->print(str, query_type);
+      orig_args[i + arg_count_field]->print(str, query_type);
       if (order[i]->asc)
         str->append(STRING_WITH_LEN(" ASC"));
       else

@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2006 MySQL AB
+/*
+   Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /*
   Functions to handle space-packed-records and blobs
@@ -66,9 +68,12 @@ static int _mi_cmp_buffer(File file, const uchar *buff, my_off_t filepos,
 my_bool mi_dynmap_file(MI_INFO *info, my_off_t size)
 {
   DBUG_ENTER("mi_dynmap_file");
-  if (size > (my_off_t) (~((size_t) 0)))
+  if (size == 0 || size > (my_off_t) (~((size_t) 0)))
   {
-    DBUG_PRINT("warning", ("File is too large for mmap"));
+    if (size)
+      DBUG_PRINT("warning", ("File is too large for mmap"));
+    else
+      DBUG_PRINT("warning", ("Do not mmap zero-length"));
     DBUG_RETURN(1);
   }
   /*

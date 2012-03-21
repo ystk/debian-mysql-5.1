@@ -1,4 +1,5 @@
-/* Copyright (C) 2000-2003 MySQL AB
+/*
+   Copyright (c) 2006, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 #include "mysql_priv.h"
 
@@ -1120,8 +1122,7 @@ bool Relay_log_info::cached_charset_compare(char *charset) const
 {
   DBUG_ENTER("Relay_log_info::cached_charset_compare");
 
-  if (bcmp((uchar*) cached_charset, (uchar*) charset,
-           sizeof(cached_charset)))
+  if (memcmp(cached_charset, charset, sizeof(cached_charset)))
   {
     memcpy(const_cast<char*>(cached_charset), charset, sizeof(cached_charset));
     DBUG_RETURN(1);

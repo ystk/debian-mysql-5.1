@@ -1,4 +1,5 @@
-/* Copyright (C) 2000 MySQL AB
+/*
+   Copyright (c) 2000, 2010, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +12,8 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+*/
 
 /*
   Delete of records and truncate of tables.
@@ -51,6 +53,7 @@ bool mysql_delete(THD *thd, TABLE_LIST *table_list, COND *conds,
   THD::killed_state killed_status= THD::NOT_KILLED;
   DBUG_ENTER("mysql_delete");
   bool save_binlog_row_based;
+  bool skip_record;
 
   THD::enum_binlog_query_type query_type=
     thd->lex->sql_command == SQLCOM_TRUNCATE ?
@@ -307,7 +310,7 @@ bool mysql_delete(THD *thd, TABLE_LIST *table_list, COND *conds,
   {
     thd->examined_row_count++;
     // thd->is_error() is tested to disallow delete row on error
-    if (!(select && select->skip_record())&& ! thd->is_error() )
+    if (!select || (!select->skip_record(thd, &skip_record) && !skip_record))
     {
 
       if (triggers_applicable &&

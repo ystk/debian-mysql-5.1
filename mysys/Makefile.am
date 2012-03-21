@@ -1,4 +1,4 @@
-# Copyright (C) 2000-2006 MySQL AB, 2009 Sun Microsystems, Inc.
+# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 # 
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
 
 MYSQLDATAdir =		$(localstatedir)
 MYSQLSHAREdir =		$(pkgdatadir)
@@ -30,8 +30,7 @@ libmysys_a_SOURCES =    my_init.c my_getwd.c mf_getdate.c my_mmap.c \
 			mf_tempdir.c my_lock.c mf_brkhant.c my_alarm.c \
 			my_malloc.c my_realloc.c my_once.c mulalloc.c \
 			my_alloc.c safemalloc.c my_new.cc \
-			my_vle.c my_atomic.c \
-			my_fopen.c my_fstream.c my_getsystime.c \
+			my_vle.c my_fopen.c my_fstream.c my_getsystime.c \
 			my_error.c errors.c my_div.c my_messnc.c \
 			mf_format.c mf_same.c mf_dirname.c mf_fn_ext.c \
 			my_symlink.c my_symlink2.c \
@@ -47,10 +46,10 @@ libmysys_a_SOURCES =    my_init.c my_getwd.c mf_getdate.c my_mmap.c \
 			my_sync.c my_getopt.c my_mkdir.c \
 			default_modify.c default.c \
                         my_compress.c checksum.c \
-			my_net.c my_port.c my_sleep.c \
+			my_net.c my_sleep.c \
 			charset.c charset-def.c my_bitmap.c my_bit.c md5.c \
-			my_gethostbyname.c rijndael.c my_aes.c sha1.c \
-			my_handler.c my_netware.c my_largepage.c \
+			rijndael.c my_aes.c sha1.c \
+			my_compare.c my_netware.c my_largepage.c \
 			my_memmem.c stacktrace.c \
 			my_windac.c my_access.c base64.c my_libwrap.c
 
