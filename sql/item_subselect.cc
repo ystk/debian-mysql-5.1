@@ -1,4 +1,4 @@
-/* Copyright (c) 2002, 2010, Oracle and/or its affiliates. All rights reserved.
+/* Copyright (c) 2002, 2011, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -173,6 +173,7 @@ bool Item_subselect::fix_fields(THD *thd_param, Item **ref)
 
       (*ref)= substitution;
       substitution->name= name;
+      substitution->name_length= name_length;
       if (have_to_be_excluded)
 	engine->exclude();
       substitution= 0;
@@ -1020,7 +1021,13 @@ Item_in_subselect::single_value_transformer(JOIN *join,
                    print_where(item, "rewrite with MIN/MAX", QT_ORDINARY););
       if (thd->variables.sql_mode & MODE_ONLY_FULL_GROUP_BY)
       {
-        DBUG_ASSERT(select_lex->non_agg_field_used());
+        /*
+          If the argument is a field, we assume that fix_fields() has
+          tagged the select_lex with non_agg_field_used.
+          We reverse that decision after this rewrite with MIN/MAX.
+         */
+        if (item->get_arg(0)->type() == Item::FIELD_ITEM)
+          DBUG_ASSERT(select_lex->non_agg_field_used());
         select_lex->set_non_agg_field_used(false);
       }
 
@@ -1128,7 +1135,7 @@ Item_in_subselect::single_value_transformer(JOIN *join,
   }
   else
   {
-    Item *item= (Item*) select_lex->item_list.head();
+    Item *item= (Item*) select_lex->item_list.head()->real_item();
 
     if (select_lex->table_list.elements)
     {

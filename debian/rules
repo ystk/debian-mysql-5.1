@@ -331,7 +331,7 @@ binary:	binary-indep binary-arch
 get-orig-source:
 	@wget -nv -T10 -t3 \
 	  -O /tmp/mysql-$(DEB_UPSTREAM_VERSION).tar.gz \
-	  http://ftp.gwdg.de/pub/misc/mysql/Downloads/MySQL-$(DEB_UPSTREAM_VERSION_MAJOR_MINOR)/mysql-$(DEB_UPSTREAM_VERSION).tar.gz
+	  http://mysql.mirrors.pair.com/Downloads/MySQL-$(DEB_UPSTREAM_VERSION_MAJOR_MINOR)/mysql-$(DEB_UPSTREAM_VERSION).tar.gz
 	@tar xfz /tmp/mysql-$(DEB_UPSTREAM_VERSION).tar.gz -C /tmp
 	@rm -rf /tmp/mysql-$(DEB_UPSTREAM_VERSION)/Docs
 	@rm -rf /tmp/mysql-$(DEB_UPSTREAM_VERSION)/debian

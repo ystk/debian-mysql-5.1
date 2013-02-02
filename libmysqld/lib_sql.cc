@@ -343,6 +343,8 @@ static int emb_stmt_execute(MYSQL_STMT *stmt)
     set_stmt_errmsg(stmt, net);
     DBUG_RETURN(1);
   }
+  else if (stmt->mysql->status == MYSQL_STATUS_GET_RESULT)
+           stmt->mysql->status= MYSQL_STATUS_STATEMENT_GET_RESULT;
   DBUG_RETURN(0);
 }
 
@@ -752,12 +754,6 @@ void THD::clear_data_list()
   data_tail= &first_data;
   free_rows(cur_data);
   cur_data= 0;
-}
-
-void THD::clear_error()
-{
-  if (main_da.is_error())
-    main_da.reset_diagnostics_area();
 }
 
 static char *dup_str_aux(MEM_ROOT *root, const char *from, uint length,

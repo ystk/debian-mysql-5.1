@@ -1,3 +1,29 @@
+mysql-5.1 (5.1.66-0+squeeze1) stable-security; urgency=high
+
+  * SECURITY UPDATE: Unspecified vulnerabilities identified by Oracle in
+    all versions of MySQL 5.1 earlier than 5.1.66.
+    CVE-2012-3163 CVE-2012-3158 CVE-2012-3177 CVE-2012-3166 CVE-2012-3173
+    CVE-2012-3150 CVE-2012-3180 CVE-2012-3167 CVE-2012-3197 CVE-2012-3160
+  * SECURITY UPDATE: Fix a buffer overflow in MySQL versions 5.1.66
+    and earlier which allows an authenticated user to crash the server or
+    execute arbitrary code with the privileges of the mysqld process.
+    Found by the MariaDB development team. CVE-2012-5611
+
+ -- Clint Byrum <clint@ubuntu.com>  Wed, 28 Nov 2012 15:18:32 -0800
+
+mysql-5.1 (5.1.63-0+squeeze1) stable-security; urgency=high
+
+  * SECURITY UPDATE: Unspecified vulnerabilities identified by Oracle:
+    CVE-2012-0583 CVE-2012-1688 CVE-2012-1690 CVE-2012-1703.
+    (Closes: 670636)
+  * SECURITY UPDATE: New upstream version fixes authentication bypass.
+    CVE-2012-2122 (Closes: #677018) 
+  * d/rules: Change get-orig-source to a working mirror.
+  * Source also properly downloaded/repacked with get-orig-source
+    to remove non DFSG compliant Docs files.
+
+ -- Clint Byrum <clint@ubuntu.com>  Tue, 12 Jun 2012 06:12:57 -0700
+
 mysql-5.1 (5.1.61-0+squeeze1) stable-security; urgency=high
 
   * SECURITY UPDATE: Unspecified vulnerabilities identified by Oracle.

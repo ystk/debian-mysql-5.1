@@ -433,6 +433,7 @@ EXTRA_DIST = auto_increment.res auto_increment.tst \
 			grant.pl grant.res test_delayed_insert.pl \
 			pmail.pl mail_to_db.pl table_types.pl \
 			myisam-big-rows.tst \
+			mysql_client_fw.c \
 			CMakeLists.txt
 
 INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include \
@@ -768,6 +769,7 @@ uninstall-am: uninstall-binPROGRAMS
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-binPROGRAMS
 
+mysql_client_test.o:	mysql_client_fw.c
 
 thread_test.o:		thread_test.c
 			$(COMPILE) -c $(INCLUDES) $<

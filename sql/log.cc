@@ -2388,7 +2388,10 @@ bool MYSQL_QUERY_LOG::write(THD *thd, time_t current_time,
     {
       end= strxmov(buff, "# administrator command: ", NullS);
       buff_len= (ulong) (end - buff);
-      my_b_write(&log_file, (uchar*) buff, buff_len);
+      DBUG_EXECUTE_IF("simulate_slow_log_write_error",
+                      {DBUG_SET("+d,simulate_file_write_error");});
+      if(my_b_write(&log_file, (uchar*) buff, buff_len))
+        tmp_errno= errno;
     }
     if (my_b_write(&log_file, (uchar*) sql_text, sql_text_len) ||
         my_b_write(&log_file, (uchar*) ";\n",2) ||
@@ -3194,8 +3197,6 @@ int MYSQL_BIN_LOG::purge_first_log(Relay_log_info* rli, bool included)
   pthread_mutex_lock(&rli->log_space_lock);
   rli->relay_log.purge_logs(to_purge_if_included, included,
                             0, 0, &rli->log_space_total);
-  // Tell the I/O thread to take the relay_log_space_limit into account
-  rli->ignore_log_space_limit= 0;
   pthread_mutex_unlock(&rli->log_space_lock);
 
   /*
