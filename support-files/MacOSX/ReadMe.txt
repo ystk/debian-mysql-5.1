@@ -60,7 +60,7 @@
        of the socket used within your application (for example,
        changing php.ini), or you should configure the socket location
        using a MySQL configuration file and the socket option. For
-       more information, see Section 5.1.2, "Server Command Options."
+       more information, see Section 5.1.3, "Server Command Options."
 
      * You may need (or want) to create a specific mysql user to own
        the MySQL directory and data. On Mac OS X 10.4 and lower you
@@ -350,7 +350,7 @@ shell> sudo /Library/StartupItems/MySQLCOM/MySQLCOM stop
    OS X Server.
 
    Table 2.14. MySQL Directory Layout for Preinstalled MySQL
-   installations on Mac OS X Server
+   Installations on Mac OS X Server
    Directory Contents of Directory
    /usr/bin Client programs
    /var/mysql Log files, databases
@@ -384,3 +384,11 @@ Additional Resources
        available for download (http://support.apple.com/kb/TA25017).
        Alternatively, you can ignore the bundled MySQL server and
        install MySQL from the package or tarball installation.
+
+   Copyright (c) 1997, 2012, Oracle and/or its affiliates. All rights
+   reserved. [1]Legal Notices
+
+References
+
+
+   1. file://localhost/data0/users/mysqldoc/docs-build/mysqldoc/refman-5.1/macosx-installation-nolink.html#legalnotice

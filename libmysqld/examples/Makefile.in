@@ -429,7 +429,7 @@ CLEANFILES = $(client_sources) $(tests_sources) $(BUILT_SOURCES)
 EXTRA_DIST = CMakeLists.txt
 INCLUDES = -I$(top_builddir)/include -I$(top_srcdir)/include -I$(srcdir) \
 		-I$(top_srcdir) -I$(top_srcdir)/client -I$(top_srcdir)/regex \
-		$(openssl_includes)
+		-I$(top_srcdir)/tests $(openssl_includes)
 
 LDADD = @CLIENT_EXTRA_LDFLAGS@ ../libmysqld.a @LIBDL@ $(CXXLDFLAGS) \
                 @NDB_SCI_LIBS@
@@ -778,6 +778,7 @@ link_sources:
 	  @LN_CP_F@ $(top_srcdir)/tests/$$f $$f; \
 	done
 	echo timestamp > link_sources
+mysql_client_test.o:	$(top_srcdir)/tests/mysql_client_fw.c
 
 # Don't update the files from bitkeeper
 %::SCCS/s.%

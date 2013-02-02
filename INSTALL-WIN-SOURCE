@@ -89,8 +89,8 @@
    Note
 
    To compile from the source code on Windows you must use the
-   standard source distribution (for example, mysql-5.1.62.zip) or
-   mysql-5.1.62.tar.gz). You build from the same distribution as used
+   standard source distribution (for example, mysql-5.1.66.zip) or
+   mysql-5.1.66.tar.gz). You build from the same distribution as used
    to build MySQL on Unix, Linux and other platforms. Do not use the
    Windows Source distributions as they do not contain the necessary
    configuration script and other files.
@@ -276,3 +276,11 @@ C:\workdir> xcopy sql-bench\*.* C:\mysql\bench /E
    for binary Windows distributions. This includes creating the
    system tables by running mysql_install_db. For more information,
    see Section 2.3, "Installing MySQL on Microsoft Windows."
+
+   Copyright (c) 1997, 2012, Oracle and/or its affiliates. All rights
+   reserved. [1]Legal Notices
+
+References
+
+
+   1. file://localhost/data0/users/mysqldoc/docs-build/mysqldoc/refman-5.1/windows-source-build-nolink.html#legalnotice

@@ -92,7 +92,7 @@ Chapter 2. Installing and Upgrading MySQL
        using either a Zipped binary or an MSI package, see Section
        2.3, "Installing MySQL on Microsoft Windows."
        For information on using the MySQL Server Instance Config
-       Wizard, see Section 2.3.4, "Using the MySQL Server Instance
+       Wizard, see Section 2.3.5, "Using the MySQL Server Instance
        Config Wizard."
        For details and instructions on building MySQL from source
        code using Microsoft Visual Studio, see Section 2.11.7,
@@ -348,13 +348,13 @@ Development Release
 
      * An internal test suite.  The mysql-test directory contains an
        extensive set of test cases. We run these tests for every
-       server binary. See Section 21.1.2, "The MySQL Test Suite," for
+       server binary. See Section 22.1.2, "The MySQL Test Suite," for
        more information about this test suite.
 
      * The MySQL benchmark suite.  This suite runs a range of common
        queries. It is also a test to determine whether the latest
        batch of optimizations actually made the code faster. See
-       Section 7.1.3, "The MySQL Benchmark Suite."
+       Section 8.1.3, "The MySQL Benchmark Suite."
 
    We also perform additional integration and nonfunctional testing
    of the latest MySQL version in our internal production
@@ -502,12 +502,7 @@ Development Release
 
    If you notice that the MD5 checksum or GPG signatures do not
    match, first try to download the respective package one more time,
-   perhaps from another mirror site. If you repeatedly cannot
-   successfully verify the integrity of the package, please notify us
-   about such incidents, including the full package name and the
-   download site you have been using, at webmaster@mysql.com or
-   build@mysql.com. Do not report downloading problems using the
-   bug-reporting system.
+   perhaps from another mirror site.
 
 2.1.4.1. Verifying the MD5 Checksum
 
@@ -519,8 +514,8 @@ Development Release
 shell> md5sum package_name
 
    Example:
-shell> md5sum mysql-standard-5.1.62-linux-i686.tar.gz
-aaab65abbec64d5e907dcd41b8699945  mysql-standard-5.1.62-linux-i686.ta
+shell> md5sum mysql-standard-5.1.66-linux-i686.tar.gz
+aaab65abbec64d5e907dcd41b8699945  mysql-standard-5.1.66-linux-i686.ta
 r.gz
 
    You should verify that the resulting checksum (the string of
@@ -647,8 +642,8 @@ pg-signature.html
 
    Table 2.1. MySQL Package and Signature Files
        File Type                      File Name
-   Distribution file mysql-standard-5.1.62-linux-i686.tar.gz
-   Signature file    mysql-standard-5.1.62-linux-i686.tar.gz.asc
+   Distribution file mysql-standard-5.1.66-linux-i686.tar.gz
+   Signature file    mysql-standard-5.1.66-linux-i686.tar.gz.asc
 
    Make sure that both files are stored in the same directory and
    then run the following command to verify the signature for the
@@ -656,7 +651,7 @@ pg-signature.html
 shell> gpg --verify package_name.asc
 
    Example:
-shell> gpg --verify mysql-standard-5.1.62-linux-i686.tar.gz.asc
+shell> gpg --verify mysql-standard-5.1.66-linux-i686.tar.gz.asc
 gpg: Signature made Tue 01 Feb 2011 02:38:30 AM CST using DSA key ID
 5072E1F5
 gpg: Good signature from "MySQL Release Engineering <mysql-build@oss.
@@ -676,8 +671,8 @@ oracle.com>"
 shell> rpm --checksig package_name.rpm
 
    Example:
-shell> rpm --checksig MySQL-server-5.1.62-0.glibc23.i386.rpm
-MySQL-server-5.1.62-0.glibc23.i386.rpm: md5 gpg OK
+shell> rpm --checksig MySQL-server-5.1.66-0.glibc23.i386.rpm
+MySQL-server-5.1.66-0.glibc23.i386.rpm: md5 gpg OK
 
    Note
 
@@ -754,7 +749,7 @@ shell> rpm --import mysql_pubkey.asc
 
    MySQL compressed tar file binary distributions have names of the
    form mysql-VERSION-OS.tar.gz, where VERSION is a number (for
-   example, 5.1.62), and OS indicates the type of operating system
+   example, 5.1.66), and OS indicates the type of operating system
    for which the distribution is intended (for example, pc-linux-i686
    or winx64).
 
@@ -919,7 +914,7 @@ Perform Postinstallation Setup
    also run the MySQL server as a Windows service. By using a service
    you can monitor and control the operation of the server through
    the standard Windows service management tools. For more
-   information, see Section 2.3.5.7, "Starting MySQL Server as a
+   information, see Section 2.3.6.7, "Starting MySQL Server as a
    Microsoft Windows Service."
 
    Generally, you should install MySQL on Windows using an account
@@ -938,12 +933,12 @@ Perform Postinstallation Setup
 
      * If you plan to connect to the MySQL server using ODBC, you
        need a Connector/ODBC driver. For more information, including
-       installation and configuration instructions, see Section 20.1,
+       installation and configuration instructions, see Section 21.1,
        "MySQL Connector/ODBC."
 
      * If you plan to use MySQL server with .NET applications, you
        need the Connector/Net driver. For more information, including
-       installation and configuration instructions, see Section 20.2,
+       installation and configuration instructions, see Section 21.2,
        "MySQL Connector/Net."
 
    MySQL distributions for Windows can be downloaded from
@@ -979,7 +974,7 @@ Perform Postinstallation Setup
        in the full Windows MSI Installer package, but does not
        including an installation program.
        For instructions on installing MySQL using the Zip file, see
-       Section 2.3.5, "Installing MySQL on Microsoft Windows Using a
+       Section 2.3.6, "Installing MySQL on Microsoft Windows Using a
        noinstall Zip Archive."
 
      * The source distribution contains all the code and support
@@ -994,7 +989,7 @@ Perform Postinstallation Setup
        If you need tables with a size larger than 4GB, install MySQL
        on an NTFS or newer file system. Do not forget to use MAX_ROWS
        and AVG_ROW_LENGTH when you create tables. See Section
-       12.1.17, "CREATE TABLE Syntax."
+       13.1.17, "CREATE TABLE Syntax."
 
      * MySQL and Virus Checking Software
        Using virus scanning software such as Norton/Symantec
@@ -1016,7 +1011,7 @@ Perform Postinstallation Setup
        temporary directory for MySQL temporary files and add this to
        the virus scanning exclusion list. To do this, add a
        configuration option for the tmpdir parameter to your my.ini
-       configuration file. For more information, see Section 2.3.5.2,
+       configuration file. For more information, see Section 2.3.6.2,
        "Creating an Option File."
 
 2.3.1. MySQL Installation Layout on Microsoft Windows
@@ -1085,7 +1080,7 @@ Perform Postinstallation Setup
 
    In the above table:
 
-     * Yes indiciates that the component is installed by default.
+     * Yes indicates that the component is installed by default.
 
      * No indicates that the component is not installed or included.
 
@@ -1115,7 +1110,7 @@ Perform Postinstallation Setup
    below for reference:
 
      * Windows Essentials: This package has a file name similar to
-       mysql-essential-5.1.62-win32.msi and is supplied as a
+       mysql-essential-5.1.66-win32.msi and is supplied as a
        Microsoft Installer (MSI) package. The package includes the
        minimum set of files needed to install MySQL on Windows,
        including the MySQL Server Instance Config Wizard. This
@@ -1126,7 +1121,7 @@ Perform Postinstallation Setup
        MySQL on Microsoft Windows Using an MSI Package."
 
      * Windows MSI Installer (Complete): This package has a file name
-       similar to mysql-5.1.62-win32.msi and contains all files
+       similar to mysql-5.1.66-win32.msi and contains all files
        needed for a complete Windows installation, including the
        MySQL Server Instance Config Wizard. This package includes
        optional components such as the embedded server and benchmark
@@ -1135,7 +1130,7 @@ Perform Postinstallation Setup
        MySQL on Microsoft Windows Using an MSI Package."
 
      * Without installer: This package has a file name similar to
-       mysql-noinstall-5.1.62-win32.zip and contains all the files
+       mysql-noinstall-5.1.66-win32.zip and contains all the files
        found in the Complete install package, with the exception of
        the MySQL Server Instance Config Wizard. This package does not
        include an automated installer, and must be manually installed
@@ -1150,7 +1145,7 @@ Perform Postinstallation Setup
    When using the MSI installers you can automate the installation
    process. For more information, see Section 2.3.3.2, "Automating
    MySQL Installation on Microsoft Windows using the MSI Package." To
-   automate the creation of a MySQL instance, see Section 2.3.4.13,
+   automate the creation of a MySQL instance, see Section 2.3.5.13,
    "MySQL Server Instance Config Wizard: Creating an Instance from
    the Command Line."
 
@@ -1158,7 +1153,7 @@ Perform Postinstallation Setup
    you must follow. If you choose to install either an Essentials or
    Complete install package, see Section 2.3.3, "Installing MySQL on
    Microsoft Windows Using an MSI Package." If you choose to install
-   a Noinstall archive, see Section 2.3.5, "Installing MySQL on
+   a Noinstall archive, see Section 2.3.6, "Installing MySQL on
    Microsoft Windows Using a noinstall Zip Archive."
 
 2.3.3. Installing MySQL on Microsoft Windows Using an MSI Package
@@ -1390,7 +1385,7 @@ Perform Postinstallation Setup
    directory. In a default installation it contains C:\Program
    Files\MySQL\MySQL Server 5.1\. The Version string contains the
    release number. For example, for an installation of MySQL Server
-   5.1.62, the key contains a value of 5.1.62.
+   5.1.66, the key contains a value of 5.1.66.
 
    These registry keys are used to help external tools identify the
    installed location of the MySQL server, preventing a complete scan
@@ -1497,7 +1492,7 @@ C:\Program Files\MySQL\MySQL Workbench 5.1 OSS
        installation with an open source installer. You cannot upgrade
        an open source installation using the enterprise installer.
 
-   See Section 2.3.7, "Upgrading MySQL Server on Microsoft Windows."
+   See Section 2.3.8, "Upgrading MySQL Server on Microsoft Windows."
 
 2.3.3.2. Automating MySQL Installation on Microsoft Windows using the
 MSI Package
@@ -1516,7 +1511,7 @@ MSI Package
    the command line (or within a script), you need to use the
    msiexec.exe tool. For example, to perform a quiet installation
    (which shows no dialog boxes or progress):
-shell> msiexec /i /quiet mysql-5.1.62.msi
+shell> msiexec /i /quiet mysql-5.1.66.msi
 
    The /i indicates that you want to perform an installation. The
    /quiet option indicates that you want no interactive elements.
@@ -1524,7 +1519,7 @@ shell> msiexec /i /quiet mysql-5.1.62.msi
    To provide a dialog box showing the progress during installation,
    and the dialog boxes providing information on the installation and
    registration of MySQL, use /passive mode instead of /quiet:
-shell> msiexec /i /passive mysql-5.1.62.msi
+shell> msiexec /i /passive mysql-5.1.66.msi
 
    Regardless of the mode of the installation, installing the package
    in this manner performs a 'Typical' installation, and installs the
@@ -1532,10 +1527,10 @@ shell> msiexec /i /passive mysql-5.1.62.msi
 
    You can also use this method to uninstall MySQL by using the
    /uninstall or /x options:
-shell> msiexec /x /quiet mysql-5.1.62.msi
+shell> msiexec /x /quiet mysql-5.1.66.msi
 
    To install MySQL and configure a MySQL instance from the command
-   line, see Section 2.3.4.13, "MySQL Server Instance Config Wizard:
+   line, see Section 2.3.5.13, "MySQL Server Instance Config Wizard:
    Creating an Instance from the Command Line."
 
    For information on using MSI packages to install software
@@ -1591,7 +1586,125 @@ shell> msiexec /x /quiet mysql-5.1.62.msi
        change your folder options to view the hidden file. Choose
        Organize, Folder and search options, Show hidden folders.
 
-2.3.4. Using the MySQL Server Instance Config Wizard
+2.3.4. MySQL Notifier for Microsoft Windows
+
+   The MySQL Notifier for Microsoft Windows is a tool that allows you
+   to monitor and adjust the status of your local MySQL Server
+   instances through an indicator that resides in the system tray.
+   The MySQL Notifier for Microsoft Windows also gives quick access
+   to several MySQL GUI tools (such as MySQL Workbench) through its
+   context menu.
+
+   The MySQL Notifier for Microsoft Windows is installed by MySQL
+   Installer (as of MySQL Installer 5.5.26), and by default it's set
+   up to automatically start when Microsoft Windows is started.
+   Supported versions of Microsoft Windows includes XP and greater.
+
+   Features include:
+
+     * Start, Stop, and Restart instances of the MySQL Server
+
+     * Automatically detect (and add) new MySQL Server instances
+
+     * The Tray icon changes, depending on the status (green/red)
+
+     * Links to other applications like MySQL Workbench, Windows
+       Installer, and the MySQL Utilities
+
+     * If MySQL Workbench is also installed, then the Configure
+       Instance and SQL Editor options are available
+
+   The MySQL Notifier for Microsoft Windows resides in the system
+   tray and provides visual status information for your MySQL Server
+   instances. A green icon is displayed at the top left corner of the
+   tray icon if the current MySQL Server is running, and a red icon
+   is displayed if the service is stopped.
+
+   The MySQL Notifier for Microsoft Windows will automatically add
+   all of the MySQL Services that it finds on the local machine. This
+   is then configurable which includes options to manage individual
+   services. If new services are added to the machine, then MySQL
+   Notifier for Microsoft Windows will recognize and install them if
+   the Automatically add new services that match this pattern option
+   is enabled. This option is enabled by default with the .*mysqld.*
+   pattern. Several Notifications Options exist and are enabled by
+   default, including an option to show when new services are found
+   and added. And uninstalling a service will also remove the service
+   from the MySQL Notifier for Microsoft Windows.
+
+   Clicking the system tray icon will reveal several options,
+   including several that are described above. The following
+   screenshots demonstrate the menu options.
+
+   The Service Instance menu is the main use of MySQL Notifier for
+   Microsoft Windows, as it allows the Stop, Start, and Restart
+   options for a server instance.
+
+   Figure 2.4. MySQL Notifier for Microsoft Windows Service Instance
+   menu
+   MySQL Notifier for Microsoft Windows Service Instance menu
+
+   The Actions menu offers additional actions, which includes several
+   links to external applications (if they are installed).
+   Note
+
+   The main menu will only show the Actions menu when there are no
+   services being monitored by the MySQL Notifier for Microsoft
+   Windows.
+
+   Figure 2.5. MySQL Notifier for Microsoft Windows Actions menu
+   MySQL Notifier for Microsoft Windows Actions menu
+
+   The Actions, Options menu configures MySQL Notifier for Microsoft
+   Windows and are described as:
+
+     * Use colorful status icons: Enables a colorful style of icons
+       for the tray of the MySQL Notifier for Microsoft Windows.
+
+     * Run at Windows Startup: Allows the application to be loaded
+       when Microsoft Windows starts.
+
+     * Automatically Check For Updates Every # Weeks: Checks for a
+       new version of MySQL Notifier for Microsoft Windows, and runs
+       this check every # weeks.
+
+     * Automatically add new services that match this pattern: A
+       custom regular expression that filters the monitored services,
+       and also filters the list of the Microsoft Windows services
+       for the Add New Service dialog.
+
+     * Notify me when a service is automatically added: Will enable a
+       balloon notification when a new service that matches the
+       criteria has been added to the monitored services list.
+
+     * Notify me when a service changes status: Will enable a balloon
+       notification when one of the monitored services experiences a
+       status change.
+
+   Figure 2.6. MySQL Notifier for Microsoft Windows Options menu
+   MySQL Notifier for Microsoft Windows Options menu
+
+   The Actions, Manage Services menu allows manual editing
+   (Add/Delete) of the services (MySQL Server instances) that are
+   being monitored by MySQL Notifier for Microsoft Windows.
+
+   Figure 2.7. MySQL Notifier for Microsoft Windows Service Instance
+   menu
+   MySQL Notifier for Microsoft Windows Manage Services menu
+
+   Adding a service (after clicking Add within the Manage Services
+   window) allows you to select from one of the existing services on
+   the Windows machine, and add it to the list of MySQL monitored
+   services for use within MySQL Notifier for Microsoft Windows. Add
+   a new service by clicking on a service name from the list, and
+   then click OK to accept. It is possible to select multiple
+   services before pressing OK.
+
+   Figure 2.8. MySQL Notifier for Microsoft Windows Adding a new
+   services
+   MySQL Notifier for Microsoft Windows Adding new services
+
+2.3.5. Using the MySQL Server Instance Config Wizard
 
    The MySQL Server Instance Config Wizard helps automate the process
    of configuring your server. It creates a custom MySQL
@@ -1607,10 +1720,10 @@ shell> msiexec /x /quiet mysql-5.1.62.msi
    The workflow sequence for using the MySQL Server Instance Config
    Wizard is shown in the figure below:
 
-   Figure 2.4. MySQL Server Instance Config Wizard Workflow
+   Figure 2.9. MySQL Server Instance Config Wizard Workflow
    MySQL Server Instance Config Wizard Workflow
 
-2.3.4.1. Starting the MySQL Server Instance Config Wizard
+2.3.5.1. Starting the MySQL Server Instance Config Wizard
 
    The MySQL Server Instance Config Wizard is normally started as
    part of the installation process. You should only need to run the
@@ -1656,7 +1769,7 @@ shell> msiexec /x /quiet mysql-5.1.62.msi
    it with a text editor and making any necessary changes. You can
    also modify the server configuration with the
    http://www.mysql.com/products/administrator/ utility. For more
-   information about server configuration, see Section 5.1.2, "Server
+   information about server configuration, see Section 5.1.3, "Server
    Command Options."
 
    MySQL clients and utilities such as the mysql and mysqldump
@@ -1671,7 +1784,7 @@ shell> msiexec /x /quiet mysql-5.1.62.msi
    use the Services application that is supplied as part of the
    Windows Administrator Tools.
 
-2.3.4.2. MySQL Server Instance Config Wizard: Choosing a Maintenance
+2.3.5.2. MySQL Server Instance Config Wizard: Choosing a Maintenance
 Option
 
    If the MySQL Server Instance Config Wizard detects an existing
@@ -1697,7 +1810,7 @@ Option
    Configuration Type dialog where you can choose the type of
    installation that you wish to configure.
 
-2.3.4.3. MySQL Server Instance Config Wizard: Choosing a
+2.3.5.3. MySQL Server Instance Config Wizard: Choosing a
 Configuration Type
 
    When you start the MySQL Server Instance Config Wizard for a new
@@ -1729,11 +1842,11 @@ Configuration Type
 
    To complete the Standard Configuration, please refer to the
    sections on Service Options and Security Options in Section
-   2.3.4.10, "MySQL Server Instance Config Wizard: The Service
-   Options Dialog," and Section 2.3.4.11, "MySQL Server Instance
+   2.3.5.10, "MySQL Server Instance Config Wizard: The Service
+   Options Dialog," and Section 2.3.5.11, "MySQL Server Instance
    Config Wizard: The Security Options Dialog," respectively.
 
-2.3.4.4. MySQL Server Instance Config Wizard: The Server Type Dialog
+2.3.5.4. MySQL Server Instance Config Wizard: The Server Type Dialog
 
    There are three different server types available to choose from.
    The server type that you choose affects the decisions that the
@@ -1768,7 +1881,7 @@ Configuration Type
    and values that were created during the execution of the Config
    Wizard.
 
-2.3.4.5. MySQL Server Instance Config Wizard: The Database Usage
+2.3.5.5. MySQL Server Instance Config Wizard: The Database Usage
 Dialog
 
    The Database Usage dialog enables you to indicate the storage
@@ -1820,7 +1933,7 @@ skip-innodb
    resources dedicated to MyISAM. The remaining resources are
    allocated to InnoDB.
 
-2.3.4.6. MySQL Server Instance Config Wizard: The InnoDB Tablespace
+2.3.5.6. MySQL Server Instance Config Wizard: The InnoDB Tablespace
 Dialog
 
    Some users may want to locate the InnoDB tablespace files in a
@@ -1840,7 +1953,7 @@ Dialog
    situation you must move the existing tablespace files to the new
    location manually before starting the server.
 
-2.3.4.7. MySQL Server Instance Config Wizard: The Concurrent
+2.3.5.7. MySQL Server Instance Config Wizard: The Concurrent
 Connections Dialog
 
    To prevent the server from running out of resources, it is
@@ -1866,7 +1979,7 @@ Connections Dialog
        provided, or enter the maximum number of connections into the
        drop-down box if the number you desire is not listed.
 
-2.3.4.8. MySQL Server Instance Config Wizard: The Networking and
+2.3.5.8. MySQL Server Instance Config Wizard: The Networking and
 Strict Mode Options Dialog
 
    Use the Networking Options dialog to enable or disable TCP/IP
@@ -1889,9 +2002,9 @@ Strict Mode Options Dialog
    database management systems. If you run applications that rely on
    MySQL's old "forgiving" behavior, make sure to either adapt those
    applications or to disable strict mode. For more information about
-   strict mode, see Section 5.1.6, "Server SQL Modes."
+   strict mode, see Section 5.1.7, "Server SQL Modes."
 
-2.3.4.9. MySQL Server Instance Config Wizard: The Character Set
+2.3.5.9. MySQL Server Instance Config Wizard: The Character Set
 Dialog
 
    The MySQL server supports multiple character sets and it is
@@ -1915,7 +2028,7 @@ Dialog
        manually. Choose the desired character set from the provided
        drop-down list.
 
-2.3.4.10. MySQL Server Instance Config Wizard: The Service Options
+2.3.5.10. MySQL Server Instance Config Wizard: The Service Options
 Dialog
 
    On Windows platforms, the MySQL server can be installed as a
@@ -1958,7 +2071,7 @@ Dialog
    automatically at startup, uncheck the box next to the Launch the
    MySQL Server Automatically option.
 
-2.3.4.11. MySQL Server Instance Config Wizard: The Security Options
+2.3.5.11. MySQL Server Instance Config Wizard: The Security Options
 Dialog
 
    The content of the security options portion of the MySQL Server
@@ -2007,7 +2120,7 @@ Dialog
    can decrease server security and cause login and permission
    difficulties. For this reason, it is not recommended.
 
-2.3.4.12. MySQL Server Instance Config Wizard: The Confirmation
+2.3.5.12. MySQL Server Instance Config Wizard: The Confirmation
 Dialog
 
    The final dialog in the MySQL Server Instance Config Wizard is the
@@ -2044,7 +2157,7 @@ Dialog
    tasks, it displays a summary. Click the Finish button to exit the
    MySQL Server Config Wizard.
 
-2.3.4.13. MySQL Server Instance Config Wizard: Creating an Instance
+2.3.5.13. MySQL Server Instance Config Wizard: Creating an Instance
 from the Command Line
 
    In addition to using the GUI interface to the MySQL Server
@@ -2109,30 +2222,30 @@ from the Command Line
    AddBinToPath={yes | no} Specifies whether to add the binary
    directory of MySQL to the standard PATH environment variable
    ServerType={DEVELOPMENT | SERVER | DEDICATED} Specify the server
-   type. For more information, see Section 2.3.4.4, "MySQL Server
+   type. For more information, see Section 2.3.5.4, "MySQL Server
    Instance Config Wizard: The Server Type Dialog"
    DatabaseType={MIXED | INNODB | MYISAM} Specify the default
-   database type. For more information, see Section 2.3.4.5, "MySQL
+   database type. For more information, see Section 2.3.5.5, "MySQL
    Server Instance Config Wizard: The Database Usage Dialog"
    ConnectionUsage={DSS | OLTP} Specify the type of connection
    support, this automates the setting for the number of concurrent
    connections (see the ConnectionCount parameter). For more
-   information, see Section 2.3.4.7, "MySQL Server Instance Config
+   information, see Section 2.3.5.7, "MySQL Server Instance Config
    Wizard: The Concurrent Connections Dialog"
    ConnectionCount=# Specify the number of concurrent connections to
-   support. For more information, see Section 2.3.4.4, "MySQL Server
+   support. For more information, see Section 2.3.5.4, "MySQL Server
    Instance Config Wizard: The Server Type Dialog"
    SkipNetworking={yes | no} Specify whether network support should
    be supported. Specifying yes disables network access altogether
    Port=# Specify the network port number to use for network
-   connections. For more information, see Section 2.3.4.8, "MySQL
+   connections. For more information, see Section 2.3.5.8, "MySQL
    Server Instance Config Wizard: The Networking and Strict Mode
    Options Dialog"
    StrictMode={yes | no} Specify whether to use the strict SQL mode.
-   For more information, see Section 2.3.4.8, "MySQL Server Instance
+   For more information, see Section 2.3.5.8, "MySQL Server Instance
    Config Wizard: The Networking and Strict Mode Options Dialog"
    Charset=$ Specify the default character set. For more information,
-   see Section 2.3.4.9, "MySQL Server Instance Config Wizard: The
+   see Section 2.3.5.9, "MySQL Server Instance Config Wizard: The
    Character Set Dialog"
    RootPassword=$ Specify the root password
    RootCurrentPassword=$ Specify the current root password then
@@ -2149,7 +2262,7 @@ from the Command Line
    service name MySQL51 and setting the root password to 1234.
 shell> MySQLInstanceConfig.exe -i -q "-lC:\mysql_install_log.txt" »
    "-nMySQL Server 5.1" "-pC:\Program Files\MySQL\MySQL Server 5.1" -
-v5.1.62 »
+v5.1.66 »
    "-tmy-template.ini" "-cC:\mytest.ini" ServerType=DEVELOPMENT Datab
 aseType=MIXED »
    ConnectionUsage=DSS Port=3311 ServiceName=MySQL51 RootPassword=123
@@ -2165,7 +2278,7 @@ Date: 2009-10-27 17:07:21
 Installing service ...
 
 Product Name:         MySQL Server 5.1
-Version:              5.1.62
+Version:              5.1.66
 Installation Path:    C:\Program Files\MySQL\MySQL Server 5.1\
 
 Creating configuration file C:\mytest.ini using template my-template.
@@ -2208,7 +2321,7 @@ Windows service MySQL51 installed.
    "Automating MySQL Installation on Microsoft Windows using the MSI
    Package."
 
-2.3.5. Installing MySQL on Microsoft Windows Using a noinstall Zip
+2.3.6. Installing MySQL on Microsoft Windows Using a noinstall Zip
 Archive
 
    Users who are installing from the noinstall package can use the
@@ -2227,12 +2340,12 @@ Archive
 
    This process is described in the sections that follow.
 
-2.3.5.1. Extracting the Install Archive
+2.3.6.1. Extracting the Install Archive
 
    To install MySQL manually, do the following:
 
     1. If you are upgrading from a previous version please refer to
-       Section 2.3.7, "Upgrading MySQL Server on Microsoft Windows,"
+       Section 2.3.8, "Upgrading MySQL Server on Microsoft Windows,"
        before beginning the upgrade process.
 
     2. Make sure that you are logged in as a user with administrator
@@ -2243,7 +2356,7 @@ Archive
        installs MySQL under C:\Program Files\MySQL. If you do not
        install MySQL at C:\mysql, you must specify the path to the
        install directory during startup or in an option file. See
-       Section 2.3.5.2, "Creating an Option File."
+       Section 2.3.6.2, "Creating an Option File."
 
     4. Extract the install archive to the chosen installation
        location using your preferred Zip archive tool. Some tools may
@@ -2252,7 +2365,7 @@ Archive
        contents of the subfolder into the chosen installation
        location.
 
-2.3.5.2. Creating an Option File
+2.3.6.2. Creating an Option File
 
    If you need to specify startup options when you run the server,
    you can indicate them on the command line or place them in an
@@ -2284,8 +2397,8 @@ C:\> echo %WINDIR%
    file. Whichever option file you use, it must be a plain text file.
 
    You can also make use of the example option files included with
-   your MySQL distribution; see Section 4.2.3.3.2, "Preconfigured
-   Option Files."
+   your MySQL distribution; see Section 5.1.2, "Server Configuration
+   Defaults."
 
    An option file can be created and modified with any text editor,
    such as Notepad. For example, if MySQL is installed in E:\mysql
@@ -2327,7 +2440,7 @@ datadir=E:\\mydata\\data
     2. Use a --datadir option to specify the new data directory
        location each time you start the server.
 
-2.3.5.3. Selecting a MySQL Server Type
+2.3.6.3. Selecting a MySQL Server Type
 
    The following table shows the available servers for Windows in
    MySQL 5.1.20 and earlier.
@@ -2386,7 +2499,7 @@ datadir=E:\\mydata\\data
    mysqld-debug, make the appropriate substitutions in the commands
    that are shown in the examples.
 
-2.3.5.4. Starting MySQL Server on Microsoft Windows for the First
+2.3.6.4. Starting MySQL Server on Microsoft Windows for the First
 Time
 
    This section gives a general overview of starting the MySQL
@@ -2412,7 +2525,7 @@ Time
    option.
 
    For information about which server binary to run, see Section
-   2.3.5.3, "Selecting a MySQL Server Type."
+   2.3.6.3, "Selecting a MySQL Server Type."
 
    Testing is best done from a command prompt in a console window (or
    "DOS window"). In this way you can have the server display status
@@ -2449,7 +2562,7 @@ InnoDB: foreign key constraint system tables created
    something like this, which indicates that the server is ready to
    service client connections:
 mysqld: ready for connections
-Version: '5.1.62'  socket: ''  port: 3306
+Version: '5.1.66'  socket: ''  port: 3306
 
    The server continues to write to the console any further
    diagnostic output it produces. You can open a new console window
@@ -2466,7 +2579,7 @@ Version: '5.1.62'  socket: ''  port: 3306
    passwords for them using the instructions in Section 2.12,
    "Postinstallation Setup and Testing."
 
-2.3.5.5. Starting MySQL Server from the Windows Command Line
+2.3.6.5. Starting MySQL Server from the Windows Command Line
 
    The MySQL server can be started manually from the command line.
    This can be done on any version of Windows.
@@ -2506,13 +2619,13 @@ C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysqladmin" -u root
    The last option is to start mysqld with the --standalone and
    --debug options. In this case, mysqld writes a log file
    C:\mysqld.trace that should contain the reason why mysqld doesn't
-   start. See MySQL Internals: Porting
-   (http://forge.mysql.com/wiki/MySQL_Internals_Porting).
+   start. See MySQL Internals: Porting to Other Systems
+   (http://dev.mysql.com/doc/internals/en/porting.html).
 
    Use mysqld --verbose --help to display all the options that mysqld
    supports.
 
-2.3.5.6. Customizing the PATH for MySQL Tools
+2.3.6.6. Customizing the PATH for MySQL Tools
 
    To make it easier to invoke MySQL programs, you can add the path
    name of the MySQL bin directory to your Windows system PATH
@@ -2554,7 +2667,7 @@ C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysqladmin" -u root
    existing PATH value can leave you with a malfunctioning or even
    unusable system.
 
-2.3.5.7. Starting MySQL Server as a Microsoft Windows Service
+2.3.6.7. Starting MySQL Server as a Microsoft Windows Service
 
    On Windows, the recommended way to run MySQL is to install it as a
    Windows service, whereby MySQL starts and stops automatically when
@@ -2639,8 +2752,9 @@ C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysqld" --install
 
      * If the service-installation command specifies a
        --defaults-file option after the service name, the server
-       reads options only from the [mysqld] group of the named file
-       and ignores the standard option files.
+       reads options the same way as described in the previous item,
+       except that it reads options only from the the named file and
+       ignores the standard option files.
 
    As a more complex example, consider the following command:
 C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysqld"
@@ -2690,14 +2804,14 @@ anual
 C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysqld" --remove
 
    If mysqld is not running as a service, you can start it from the
-   command line. For instructions, see Section 2.3.5.5, "Starting
+   command line. For instructions, see Section 2.3.6.5, "Starting
    MySQL Server from the Windows Command Line."
 
-   Please see Section 2.3.6, "Troubleshooting a Microsoft Windows
+   Please see Section 2.3.7, "Troubleshooting a Microsoft Windows
    MySQL Server Installation," if you encounter difficulties during
    installation.
 
-2.3.5.8. Testing The MySQL Server Installation on Microsoft Windows
+2.3.6.8. Testing The MySQL Server Installation on Microsoft Windows
 
    You can test whether the MySQL server is working by executing any
    of the following commands:
@@ -2736,7 +2850,7 @@ C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysql" test
    For more information about mysqlshow, see Section 4.5.6,
    "mysqlshow --- Display Database, Table, and Column Information."
 
-2.3.6. Troubleshooting a Microsoft Windows MySQL Server Installation
+2.3.7. Troubleshooting a Microsoft Windows MySQL Server Installation
 
    When installing and running MySQL for the first time, you may
    encounter certain errors that prevent the MySQL server from
@@ -2744,13 +2858,16 @@ C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysql" test
    correct some of these errors.
 
    Your first resource when troubleshooting server issues is the
-   error log. The MySQL server uses the error log to record
-   information relevant to the error that prevents the server from
-   starting. The error log is located in the data directory specified
-   in your my.ini file. The default data directory location is
-   C:\Program Files\MySQL\MySQL Server 5.1\data, or
+   error log
+   (http://dev.mysql.com/doc/refman/5.5/en/glossary.html#glos_error_l
+   og). The MySQL server uses the error log to record information
+   relevant to the error that prevents the server from starting. The
+   error log is located in the data directory
+   (http://dev.mysql.com/doc/refman/5.5/en/glossary.html#glos_data_di
+   rectory) specified in your my.ini file. The default data directory
+   location is C:\Program Files\MySQL\MySQL Server 5.1\data, or
    C:\ProgramData\Mysql on Windows 7 and Windows Server 2008. The
-   C:\ProgramData diectory is hidden by default. You need to change
+   C:\ProgramData directory is hidden by default. You need to change
    your folder options to see the directory and contents. For more
    information on the error log and understanding the content, see
    Section 5.2.2, "The Error Log."
@@ -2759,7 +2876,7 @@ C:\> "C:\Program Files\MySQL\MySQL Server 5.1\bin\mysql" test
    console messages displayed when the MySQL service is starting. Use
    the NET START MySQL command from the command line after installing
    mysqld as a service to see any error messages regarding the
-   starting of the MySQL server as a service. See Section 2.3.5.7,
+   starting of the MySQL server as a service. See Section 2.3.6.7,
    "Starting MySQL Server as a Microsoft Windows Service."
 
    The following examples show other common error messages you may
@@ -2812,7 +2929,7 @@ datadir=D:\\MySQLdata
        If you change the datadir value in your MySQL configuration
        file, you must move the contents of the existing MySQL data
        directory before restarting the MySQL server.
-       See Section 2.3.5.2, "Creating an Option File."
+       See Section 2.3.6.2, "Creating an Option File."
 
      * If you reinstall or upgrade MySQL without first stopping and
        removing the existing MySQL service and install MySQL using
@@ -2835,7 +2952,7 @@ C:\> sc delete mysql
        http://www.microsoft.com/windows2000/techinfo/reskit/tools/exi
        sting/delsrv-o.asp and use the delsrv mysql syntax.
 
-2.3.7. Upgrading MySQL Server on Microsoft Windows
+2.3.8. Upgrading MySQL Server on Microsoft Windows
 
    This section lists some of the steps you should take when
    upgrading MySQL on Windows.
@@ -2845,7 +2962,7 @@ C:\> sc delete mysql
        Windows.
 
     2. You should always back up your current MySQL installation
-       before performing an upgrade. See Section 6.2, "Database
+       before performing an upgrade. See Section 7.2, "Database
        Backup Methods."
 
     3. Download the latest Windows distribution of MySQL from
@@ -2896,7 +3013,7 @@ C:\> C:\mysql\bin\mysqld --remove
 
     9. If you were running MySQL as a Windows service and you had to
        remove the service earlier in this procedure, reinstall the
-       service. (See Section 2.3.5.7, "Starting MySQL Server as a
+       service. (See Section 2.3.6.7, "Starting MySQL Server as a
        Microsoft Windows Service.")
    10. Restart the server. For example, use NET START MySQL if you
        run MySQL as a service, or invoke mysqld directly otherwise.
@@ -2905,10 +3022,10 @@ C:\> C:\mysql\bin\mysqld --remove
        tables if they have changed so that you can take advantage of
        any new capabilities. See Section 4.4.8, "mysql_upgrade ---
        Check Tables for MySQL Upgrade."
-   12. If you encounter errors, see Section 2.3.6, "Troubleshooting a
+   12. If you encounter errors, see Section 2.3.7, "Troubleshooting a
        Microsoft Windows MySQL Server Installation."
 
-2.3.8. MySQL Server on Microsoft Windows Postinstallation Procedures
+2.3.9. MySQL Server on Microsoft Windows Postinstallation Procedures
 
    On Windows, you need not create the data directory and the grant
    tables. MySQL Windows distributions include the grant tables with
@@ -2923,7 +3040,7 @@ C:\> C:\mysql\bin\mysqld --remove
    Before setting up passwords, you might want to try running some
    client programs to make sure that you can connect to the server
    and that it is operating properly. Make sure that the server is
-   running (see Section 2.3.5.4, "Starting MySQL Server on Microsoft
+   running (see Section 2.3.6.4, "Starting MySQL Server on Microsoft
    Windows for the First Time"), and then issue the following
    commands to verify that you can retrieve information from the
    server. You may need to specify directory different from
@@ -3013,7 +3130,7 @@ C:\> C:\mysql\bin\mysql -e "SELECT Host,Db,User FROM mysql.db"
 
    If you are running a version of Windows that supports services,
    you can set up the MySQL server to run automatically when Windows
-   starts. See Section 2.3.5.7, "Starting MySQL Server as a Microsoft
+   starts. See Section 2.3.6.7, "Starting MySQL Server as a Microsoft
    Windows Service."
 
 2.4. Installing MySQL on Mac OS X
@@ -3077,7 +3194,7 @@ C:\> C:\mysql\bin\mysql -e "SELECT Host,Db,User FROM mysql.db"
        of the socket used within your application (for example,
        changing php.ini), or you should configure the socket location
        using a MySQL configuration file and the socket option. For
-       more information, see Section 5.1.2, "Server Command Options."
+       more information, see Section 5.1.3, "Server Command Options."
 
      * You may need (or want) to create a specific mysql user to own
        the MySQL directory and data. On Mac OS X 10.4 and lower you
@@ -3367,7 +3484,7 @@ shell> sudo /Library/StartupItems/MySQLCOM/MySQLCOM stop
    OS X Server.
 
    Table 2.14. MySQL Directory Layout for Preinstalled MySQL
-   installations on Mac OS X Server
+   Installations on Mac OS X Server
    Directory Contents of Directory
    /usr/bin Client programs
    /var/mysql Log files, databases
@@ -3478,7 +3595,10 @@ Additional Resources
    capabilities, and conventions (including communication setup), and
    that the instructions in this manual do not necessarily apply to
    installing them. The vendor's instructions should be consulted
-   instead.
+   instead. Because of these differences, RPM packages built by us
+   check whether such RPMs built by other vendors are installed. If
+   so, the RPM does not install and produces a message explaining
+   this.
 
    In most cases, you need to install only the MySQL-server and
    MySQL-client packages to get a functional MySQL installation. The
@@ -3496,7 +3616,7 @@ Additional Resources
    all installed RPMs, including the Server and Client RPMs.
 
    For more information about installing MySQL Cluster from RPMs, see
-   Section 16.2.1.2, "Installing MySQL Cluster from RPM."
+   Section 17.2.1.2, "Installing MySQL Cluster from RPM."
 
    For upgrades, if your installation was originally produced by
    installing multiple RPM packages, it is best to upgrade all the
@@ -3563,7 +3683,7 @@ Additional Resources
        The MySQL-ndb-tools RPM requires a working installation of
        perl. Prior to MySQL 5.1.18, the DBI and HTML::Template
        packages were also required. See Section 2.15, "Perl
-       Installation Notes," and Section 16.4.21, "ndb_size.pl ---
+       Installation Notes," and Section 17.4.22, "ndb_size.pl ---
        NDBCLUSTER Size Requirement Estimator," for more information.
 
      * MySQL-test-VERSION.glibc23.i386.rpm
@@ -3940,7 +4060,7 @@ root-shell> emerge --config =dev-db/mysql-5.1.46
        in /etc/init.d/mysql.
        To enable MySQL to start automatically at the normal (default)
        run levels, you can use:
-root-shell> rc-update add default mysql
+root-shell> rc-update add mysql default
 
 2.6. Installing MySQL on Solaris and OpenSolaris
 
@@ -4026,15 +4146,15 @@ Error in accept: Protocol error
    To use this package, download the corresponding
    mysql-VERSION-solaris10-PLATFORM.pkg.gz file, then decompress it.
    For example:
-shell> gunzip mysql-5.1.62-solaris10-x86_64.pkg.gz
+shell> gunzip mysql-5.1.66-solaris10-x86_64.pkg.gz
 
    To install a new package, use pkgadd and follow the onscreen
    prompts. You must have root privileges to perform this operation:
-shell> pkgadd -d mysql-5.1.62-solaris10-x86_64.pkg
+shell> pkgadd -d mysql-5.1.66-solaris10-x86_64.pkg
 
 The following packages are available:
   1  mysql     MySQL Community Server (GPL)
-               (i86pc) 5.1.62
+               (i86pc) 5.1.66
 
 Select package(s) you wish to process (or 'all' to process
 all packages). (default: all) [?,??,q]:
@@ -4071,7 +4191,7 @@ shell> ln /etc/init.d/mysql /etc/rc0.d/K02mysql
    The typical upgrade sequence is therefore:
 shell> mysqladmin shutdown
 shell> pkgrm mysql
-shell> pkgadd -d mysql-5.1.62-solaris10-x86_64.pkg
+shell> pkgadd -d mysql-5.1.66-solaris10-x86_64.pkg
 shell> mysql_upgrade
 shell> mysqld_safe &
 
@@ -4375,8 +4495,8 @@ root-shell> mysqld_safe --user=mysql &
 CRTSAVF FILE(QGPL/MYSQLINST) TESXT('MySQL Save file')
 
     2. Download the MySQL installation save file in 32-bit
-       (mysql-5.1.62-i5os-power-32bit.savf) or 64-bit
-       (mysql-5.1.62-i5os-power-64bit.savf) from MySQL Downloads
+       (mysql-5.1.66-i5os-power-32bit.savf) or 64-bit
+       (mysql-5.1.66-i5os-power-64bit.savf) from MySQL Downloads
        (http://dev.mysql.com/downloads).
 
     3. You need to FTP the downloaded .savf file directly into the
@@ -4385,7 +4505,7 @@ CRTSAVF FILE(QGPL/MYSQLINST) TESXT('MySQL Save file')
        System i machine:
 ftp> bin
 ftp> cd qgpl
-ftp> put mysql-5.1.62-i5os-power.savf mysqlinst
+ftp> put mysql-5.1.66-i5os-power.savf mysqlinst
 
     4. Log into the System i server using a user in the *SECOFR
        class, such as the QSECOFR user ID.
@@ -4465,8 +4585,8 @@ DLTLIB LIB(MYSQLINST)
        not already exist. This is the directory that the MySQL server
        will be installed into, inside a directory with a name
        matching the version and release. For example, if installing
-       MySQL 5.1.62 with the DIR set to /QOpenSys/usr/local/ would
-       result in /QOpenSys/usr/local/mysql-5.1.62-i5os-power64 and a
+       MySQL 5.1.66 with the DIR set to /QOpenSys/usr/local/ would
+       result in /QOpenSys/usr/local/mysql-5.1.66-i5os-power64 and a
        symbolic link to this directory will be created in
        /QOpenSys/usr/local/mysql.
 
@@ -4492,7 +4612,7 @@ DLTLIB LIB(MYSQLINST)
      * CURINST('path to previous install'): The full path to the
        installation that is being upgraded. For example an
        installation in /QOpenSys/usr/local/ will be
-       /QOpenSys/usr/local/mysql-5.1.62-i5os-power64. Failure to
+       /QOpenSys/usr/local/mysql-5.1.66-i5os-power64. Failure to
        specify this option may result in corruption of your existing
        data files.
 
@@ -4500,7 +4620,7 @@ DLTLIB LIB(MYSQLINST)
 MYSQLINST/UPGMYSQL DIR('/QOpenSys/usr/local/') DATADIR('/QOpenSys/mys
 ql/data') »
      USERPRF(MYSQL) MYSQLUSR('root') PASSWORD('root') CURINST('/QOpen
-Sys/usr/local/mysql-5.1.62-i5os-power64')
+Sys/usr/local/mysql-5.1.66-i5os-power64')
 
    You should receive a Program Message indicating UPGRADE
    SUCCESSFUL! upon completion or an error message if there is a
@@ -4593,7 +4713,7 @@ CHLAND.IBM.COM.pid
    compressed tar files, Zip archives, or RPM packages. Distribution
    files have names of the form mysql-VERSION.tar.gz,
    mysql-VERSION.zip, or mysql-VERSION.rpm, where VERSION is a number
-   like 5.1.62.
+   like 5.1.66.
 
    To perform a MySQL installation using the source code:
 
@@ -4771,8 +4891,8 @@ shell> ./configure --prefix=/usr/local/mysql
        options. For example, if you need to debug mysqld or a MySQL
        client, run configure with the --with-debug option, and then
        recompile and link your clients with the new client library.
-       See MySQL Internals: Porting
-       (http://forge.mysql.com/wiki/MySQL_Internals_Porting).
+       See MySQL Internals: Porting to Other Systems
+       (http://dev.mysql.com/doc/internals/en/porting.html).
        Run ./configure --help for a list of options. Section 2.11.4,
        "MySQL Source-Configuration Options," discusses some of the
        more useful options.
@@ -4853,9 +4973,6 @@ shell> /usr/local/mysql/bin/mysqld_safe --user=mysql &
    Engineering (http://launchpad.net/~mysql) page. For the
    repositories related only to MySQL Server, see the MySQL Server
    (http://launchpad.net/mysql-server) page.
-
-   For information about using Bazaar with MySQL, see
-   http://forge.mysql.com/wiki/MySQL_Bazaar_Howto.
 
    To build under Unix/Linux, you must have the following tools
    installed:
@@ -4992,12 +5109,12 @@ shell> make
        --with-unix-socket-path options different from those used by
        your production server. For additional information about
        preventing multiple servers from interfering with each other,
-       see Section 5.6, "Running Multiple MySQL Instances on One
+       see Section 5.3, "Running Multiple MySQL Instances on One
        Machine."
 
     5. Play hard with your new installation. For example, try to make
        new features crash. Start by running make test. See Section
-       21.1.2, "The MySQL Test Suite."
+       22.1.2, "The MySQL Test Suite."
 
     6. If you have gotten to the make stage, but the distribution
        does not compile, please enter the problem into our bugs
@@ -5354,15 +5471,15 @@ shell> ./configure --with-collation=COLLATION
           + all to include all character sets into the binaries
        Clients that want to convert characters between the server and
        the client should use the SET NAMES statement. See Section
-       9.1.4, "Connection Character Sets and Collations."
+       10.1.4, "Connection Character Sets and Collations."
 
      * To configure MySQL with debugging code, use the --with-debug
        option:
 shell> ./configure --with-debug
        This causes a safe memory allocator to be included that can
        find some errors and that provides output about what is
-       happening. See MySQL Internals: Porting
-       (http://forge.mysql.com/wiki/MySQL_Internals_Porting).
+       happening. See MySQL Internals: Porting to Other Systems
+       (http://dev.mysql.com/doc/internals/en/porting.html).
        As of MySQL 5.1.12, using --with-debug to configure MySQL with
        debugging support enables you to use the
        --debug="d,parser_debug" option when you start the server.
@@ -5385,8 +5502,8 @@ shell> ./configure --with-debug
        For a description of the Debug Sync facility and how to use
        synchronization points, see MySQL Internals: Test
        Synchronization
-       (http://forge.mysql.com/wiki/MySQL_Internals_Test_Synchronizat
-       ion).
+       (http://dev.mysql.com/doc/internals/en/test-synchronization.ht
+       ml).
        The --enable-debug-sync and --disable-debug-sync options were
        added in MySQL 5.1.41.
 
@@ -5394,7 +5511,7 @@ shell> ./configure --with-debug
        thread-safe version of the MySQL client library with the
        --enable-thread-safe-client configure option. This creates a
        libmysqlclient_r library with which you should link your
-       threaded applications. See Section 20.9.16.2, "How to Write a
+       threaded applications. See Section 21.9.16.2, "How to Write a
        Threaded Client."
 
      * Some features require that the server be built with
@@ -5433,7 +5550,7 @@ shell> ./configure --with-debug
      * When given with --enable-community-features, the
        --enable-profiling option enables the statement profiling
        capability exposed by the SHOW PROFILE and SHOW PROFILES
-       statements. (See Section 12.7.5.33, "SHOW PROFILES Syntax.")
+       statements. (See Section 13.7.5.34, "SHOW PROFILES Syntax.")
        This option was added in MySQL 5.1.24. It is enabled by
        default as of MySQL 5.1.28; to disable it, use
        --disable-profiling.
@@ -5441,9 +5558,9 @@ shell> ./configure --with-debug
      * See Section 2.1, "General Installation Guidance," for options
        that pertain to particular operating systems.
 
-     * See Section 5.5.6.2, "Using SSL Connections," for options that
-       pertain to configuring MySQL to support secure (encrypted)
-       connections.
+     * See Section 6.3.6.2, "Configuring MySQL for SSL," for options
+       that pertain to configuring MySQL to support secure
+       (encrypted) connections.
 
      * Several configure options apply to plugin selection and
        building:
@@ -5784,8 +5901,8 @@ export CXX="gcc"
    Note
 
    To compile from the source code on Windows you must use the
-   standard source distribution (for example, mysql-5.1.62.zip) or
-   mysql-5.1.62.tar.gz). You build from the same distribution as used
+   standard source distribution (for example, mysql-5.1.66.zip) or
+   mysql-5.1.66.tar.gz). You build from the same distribution as used
    to build MySQL on Unix, Linux and other platforms. Do not use the
    Windows Source distributions as they do not contain the necessary
    configuration script and other files.
@@ -6051,7 +6168,7 @@ crle -64 -u -l /usr/local/mysql/lib
             -Wl,r/full/path/to/libmysqlclient.so flag rather than
             with -Lpath).
 
-          + Copy libmysqclient.so to /usr/lib.
+          + Copy libmysqlclient.so to /usr/lib.
 
           + Add the path name of the directory where
             libmysqlclient.so is located to the LD_RUN_PATH
@@ -6168,8 +6285,8 @@ Try gcc. See the Installation chapter in the Reference Manual.
 
    When you are ready to create additional user accounts, you can
    find information on the MySQL access control system and account
-   management in Section 5.4, "The MySQL Access Privilege System,"
-   and Section 5.5, "MySQL User Account Management."
+   management in Section 6.2, "The MySQL Access Privilege System,"
+   and Section 6.3, "MySQL User Account Management."
 
 2.12.1. Unix Postinstallation Procedures
 
@@ -6291,7 +6408,7 @@ shell> scripts/mysql_install_db --user=mysql \
        MySQL Accounts," describes the initial privileges. Briefly,
        these privileges permit the MySQL root user to do anything,
        and permit anybody to create or use databases with a name of
-       test or starting with test_. See Section 5.4, "The MySQL
+       test or starting with test_. See Section 6.2, "The MySQL
        Access Privilege System," for a complete listing and
        description of the grant tables.
        It is important to make sure that the database directories and
@@ -6351,7 +6468,7 @@ shell> bin/mysqld_safe --user=mysql &
        mysql, in which case you can omit the --user option from the
        command.
        For further instructions for running MySQL as an unprivileged
-       user, see Section 5.3.6, "How to Run MySQL as a Normal User."
+       user, see Section 6.1.5, "How to Run MySQL as a Normal User."
        If the command fails immediately and prints mysqld ended, look
        for information in the error log (which by default is the
        host_name.err file in the data directory).
@@ -6378,10 +6495,10 @@ shell> bin/mysqladmin variables
        on your platform and version of MySQL, but should be similar
        to that shown here:
 shell> bin/mysqladmin version
-mysqladmin  Ver 14.12 Distrib 5.1.62, for pc-linux-gnu on i686
+mysqladmin  Ver 14.12 Distrib 5.1.66, for pc-linux-gnu on i686
 ...
 
-Server version          5.1.62
+Server version          5.1.66
 Protocol version        10
 Connection              Localhost via UNIX socket
 UNIX socket             /var/lib/mysql/mysql.sock
@@ -6486,7 +6603,7 @@ shell> mysql -vvf test < ./tests/auto_increment.tst
 
    The MySQL 5.1 installation procedure creates time zone tables in
    the mysql database but does not populate them. To do so, use the
-   instructions in Section 9.6, "MySQL Server Time Zone Support."
+   instructions in Section 10.6, "MySQL Server Time Zone Support."
 
    To make it more convenient to invoke programs installed in the bin
    directory under the installation directory, you can add that
@@ -6562,7 +6679,7 @@ Can't start server: Bind on TCP/IP port:
 Address already in use
 Can't start server: Bind on unix socket...
        For instructions on setting up multiple servers, see Section
-       5.6, "Running Multiple MySQL Instances on One Machine."
+       5.3, "Running Multiple MySQL Instances on One Machine."
 
      * You do not have write access to the /tmp directory
        If you do not have write access to create temporary files or a
@@ -6637,7 +6754,7 @@ shell> bin/mysql mysql
      * Run the MySQL server as a Windows service. The service can be
        set to start the server automatically when Windows starts, or
        as a manual service that you start on request. For
-       instructions, see Section 2.3.5.7, "Starting MySQL Server as a
+       instructions, see Section 2.3.6.7, "Starting MySQL Server as a
        Microsoft Windows Service."
 
      * Invoke mysqld_safe, which tries to determine the proper
@@ -6802,7 +6919,7 @@ basedir=/usr/local/mysql
 
    This section provides troubleshooting suggestions for problems
    starting the server on Unix. If you are using Windows, see Section
-   2.3.6, "Troubleshooting a Microsoft Windows MySQL Server
+   2.3.7, "Troubleshooting a Microsoft Windows MySQL Server
    Installation."
 
    If you have problems starting the server, here are some things to
@@ -6831,10 +6948,10 @@ basedir=/usr/local/mysql
    that you have them configured the way you want before starting the
    server:
 
-   If you are using InnoDB tables, see Section 13.6.2, "Configuring
+   If you are using InnoDB tables, see Section 14.6.2, "Configuring
    InnoDB."
 
-   If you are using MySQL Cluster, see Section 16.3, "MySQL Cluster
+   If you are using MySQL Cluster, see Section 17.3, "MySQL Cluster
    Configuration."
 
    Storage engines will use default option values if you specify
@@ -6939,7 +7056,7 @@ Can't start server: Bind on unix socket...
    running. If so, shut down the server before starting mysqld again.
    (If another server is running, and you really want to run multiple
    servers, you can find information about how to do so in Section
-   5.6, "Running Multiple MySQL Instances on One Machine.")
+   5.3, "Running Multiple MySQL Instances on One Machine.")
 
    If no other server is running, try to execute the command telnet
    your_host_name tcp_ip_port_number. (The default MySQL port number
@@ -6962,8 +7079,8 @@ Can't start server: Bind on unix socket...
 
    If you cannot get mysqld to start, you can try to make a trace
    file to find the problem by using the --debug option. See MySQL
-   Internals: Porting
-   (http://forge.mysql.com/wiki/MySQL_Internals_Porting).
+   Internals: Porting to Other Systems
+   (http://dev.mysql.com/doc/internals/en/porting.html).
 
 2.12.2. Securing the Initial MySQL Accounts
 
@@ -7066,7 +7183,7 @@ mysql> SELECT User, Host, Password FROM mysql.user;
    Note
 
    For additional information about setting passwords, see Section
-   5.5.5, "Assigning Account Passwords." If you forget your root
+   6.3.5, "Assigning Account Passwords." If you forget your root
    password after setting it, see Section C.5.4.1, "How to Reset the
    Root Password."
 
@@ -7075,7 +7192,7 @@ mysql> SELECT User, Host, Password FROM mysql.user;
    or testing. However, be sure to set them before using your
    installation for production purposes.
 
-   To set up additional accounts, see Section 5.5.2, "Adding User
+   To set up additional accounts, see Section 6.3.2, "Adding User
    Accounts."
 
 Assigning root Account Passwords
@@ -7217,7 +7334,7 @@ mysql> DROP DATABASE test;
    Note
 
    On Windows, you can also perform the process described in this
-   section using the Configuration Wizard (see Section 2.3.4.11,
+   section using the Configuration Wizard (see Section 2.3.5.11,
    "MySQL Server Instance Config Wizard: The Security Options
    Dialog"). On other platforms, the MySQL distribution includes
    mysql_secure_installation, a command-line utility that automates
@@ -7228,15 +7345,15 @@ mysql> DROP DATABASE test;
 2.13.1. Upgrading MySQL
 
    As a general rule, to upgrade from one release series to another,
-   you should go to the next series rather than skipping a series. To
-   upgrade from a release series previous to MySQL 5.0, upgrade to
-   each successive release series in turn until you have reached
-   MySQL 5.0, and then proceed with the upgrade to MySQL 5.1. For
-   example, if you currently are running MySQL 4.1 and wish to
-   upgrade to a newer series, upgrade to MySQL 5.0 first before
-   upgrading to 5.1, and so forth. For information on upgrading to
-   MySQL 5.0, see the MySQL 5.0 Reference Manual; for earlier
-   releases, see the MySQL 3.23, 4.0, 4.1 Reference Manual.
+   go to the next series rather than skipping a series. To upgrade
+   from a release series previous to MySQL 5.0, upgrade to each
+   successive release series in turn until you have reached MySQL
+   5.0, and then proceed with the upgrade to MySQL 5.1. For example,
+   if you currently are running MySQL 4.1 and wish to upgrade to a
+   newer series, upgrade to MySQL 5.0 first before upgrading to 5.1,
+   and so forth. For information on upgrading to MySQL 5.0, see the
+   MySQL 5.0 Reference Manual; for earlier releases, see the MySQL
+   3.23, 4.0, 4.1 Reference Manual.
 
    If you perform a binary (in-place) upgrade without dumping and
    reloading tables, you cannot upgrade directly from MySQL 4.1 to
@@ -7251,7 +7368,7 @@ mysql> DROP DATABASE test;
 
      * Before any upgrade, back up your databases, including the
        mysql database that contains the grant tables. See Section
-       6.2, "Database Backup Methods."
+       7.2, "Database Backup Methods."
 
      * Read all the notes in Section 2.13.1.1, "Upgrading from MySQL
        5.0 to 5.1." These notes enable you to identify upgrade issues
@@ -7273,13 +7390,13 @@ mysql> DROP DATABASE test;
        MySQL introduce changes to the structure of the grant tables
        to add new privileges or features.)
        mysql_upgrade does not upgrade the contents of the help
-       tables. For upgrade instructions, see Section 5.1.8,
+       tables. For upgrade instructions, see Section 5.1.9,
        "Server-Side Help."
 
-     * If you run MySQL Server on Windows, see Section 2.3.7,
+     * If you run MySQL Server on Windows, see Section 2.3.8,
        "Upgrading MySQL Server on Microsoft Windows."
 
-     * If you use replication, see Section 15.4.3, "Upgrading a
+     * If you use replication, see Section 16.4.3, "Upgrading a
        Replication Setup," for information on upgrading your
        replication setup.
 
@@ -7302,21 +7419,32 @@ mysql> DROP DATABASE test;
        UDF, and then use CREATE FUNCTION to re-create the UDF with a
        different nonconflicting name. The same is true if the new
        version of MySQL implements a built-in function with the same
-       name as an existing stored function. See Section 8.2.4,
+       name as an existing stored function. See Section 9.2.4,
        "Function Name Parsing and Resolution," for the rules
        describing how the server interprets references to different
        kinds of functions.
 
-   You can always move the MySQL format files and data files between
-   different versions on systems with the same architecture as long
-   as you stay within versions for the same release series of MySQL.
+   For upgrades between versions of a MySQL release series that has
+   reached General Availability status, you can move the MySQL format
+   files and data files between different versions on systems with
+   the same architecture. For upgrades to a version of a MySQL
+   release series that is in development status, that is not
+   necessarily true. Use of development releases is at your own risk.
 
    If you are cautious about using new versions, you can always
    rename your old mysqld before installing a newer one. For example,
-   if you are using MySQL 5.0.13 and want to upgrade to 5.1.10,
-   rename your current server from mysqld to mysqld-5.0.13. If your
+   if you are using a version of MySQL 5.0 and want to upgrade to
+   5.1, rename your current server from mysqld to mysqld-5.0. If your
    new mysqld then does something unexpected, you can simply shut it
    down and restart with your old mysqld.
+
+   If problems occur, such as that the new mysqld server does not
+   start or that you cannot connect without a password, verify that
+   you do not have an old my.cnf file from your previous
+   installation. You can check this with the --print-defaults option
+   (for example, mysqld --print-defaults). If this command displays
+   anything other than the program name, you have an active my.cnf
+   file that affects server or client operation.
 
    If, after an upgrade, you experience problems with compiled client
    programs, such as Commands out of sync or unexpected core dumps,
@@ -7328,14 +7456,6 @@ mysql> DROP DATABASE test;
    necessary for programs compiled against the shared client library
    if the library major version number has changed (for example from
    libmysqlclient.so.15 to libmysqlclient.so.16.
-
-   If problems occur, such as that the new mysqld server does not
-   start or that you cannot connect without a password, verify that
-   you do not have an old my.cnf file from your previous
-   installation. You can check this with the --print-defaults option
-   (for example, mysqld --print-defaults). If this command displays
-   anything other than the program name, you have an active my.cnf
-   file that affects server or client operation.
 
    If your MySQL installation contains a large amount of data that
    might take a long time to convert after an in-place upgrade, you
@@ -7368,7 +7488,9 @@ mysql> DROP DATABASE test;
 
    To upgrade to 5.1 from any previous version, MySQL recommends that
    you dump your tables with mysqldump before upgrading and reload
-   the dump file after upgrading.
+   the dump file after upgrading. Use the --all-databases option to
+   include all databases in the dump. If your databases include
+   stored programs, use the --routines and --events options as well.
 
    If you perform a binary (in-place) upgrade without dumping and
    reloading tables, you cannot upgrade directly from MySQL 4.1 to
@@ -7381,21 +7503,24 @@ mysql> DROP DATABASE test;
    In general, you should do the following when upgrading from MySQL
    5.0 to 5.1:
 
-     * Read all the items in the following sections to see whether
-       any of them might affect your applications:
+     * Read all the items in these sections to see whether any of
+       them might affect your applications:
 
           + Section 2.13.1, "Upgrading MySQL," has general update
             information.
 
-          + The items in the change lists found later in this section
-            enable you to identify upgrade issues that apply to your
-            current MySQL installation.
+          + The items in the change lists provided later in this
+            section enable you to identify upgrade issues that apply
+            to your current MySQL installation. Some
+            incompatibilities discussed there require your attention
+            before upgrading. Others should be dealt with after
+            upgrading.
 
           + The MySQL 5.1 change history describes significant new
             features you can use in 5.1 or that differ from those
             found in MySQL 5.0. Some of these changes may result in
-            incompatibilities. See Section D.1, "Changes in Release
-            5.1.x (Production)."
+            incompatibilities. See Appendix D, "MySQL Change
+            History."
        Note particularly any changes that are marked Known issue or
        Incompatible change. These incompatibilities with earlier
        versions of MySQL may require your attention before you
@@ -7404,7 +7529,7 @@ mysql> DROP DATABASE test;
        than an incompatibility between releases. If any upgrade issue
        applicable to your installation involves an incompatibility
        that requires special handling, follow the instructions given
-       in the incompatibility description. Often this will involve
+       in the incompatibility description. Sometimes this involves
        dumping and reloading tables, or use of a statement such as
        CHECK TABLE or REPAIR TABLE.
        For dump and reload instructions, see Section 2.13.4,
@@ -7413,7 +7538,7 @@ mysql> DROP DATABASE test;
        done before upgrading. Use of this statement with a version of
        MySQL different from the one used to create the table (that
        is, using it after upgrading) may damage the table. See
-       Section 12.7.2.6, "REPAIR TABLE Syntax."
+       Section 13.7.2.6, "REPAIR TABLE Syntax."
 
      * Before upgrading to a new version of MySQL, Section 2.13.3,
        "Checking Whether Tables or Indexes Must Be Rebuilt," to see
@@ -7434,13 +7559,13 @@ mysql> DROP DATABASE test;
        MySQL introduce changes to the structure of the grant tables
        to add new privileges or features.)
        mysql_upgrade does not upgrade the contents of the help
-       tables. For upgrade instructions, see Section 5.1.8,
+       tables. For upgrade instructions, see Section 5.1.9,
        "Server-Side Help."
 
-     * If you run MySQL Server on Windows, see Section 2.3.7,
+     * If you run MySQL Server on Windows, see Section 2.3.8,
        "Upgrading MySQL Server on Microsoft Windows."
 
-     * If you use replication, see Section 15.4.3, "Upgrading a
+     * If you use replication, see Section 16.4.3, "Upgrading a
        Replication Setup," for information on upgrading your
        replication setup.
 
@@ -7567,7 +7692,7 @@ shell> mysqldump --no-create-info other_args > data.sql
        Alternatively, drop and recreate affected indexes.
 
      * Known issue: MySQL introduces encoding for table names that
-       have non-ASCII characters (see Section 8.2.3, "Mapping of
+       have non-ASCII characters (see Section 9.2.3, "Mapping of
        Identifiers to File Names"). After a binary upgrade from MySQL
        5.0 to 5.1 or higher, the server recognizes names that have
        non-ASCII characters and adds a #mysql50# prefix to them.
@@ -7626,6 +7751,12 @@ RENAME TABLE table_b TO `table b`;
 
           + Instead of renaming a view after the downgrade, drop it
             and recreate it.
+
+     * Incompatible change: Character set or collation changes may
+       require table indexes to be rebuilt. In MySQL 5.1, these
+       occurred in versions 5.1.21, 5.1.23, and 5.1.24. For details,
+       see Section 2.13.3, "Checking Whether Tables or Indexes Must
+       Be Rebuilt."
 
      * Incompatible change: As of MySQL 5.5.6, handling of CREATE
        TABLE IF NOT EXISTS ... SELECT statements has been changed for
@@ -7709,14 +7840,9 @@ shell> mv host_name.err host_name.err-old
 shell> mysqladmin flush-logs
 shell> mv host_name.err-old backup-directory
 
-     * Incompatible change: Character set or collation changes were
-       made in MySQL 5.1.21, 5.1.23, and 5.1.24 that may require
-       table indexes to be rebuilt. For details, see Section 2.13.3,
-       "Checking Whether Tables or Indexes Must Be Rebuilt."
-
      * Incompatible change: MySQL 5.1 implements support for a plugin
        API that enables the loading and unloading of components at
-       runtime, without restarting the server. Section 21.2, "The
+       runtime, without restarting the server. Section 22.2, "The
        MySQL Plugin API." The plugin API requires the mysql.plugin
        table. After upgrading from an older version of MySQL, you
        should run the mysql_upgrade command to create this table. See
@@ -7740,7 +7866,7 @@ shell> mv host_name.err-old backup-directory
        if you previously used options of the form --plugin_name=0 or
        --plugin_name=1, you should instead use --plugin_name=OFF or
        --plugin_name=ON, respectively. For details, see Section
-       5.1.7.1, "Installing and Uninstalling Plugins."
+       5.1.8.1, "Installing and Uninstalling Plugins."
 
      * Incompatible change: From MySQL 5.1.24 to 5.1.31, the UPDATE
        statement was changed such that assigning NULL to a NOT NULL
@@ -7749,7 +7875,7 @@ shell> mv host_name.err-old backup-directory
        such assignments caused an error only in strict SQL mode, and
        otherwise set the column to the implicit default value for the
        column data type and generated a warning. (For information
-       about implicit default values, see Section 10.1.4, "Data Type
+       about implicit default values, see Section 11.5, "Data Type
        Default Values.")
        The change caused compatibility problems for applications that
        relied on the original behavior. It also caused replication
@@ -7854,7 +7980,9 @@ shell> mv host_name.err-old backup-directory
        reload them to recreate them with new definitions. Invoke
        mysqldump with a --default-character-set option that names the
        non-ASCII character set that was used for the definitions when
-       the objects were originally created.
+       the objects were originally created, and the --routines,
+       --events, and --triggers options to dump stored program
+       definitions.
        Upgrading for triggers in particular must be handled
        carefully, for two reasons:
 
@@ -7879,7 +8007,7 @@ shell> mv host_name.err-old backup-directory
 
           + Use mysqldump to generate a dump file that contains the
             trigger definitions:
-mysqldump --triggers--no-create-db --no-data
+mysqldump --triggers --no-create-db --no-data
           --no-create-info --all-databases > triggers.sql
             You might need to add options to specify connection
             parameters, such as --user or --password. Also, if you
@@ -7940,7 +8068,7 @@ mysql --force < triggers.sql
        used for all command-line options where you are uncertain
        whether the plugin exists and when you want the operation to
        proceed even if the option is necessarily ignored due to the
-       absence of the plugin. (For a desecription of how --loose
+       absence of the plugin. (For a description of how --loose
        works, see Section 4.2.3.1, "Using Options on the Command
        Line.")
 
@@ -7975,7 +8103,7 @@ mysql --force < triggers.sql
      * Incompatible change: The number of function names affected by
        IGNORE_SPACE was reduced significantly in MySQL 5.1.13, from
        about 200 to about 30. (For details about IGNORE_SPACE, see
-       Section 8.2.4, "Function Name Parsing and Resolution.") This
+       Section 9.2.4, "Function Name Parsing and Resolution.") This
        change improves the consistency of parser operation. However,
        it also introduces the possibility of incompatibility for old
        SQL code that relies on the following conditions:
@@ -8014,7 +8142,7 @@ REPAIR TABLE tbl_name QUICK;
        runtime, so the distinction between disabled and invalid
        storage engines no longer applies. As of MySQL 5.1.12, this
        affects the NO_ENGINE_SUBSTITUTION SQL mode, as described in
-       Section 5.1.6, "Server SQL Modes."
+       Section 5.1.7, "Server SQL Modes."
 
      * Incompatible change: The structure of FULLTEXT indexes has
        been changed in MySQL 5.1.6. After upgrading to MySQL 5.1.6 or
@@ -8035,7 +8163,7 @@ REPAIR TABLE tbl_name QUICK;
 
      * Incompatible change: In very old versions of MySQL (prior to
        4.1), the TIMESTAMP data type supported a display width, which
-       was silenty ignored beginning with MySQL 4.1. This is
+       was silently ignored beginning with MySQL 4.1. This is
        deprecated in MySQL 5.1, and removed altogether in MySQL 5.5.
        These changes in behavior can lead to two problem scenarios
        when trying to use TIMESTAMP(N) columns with a MySQL 5.5 or
@@ -8092,7 +8220,7 @@ REPAIR TABLE tbl_name QUICK;
        specifies the locale that controls the language used to
        display day and month names and abbreviations. This variable
        affects the output from the DATE_FORMAT(), DAYNAME() and
-       MONTHNAME() functions. See Section 9.7, "MySQL Server Locale
+       MONTHNAME() functions. See Section 10.7, "MySQL Server Locale
        Support."
 
      * As of MySQL 5.1.9, mysqld_safe no longer implicitly invokes
@@ -8125,7 +8253,7 @@ SQL Changes
        to reload them into an upgraded server. Handlers that contain
        illegal label references will be rejected.
        For more information about condition handlers and writing them
-       to avoid invalid jumps, see Section 12.6.7.2, "DECLARE ...
+       to avoid invalid jumps, see Section 13.6.7.2, "DECLARE ...
        HANDLER Syntax."
 
      * Incompatible change: The parser accepted statements that
@@ -8183,19 +8311,19 @@ DELETE t1 FROM t1 AS a1 INNER JOIN t2 AS a2;
        require it.
 
      * Some keywords may be reserved in MySQL 5.1 that were not
-       reserved in MySQL 5.0. See Section 8.3, "Reserved Words."
+       reserved in MySQL 5.0. See Section 9.3, "Reserved Words."
 
      * The BACKUP TABLE, and RESTORE TABLE statements are deprecated.
        mysqldump or mysqlhotcopy can be used as alternatives.
 
      * The LOAD DATA FROM MASTER and LOAD TABLE FROM MASTER
-       statements are deprecated. See Section 12.4.2.2, "LOAD DATA
+       statements are deprecated. See Section 13.4.2.2, "LOAD DATA
        FROM MASTER Syntax," for recommended alternatives.
 
      * The INSTALL PLUGIN and UNINSTALL PLUGIN statements that are
        used for the plugin API are new. So is the WITH PARSER clause
        for FULLTEXT index creation that associates a parser plugin
-       with a full-text index. Section 21.2, "The MySQL Plugin API."
+       with a full-text index. Section 22.2, "The MySQL Plugin API."
 
 C API Changes
 
@@ -8400,8 +8528,10 @@ Index Incompatibilities
    The solution to these problems is to rebuild any indexes that use
    an affected character set or collation, either by dropping and
    re-creating the indexes, or by dumping and reloading the entire
-   table. For information about rebuilding indexes, see Section
-   2.13.4, "Rebuilding or Repairing Tables or Indexes."
+   table. In some cases, it is possible to alter affected columns to
+   use a different collation. For information about rebuilding
+   indexes, see Section 2.13.4, "Rebuilding or Repairing Tables or
+   Indexes."
 
    To check whether a table has indexes that must be rebuilt, consult
    the following list. It indicates which versions of MySQL
@@ -8418,22 +8548,35 @@ Index Incompatibilities
    than 5.1.24.
 
    In many cases, you can use CHECK TABLE ... FOR UPGRADE to identify
-   tables for which index rebuilding is required. (It will report:
-   Table upgrade required. Please do "REPAIR TABLE `tbl_name`" or
-   dump/reload to fix it!) In these cases, you can also use
-   mysqlcheck --check-upgrade or mysql_upgrade, which execute CHECK
-   TABLE. However, the use of CHECK TABLE applies only after
-   upgrades, not downgrades. Also, CHECK TABLE is not applicable to
-   all storage engines. For details about which storage engines CHECK
-   TABLE supports, see Section 12.7.2.3, "CHECK TABLE Syntax."
+   tables for which index rebuilding is required. It will report this
+   message:
+Table upgrade required.
+Please do "REPAIR TABLE `tbl_name`" or dump/reload to fix it!
 
-   Changes that cause index rebuilding to be necessary:
+   In these cases, you can also use mysqlcheck --check-upgrade or
+   mysql_upgrade, which execute CHECK TABLE. However, the use of
+   CHECK TABLE applies only after upgrades, not downgrades. Also,
+   CHECK TABLE is not applicable to all storage engines. For details
+   about which storage engines CHECK TABLE supports, see Section
+   13.7.2.3, "CHECK TABLE Syntax."
 
-     * MySQL 5.0.48, 5.1.21 (Bug #29461)
-       Affects indexes for columns that use any of these character
-       sets: eucjpms, euc_kr, gb2312, latin7, macce, ujis
+   These changes cause index rebuilding to be necessary:
+
+     * MySQL 5.1.24, 5.4.0 (Bug #27877)
+       Affects indexes that use the utf8_general_ci or
+       ucs2_general_ci collation for columns that contain 'ß' LATIN
+       SMALL LETTER SHARP S (German). The bug fix corrected an error
+       in the original collations but introduced an incompatibility
+       such that 'ß' compares equal to characters with which it
+       previously compared different.
        Affected tables can be detected by CHECK TABLE ... FOR UPGRADE
-       as of MySQL 5.1.29, 5.4.0 (see Bug #39585).
+       as of MySQL 5.1.30, 5.4.0 (see Bug #40053).
+       A workaround for this issue is implemented as of MySQL 5.1.62,
+       5.5.21, and 5.6.5. The workaround involves altering affected
+       columns to use the utf8_general_mysql500_ci and
+       ucs2_general_mysql500_ci collations, which preserve the
+       original pre-5.1.24 ordering of utf8_general_ci and
+       ucs2_general_ci.
 
      * MySQL 5.0.48, 5.1.23 (Bug #27562)
        Affects indexes that use the ascii_general_ci collation for
@@ -8443,12 +8586,11 @@ Index Incompatibilities
        Affected tables can be detected by CHECK TABLE ... FOR UPGRADE
        as of MySQL 5.1.29, 5.4.0 (see Bug #39585).
 
-     * MySQL 5.1.24, 5.4.0 (Bug #27877)
-       Affects indexes that use the utf8_general_ci or
-       ucs2_general_ci collation for columns that contain 'ß' LATIN
-       SMALL LETTER SHARP S (German).
+     * MySQL 5.0.48, 5.1.21 (Bug #29461)
+       Affects indexes for columns that use any of these character
+       sets: eucjpms, euc_kr, gb2312, latin7, macce, ujis
        Affected tables can be detected by CHECK TABLE ... FOR UPGRADE
-       as of MySQL 5.1.30, 5.4.0 (see Bug #40053).
+       as of MySQL 5.1.29, 5.4.0 (see Bug #39585).
 
 2.13.4. Rebuilding or Repairing Tables or Indexes
 
@@ -8514,7 +8656,7 @@ mysql> REPAIR TABLE t1;
    the file, as described earlier.
 
    For specifics about which storage engines REPAIR TABLE supports,
-   see Section 12.7.2.6, "REPAIR TABLE Syntax."
+   see Section 13.7.2.6, "REPAIR TABLE Syntax."
 
    mysqlcheck --repair provides command-line access to the REPAIR
    TABLE statement. This can be a more convenient means of repairing
@@ -8524,12 +8666,44 @@ mysql> REPAIR TABLE t1;
 shell> mysqlcheck --repair --databases db_name ...
 shell> mysqlcheck --repair --all-databases
 
+   For incompatibilities introduced in MySQL 5.1.24 by the fix for
+   Bug #27877 that corrected the utf8_general_ci and ucs2_general_ci
+   collations, a workaround is implemented as of MySQL 5.1.62,
+   5.5.21, and 5.6.5. Upgrade to one of those versions, then convert
+   each affected table using one of the following methods. In each
+   case, the workaround altering affected columns to use the
+   utf8_general_mysql500_ci and ucs2_general_mysql500_ci collations,
+   which preserve the original pre-5.1.24 ordering of utf8_general_ci
+   and ucs2_general_ci.
+
+     * To convert an affected table after a binary upgrade that
+       leaves the table files in place, alter the table to use the
+       new collation. Suppose that the table t1 contains one or more
+       problematic utf8 columns. To convert the table at the table
+       level, use a statement like this:
+ALTER TABLE t1
+CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_mysql500_ci;
+       To apply the change on a column-specific basis, use a
+       statement like this (be sure to repeat the column definition
+       as originally specified except for the COLLATE clause):
+ALTER TABLE t1
+MODIFY c1 CHAR(N) CHARACTER SET utf8 COLLATE utf8_general_mysql500_ci
+;
+
+     * To upgrade the table using a dump and reload procedure, dump
+       the table using mysqldump, modify the CREATE TABLE statement
+       in the dump file to use the new collation, and reload the
+       table.
+
+   After making the appropriate changes, CHECK TABLE should report no
+   error.
+
 2.13.5. Copying MySQL Databases to Another Machine
 
    You can copy the .frm, .MYI, and .MYD files for MyISAM tables
    between different architectures that support the same
    floating-point format. (MySQL takes care of any byte-swapping
-   issues.) See Section 13.5, "The MyISAM Storage Engine."
+   issues.) See Section 14.5, "The MyISAM Storage Engine."
 
    In cases where you need to transfer databases between different
    architectures, you can use mysqldump to create a file containing
@@ -8642,13 +8816,13 @@ shell> set ENVVAR=value
    variable is set, its value overrides the default for
    $HOME/.mysql_history.
    MYSQL_HOME The path to the directory in which the server-specific
-   my.cnf file resides (as of MySQL 5.0.3).
+   my.cnf file resides.
    MYSQL_HOST The default host name used by the mysql command-line
    client.
    MYSQL_PS1 The command prompt to use in the mysql command-line
    client.
    MYSQL_PWD The default password when connecting to mysqld. Note
-   that using this is insecure. See Section 5.3.2.2, "End-User
+   that using this is insecure. See Section 6.1.2.1, "End-User
    Guidelines for Password Security."
    MYSQL_TCP_PORT The default TCP/IP port number.
    MYSQL_UNIX_PORT The default Unix socket file name; used for
@@ -8690,13 +8864,13 @@ shell> set ENVVAR=value
    access. You can write a DBI script that works with many different
    database engines without change. To use DBI, you must install the
    DBI module, as well as a DataBase Driver (DBD) module for each
-   type of databas server you want to access. For MySQL, this driver
+   type of database server you want to access. For MySQL, this driver
    is the DBD::mysql module.
 
    Perl, and the DBD::MySQL module for DBI must be installed if you
-   want to run the MySQL benchmark scripts; see Section 7.1.3, "The
+   want to run the MySQL benchmark scripts; see Section 8.1.3, "The
    MySQL Benchmark Suite." They are also required for the MySQL
-   Cluster ndb_size.pl utility; see Section 16.4.21, "ndb_size.pl ---
+   Cluster ndb_size.pl utility; see Section 17.4.22, "ndb_size.pl ---
    NDBCLUSTER Size Requirement Estimator."
    Note
 
@@ -8870,3 +9044,11 @@ $sysliblist .= " -lm -lz";
 
    After this, you must run make realclean and then proceed with the
    installation from the beginning.
+
+   Copyright (c) 1997, 2012, Oracle and/or its affiliates. All rights
+   reserved. [1]Legal Notices
+
+References
+
+
+   1. file://localhost/data0/users/mysqldoc/docs-build/mysqldoc/refman-5.1/installing-nolink.html#legalnotice
