@@ -2,12 +2,12 @@
 .\"     Title: \fBmysqldump\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBMYSQLDUMP\FR" "1" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBMYSQLDUMP\FR" "1" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -50,21 +50,34 @@ requires at least the
 SELECT
 privilege for dumped tables,
 SHOW VIEW
-for dumped views, and
+for dumped views,
+TRIGGER
+for dumped triggers, and
 LOCK TABLES
 if the
 \fB\-\-single\-transaction\fR
 option is not used\&. Certain options might require other privileges as noted in the option descriptions\&.
 .PP
-If you are doing a backup on the server and your tables all are
-MyISAM
-tables, consider using the
-\fBmysqlhotcopy\fR
-instead because it can accomplish faster backups and faster restores\&. See
-\fBmysqlhotcopy\fR(1)\&.
+To reload a dump file, you must have the same privileges needed to create each of the dumped objects by issuing
+CREATE
+statements manually\&.
 .PP
-There are three general ways to invoke
-\fBmysqldump\fR:
+\fBmysqldump\fR
+output can include
+ALTER DATABASE
+statements that change the database collation\&. These may be used when dumping stored programs to preserve their character encodings\&. To reload a dump file containing such statements, the
+ALTER
+privilege for the affected database is required\&.
+.PP
+If you are performing a backup on the server and your tables all are
+MyISAM
+tables, you can also use
+\fBmysqlhotcopy\fR
+for this purpose\&.
+        Syntax
+.PP
+There are in general three ways to use
+\fBmysqldump\fR\(emin order to dump a set of one or more tables, a set of one or more complete databases, or an entire MySQL server\(emas shown here:
 .sp
 .if n \{\
 .RS 4
@@ -78,13 +91,12 @@ shell> \fBmysqldump [\fR\fB\fIoptions\fR\fR\fB] \-\-all\-databases\fR
 .RE
 .\}
 .PP
-If you do not name any tables following
-\fIdb_name\fR
-or if you use the
+To dump entire databases, do not name any tables following
+\fIdb_name\fR, or use the
 \fB\-\-databases\fR
 or
 \fB\-\-all\-databases\fR
-option, entire databases are dumped\&.
+option\&.
 .PP
 \fBmysqldump\fR
 does not dump the
@@ -942,9 +954,9 @@ or
 .\" flush-privileges option: mysqldump
 \fB\-\-flush\-privileges\fR
 .sp
-Send a
+Add a
 FLUSH PRIVILEGES
-statement to the server after dumping the
+statement to the dump output after dumping the
 mysql
 database\&. This option should be used any time the dump contains the
 mysql
@@ -1676,7 +1688,7 @@ carriage return/newline sequences\&. The result file is created and its previous
 \fB\-\-routines\fR,
 \fB\-R\fR
 .sp
-Included stored routines (procedures and functions) for the dumped databases in the output\&. Use of this option requires the
+Include stored routines (procedures and functions) for the dumped databases in the output\&. Use of this option requires the
 SELECT
 privilege for the
 mysql\&.proc
@@ -1738,11 +1750,13 @@ statement, use
 .\" single-transaction option: mysqldump
 \fB\-\-single\-transaction\fR
 .sp
-This option sends a
+This option sets the transaction isolation mode to
+REPEATABLE READ
+and sends a
 START TRANSACTION
 SQL statement to the server before dumping data\&. It is useful only with transactional tables such as
 InnoDB, because then it dumps the consistent state of the database at the time when
-BEGIN
+START TRANSACTION
 was issued without blocking any applications\&.
 .sp
 When using this option, you should keep in mind that only
@@ -2186,7 +2200,7 @@ syntax:
 .\}
 max_allowed_packet
 .sp
-The maximum size of the buffer for client/server communication\&. The maximum is 1GB\&.
+The maximum size of the buffer for client/server communication\&. The default is 24MB, the maximum is 1GB\&.
 .RE
 .sp
 .RS 4
@@ -2360,7 +2374,7 @@ Section\ \&E.4, \(lqRestrictions on Views\(rq\&.
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

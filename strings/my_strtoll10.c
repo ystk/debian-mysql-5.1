@@ -1,4 +1,4 @@
-/* Copyright (c) 2003-2007 MySQL AB
+/* Copyright (c) 2003-2005, 2007 MySQL AB
    Use is subject to license terms.
 
    This program is free software; you can redistribute it and/or modify
@@ -206,8 +206,8 @@ longlong my_strtoll10(const char *nptr, char **endptr, int *error)
     goto overflow;
 
   /* Check that we didn't get an overflow with the last digit */
-  if (i > cutoff || (i == cutoff && ((j > cutoff2 || j == cutoff2) &&
-                                     k > cutoff3)))
+  if (i > cutoff || (i == cutoff && (j > cutoff2 || (j == cutoff2 &&
+                                     k > cutoff3))))
     goto overflow;
   li=i*LFACTOR2+ (ulonglong) j*100 + k;
   return (longlong) li;

@@ -33,6 +33,8 @@ Created 12/19/1997 Heikki Tuuri
 #include "read0read.h"
 #include "buf0lru.h"
 #include "ha_prototypes.h"
+#include "m_string.h" /* for my_sys.h */
+#include "my_sys.h" /* DEBUG_SYNC_C */
 
 /* Maximum number of rows to prefetch; MySQL interface has another parameter */
 #define SEL_MAX_N_PREFETCH	16
@@ -105,7 +107,8 @@ row_sel_sec_rec_is_for_clust_rec(
 			dict_col_get_clust_pos(col, clust_index), &clust_len);
 		sec_field = rec_get_nth_field(sec_rec, sec_offs, i, &sec_len);
 
-		if (ifield->prefix_len > 0 && clust_len != UNIV_SQL_NULL) {
+		if (ifield->prefix_len > 0 && clust_len != UNIV_SQL_NULL
+		    && sec_len != UNIV_SQL_NULL) {
 
 			clust_len = dtype_get_at_most_n_mbchars(
 				col->prtype, col->mbminlen, col->mbmaxlen,
@@ -3758,9 +3761,15 @@ wait_table_again:
 	}
 
 rec_loop:
+	DEBUG_SYNC_C("row_search_rec_loop");
+	if (trx_is_interrupted(trx)) {
+		btr_pcur_store_position(pcur, &mtr);
+		err = DB_INTERRUPTED;
+		goto normal_return;
+	}
+
 	/*-------------------------------------------------------------*/
 	/* PHASE 4: Look for matching records in a loop */
-
 	rec = btr_pcur_get_rec(pcur);
 	ut_ad(!!page_rec_is_comp(rec) == comp);
 #ifdef UNIV_SEARCH_DEBUG
@@ -4656,13 +4665,17 @@ row_search_autoinc_read_column(
 	/* TODO: We have to cast away the const of rec for now.  This needs
 	to be fixed later.*/
 	offsets = rec_get_offsets(
-		(rec_t*) rec, index, offsets, ULINT_UNDEFINED, &heap);
+		(rec_t*) rec, index, offsets, col_no + 1, &heap);
+
+	if (rec_offs_nth_sql_null(offsets, col_no)) {
+		/* There is no non-NULL value in the auto-increment column. */
+		value = 0;
+		goto func_exit;
+	}
 
 	/* TODO: We have to cast away the const of rec for now.  This needs
 	to be fixed later.*/
 	data = rec_get_nth_field((rec_t*)rec, offsets, col_no, &len);
-
-	ut_a(len != UNIV_SQL_NULL);
 
 	switch (mtype) {
 	case DATA_INT:
@@ -4684,13 +4697,14 @@ row_search_autoinc_read_column(
 		ut_error;
 	}
 
-	if (UNIV_LIKELY_NULL(heap)) {
-		mem_heap_free(heap);
-	}
-
 	/* We assume that the autoinc counter can't be negative. */
 	if (!unsigned_type && (ib_longlong) value < 0) {
 		value = 0;
+	}
+
+func_exit:
+	if (UNIV_LIKELY_NULL(heap)) {
+		mem_heap_free(heap);
 	}
 
 	return(value);

@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -605,6 +605,7 @@ THD::THD()
    Open_tables_state(refresh_version), rli_fake(NULL), rli_slave(NULL),
    lock_id(&main_lock_id),
    user_time(0), in_sub_stmt(0),
+   fill_status_recursion_level(0),
    sql_log_bin_toplevel(false),
    binlog_table_maps(0), binlog_flags(0UL),
    table_map_for_update(0),

@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2000, 2013 Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1616,6 +1616,7 @@ void st_select_lex::init_query()
   ref_pointer_array= 0;
   select_n_where_fields= 0;
   select_n_having_items= 0;
+  n_child_sum_items= 0;
   subquery_in_having= explicit_limit= 0;
   is_item_list_lookup= 0;
   first_execution= 1;
@@ -1918,6 +1919,11 @@ bool st_select_lex::add_order_to_list(THD *thd, Item *item, bool asc)
   return add_to_list(thd, order_list, item, asc);
 }
 
+
+bool st_select_lex::add_gorder_to_list(THD *thd, Item *item, bool asc)
+{
+  return add_to_list(thd, gorder_list, item, asc);
+}
 
 bool st_select_lex::add_item_to_list(THD *thd, Item *item)
 {

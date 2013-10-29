@@ -277,13 +277,14 @@ btr_cur_del_mark_set_sec_rec(
 	que_thr_t*	thr,	/* in: query thread */
 	mtr_t*		mtr);	/* in: mtr */
 /***************************************************************
-Sets a secondary index record delete mark to FALSE. This function is
-only used by the insert buffer insert merge mechanism. */
+Sets a secondary index record delete mark. This function is only
+used by the insert buffer insert merge mechanism. */
 
 void
-btr_cur_del_unmark_for_ibuf(
-/*========================*/
+btr_cur_set_deleted_flag_for_ibuf(
+/*==============================*/
 	rec_t*		rec,	/* in: record to delete unmark */
+	ibool		val,	/* in: value to set */
 	mtr_t*		mtr);	/* in: mtr */
 /*****************************************************************
 Tries to compress a page of the tree on the leaf level. It is assumed
@@ -701,6 +702,11 @@ extern ulint	btr_cur_n_non_sea;
 extern ulint	btr_cur_n_sea;
 extern ulint	btr_cur_n_non_sea_old;
 extern ulint	btr_cur_n_sea_old;
+
+#ifdef UNIV_DEBUG
+/* Flag to limit optimistic insert records */
+extern uint	btr_cur_limit_optimistic_insert_debug;
+#endif /* UNIV_DEBUG */
 
 #ifndef UNIV_NONINL
 #include "btr0cur.ic"

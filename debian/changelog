@@ -1,3 +1,25 @@
+mysql-5.1 (5.1.72-2) oldstable-security; urgency=low
+
+  * Don't fail the build on test suite failures for ia64. Pretty much
+    dead as an arch and failing builds on ia64 prevented synchronous
+    builds for a while.
+
+ -- Moritz Muehlenhoff <jmm@debian.org>  Thu, 17 Oct 2013 00:10:25 +0000
+
+mysql-5.1 (5.1.72-1) oldstable; urgency=low
+
+  * New upstream release, fixed multiple security issues:
+    CVE-2013-1861, CVE-2012-0553, CVE-2012-0572, CVE-2012-0574, CVE-2012-1702
+    CVE-2012-1705, CVE-2012-5060, CVE-2013-0375, CVE-2013-0383, CVE-2013-0384
+    CVE-2013-0385, CVE-2013-0389, CVE-2013-1492, CVE-2013-1506, CVE-2013-1521
+    CVE-2013-1531, CVE-2013-1532, CVE-2013-1544, CVE-2013-1548, CVE-2013-1552
+    CVE-2013-1555, CVE-2013-2375, CVE-2013-2378, CVE-2013-2389, CVE-2013-2391
+    CVE-2013-2392, CVE-2013-3802, CVE-2013-3804, CVE-2013-3808
+    http://www.oracle.com/technetwork/topics/security/cpujuly2013-1899826.html
+    http://www.oracle.com/technetwork/topics/security/cpuapr2013-1899555.html
+
+ -- Moritz Mühlenhoff <muehlenhoff@univention.de>  Tue, 24 Sep 2013 12:45:19 +0200
+
 mysql-5.1 (5.1.66-0+squeeze1) stable-security; urgency=high
 
   * SECURITY UPDATE: Unspecified vulnerabilities identified by Oracle in

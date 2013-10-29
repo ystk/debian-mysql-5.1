@@ -11,8 +11,8 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place, Suite 330, Boston, MA 02111-1307 USA
+this program; if not, write to the Free Software Foundation, Inc., 
+51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 *****************************************************************************/
 
@@ -50,6 +50,10 @@ UNIV_INTERN trx_purge_t*	purge_sys = NULL;
 /** A dummy undo record used as a return value when we have a whole undo log
 which needs no purge */
 UNIV_INTERN trx_undo_rec_t	trx_purge_dummy_rec;
+
+#ifdef UNIV_DEBUG
+UNIV_INTERN my_bool		srv_purge_view_update_only_debug;
+#endif /* UNIV_DEBUG */
 
 /*****************************************************************//**
 Checks if trx_id is >= purge_view: then it is guaranteed that its update
@@ -226,6 +230,7 @@ trx_purge_sys_create(void)
 	purge_sys->purge_trx_no = ut_dulint_zero;
 	purge_sys->purge_undo_no = ut_dulint_zero;
 	purge_sys->next_stored = FALSE;
+	ut_d(purge_sys->done_trx_no = ut_dulint_zero);
 
 	rw_lock_create(&purge_sys->latch, SYNC_PURGE_LATCH);
 
@@ -637,6 +642,7 @@ trx_purge_truncate_if_arr_empty(void)
 	ut_ad(mutex_own(&(purge_sys->mutex)));
 
 	if (purge_sys->arr->n_used == 0) {
+		ut_d(purge_sys->done_trx_no = purge_sys->purge_trx_no);
 
 		trx_purge_truncate_history();
 
@@ -1139,6 +1145,13 @@ trx_purge(void)
 	mutex_exit(&kernel_mutex);
 
 	rw_lock_x_unlock(&(purge_sys->latch));
+
+#ifdef UNIV_DEBUG
+	if (srv_purge_view_update_only_debug) {
+		mutex_exit(&(purge_sys->mutex));
+		return(0);
+	}
+#endif
 
 	purge_sys->state = TRX_PURGE_ON;
 

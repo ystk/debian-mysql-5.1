@@ -347,6 +347,7 @@ THREAD_LOBJECTS = @THREAD_LOBJECTS@
 VERSION = @VERSION@
 WRAPLIBS = @WRAPLIBS@
 YACC = @YACC@
+YACC_HEXT = @YACC_HEXT@
 ZLIB_DEPS = @ZLIB_DEPS@
 ZLIB_INCLUDES = @ZLIB_INCLUDES@
 ZLIB_LIBS = @ZLIB_LIBS@
@@ -1096,7 +1097,7 @@ uninstall-am: uninstall-pkglibLIBRARIES
 
 
 # automake misses these
-sql_yacc.cc sql_yacc.h: $(top_srcdir)/sql/sql_yacc.yy
+sql_yacc.cc sql_yacc.$(YACC_HEXT): $(top_srcdir)/sql/sql_yacc.yy
 
 # Storage engine specific compilation options
 ha_ndbcluster.o:ha_ndbcluster.cc

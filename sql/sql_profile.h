@@ -1,6 +1,5 @@
 /*
-   Copyright (c) 2007 MySQL AB, 2009 Sun Microsystems, Inc.
-   Use is subject to license terms.
+   Copyright (c) 2007, 2012, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -182,6 +181,7 @@ private:
   char *file;
   unsigned int line;
 
+  ulong m_seq;
   double time_usecs;
   char *allocated_status_memory;
 
@@ -213,8 +213,9 @@ private:
   query_id_t profiling_query_id;        /* Session-specific id. */
   char *query_source;
 
-  PROF_MEASUREMENT *profile_start;
-  PROF_MEASUREMENT *profile_end;
+  double m_start_time_usecs;
+  double m_end_time_usecs;
+  ulong m_seq_counter;
   Queue<PROF_MEASUREMENT> entries;
 
 

@@ -11,8 +11,8 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place, Suite 330, Boston, MA 02111-1307 USA
+this program; if not, write to the Free Software Foundation, Inc., 
+51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 *****************************************************************************/
 
@@ -153,6 +153,10 @@ struct trx_purge_struct{
 					than this */
 	undo_no_t	purge_undo_no;	/*!< Purge has advanced past all records
 					whose undo number is less than this */
+#ifdef UNIV_DEBUG
+	trx_id_t	done_trx_no;	/* Indicate 'purge pointer' which have
+					purged already accurately. */
+#endif /* UNIV_DEBUG */
 	/*-----------------------------*/
 	ibool		next_stored;	/*!< TRUE if the info of the next record
 					to purge is stored below: if yes, then

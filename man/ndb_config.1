@@ -2,12 +2,12 @@
 .\"     Title: \fBndb_config\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBNDB_CONFIG\FR" "1" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBNDB_CONFIG\FR" "1" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -44,7 +44,7 @@ file\&. By default, the management node is the source for the configuration data
 or
 \fB\-\-mycnf\fR
 option\&. Beginning with MySQL Cluster NDB 7\&.0\&.27 and MySQL Cluster NDB 7\&.1\&.16, it is also possible to use a data node as the source by specifying its node ID using
-\fB\-\-config_from_node=\fR\fB\fInode_id\fR\fR\-
+\fB\-\-config_from_node=\fR\fB\fInode_id\fR\fR\&.
 .PP
 Beginning with MySQL Cluster NDB 6\&.3\&.25 and MySQL Cluster NDB 7\&.0\&.6,
 \fBndb_config\fR
@@ -70,7 +70,7 @@ Options Common to MySQL Cluster Programs(1)\&.
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-.B Table\ \&17.14.\ \&ndb_config Options and Variables: MySQL 5.1, MySQL Cluster NDB 6.3-7.1
+.B Table\ \&17.15.\ \&ndb_config Options and Variables: MySQL 5.1, MySQL Cluster NDB 6.3-7.1
 .TS
 allbox tab(:);
 lB lB lB.
@@ -79,7 +79,7 @@ Format
 T}:T{
 Description
 T}:T{
-Supported / Introduced / Removed
+Added / Removed
 T}
 .T&
 l l l
@@ -104,7 +104,7 @@ T}:T{
 Print node information (DB section) only\&.
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -114,7 +114,7 @@ Print CONNECTIONS section information only\&. Cannot be used with \-\-nodes
             or \-\-system option\&.
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -125,7 +125,7 @@ T}:T{
 One or more query options (attributes)
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -134,7 +134,7 @@ T}:T{
 Specify host
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -143,7 +143,7 @@ T}:T{
 Specify node type
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -154,7 +154,7 @@ T}:T{
 Get configuration of node with this ID
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -165,7 +165,7 @@ T}:T{
 Field separator
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -176,7 +176,7 @@ T}:T{
 Row separator
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -185,7 +185,7 @@ T}:T{
 Set the path to config\&.ini file
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -194,7 +194,7 @@ T}:T{
 Read configuration data from my\&.cnf file
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -203,7 +203,7 @@ T}:T{
 Short form for \-\-ndb\-connectstring
 T}:T{
 .PP
-INTRODUCED: MySQL 5\&.1\&.12
+ADDED: 5\&.1\&.12
 T}
 T{
 .PP
@@ -214,7 +214,7 @@ Dumps information about all NDB configuration parameters in text format
             obtain XML output\&.
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.3\&.25, NDB 7\&.0\&.6
+ADDED: NDB 6\&.3\&.25, NDB 7\&.0\&.6
 T}
 T{
 .PP
@@ -225,7 +225,7 @@ Use \-\-xml with \-\-configinfo to obtain a dump of all NDB configuration
             values\&.
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.3\&.25, NDB 7\&.0\&.6
+ADDED: NDB 6\&.3\&.25, NDB 7\&.0\&.6
 T}
 T{
 .PP
@@ -235,7 +235,7 @@ Print SYSTEM section information only\&. Cannot be used with \-\-nodes or
             \-\-connections option\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.27, NDB 7\&.1\&.16
+ADDED: NDB 7\&.0\&.27, NDB 7\&.1\&.16
 T}
 T{
 .PP
@@ -245,7 +245,7 @@ Obtain configuration data from the node having this ID (must be a data
             node)\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.27, NDB 7\&.1\&.16
+ADDED: NDB 7\&.0\&.27, NDB 7\&.1\&.16
 T}
 .TE
 .sp 1
@@ -274,10 +274,12 @@ T}:T{
 \-\-help
 T}
 T{
+\ \&
 T}:T{
 \-\-usage
 T}
 T{
+\ \&
 T}:T{
 \-?
 T}
@@ -308,7 +310,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.56\-ndb\-7\&.1\&.16
 T}
@@ -320,7 +322,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -371,6 +373,7 @@ T}:T{
 \-\-version
 T}
 T{
+\ \&
 T}:T{
 \-V
 T}
@@ -392,9 +395,48 @@ to print a version information string, and then exit\&.
 .\" ndb_config: ndb-connectstring option
 .\" ndb-connectstring option: ndb_config
 \fB\-\-ndb\-connectstring=\fR\fB\fIconnect_string\fR\fR
-.sp
-Specifies the connectstring to use in connecting to the management server\&. The format for the connectstring is the same as described in
-Section\ \&17.3.2.3, \(lqThe MySQL Cluster Connectstring\(rq, and defaults to
+.TS
+allbox tab(:);
+l l s s
+l l s s
+l l s s
+l l s s
+^ l l s
+^ l l s.
+T{
+\fBCommand\-Line Format\fR
+T}:T{
+\-\-ndb\-connectstring=connectstring
+T}
+T{
+\ \&
+T}:T{
+\-\-connect\-string=connectstring
+T}
+T{
+\ \&
+T}:T{
+\-c
+T}
+T{
+\ \&
+T}:T{
+\fBPermitted Values\fR
+T}
+:T{
+\fBType\fR
+T}:T{
+string
+T}
+:T{
+\fBDefault\fR
+T}:T{
+localhost:1186
+T}
+.TE
+.sp 1
+Specifies the connection string to use in connecting to the management server\&. The format for the connection string is the same as described in
+Section\ \&17.3.2.3, \(lqMySQL Cluster Connection Strings\(rq, and defaults to
 localhost:1186\&.
 .sp
 The use of
@@ -429,7 +471,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -472,7 +514,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -517,13 +559,14 @@ T}:T{
 \-\-query=string
 T}
 T{
+\ \&
 T}:T{
 \-q
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -594,7 +637,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -655,7 +698,34 @@ in the same fashion\&.
 .\" ndb_config: nodeid option
 .\" nodeid option: ndb_config
 \fB\-\-nodeid=\fR\fB\fInode_id\fR\fR
-.sp
+.TS
+allbox tab(:);
+l l s s
+l l s s
+^ l l s
+^ l l s.
+T{
+\fBCommand\-Line Format\fR
+T}:T{
+\-\-ndb\-nodeid=#
+T}
+T{
+\ \&
+T}:T{
+\fBPermitted Values\fR
+T}
+:T{
+\fBType\fR
+T}:T{
+numeric
+T}
+:T{
+\fBDefault\fR
+T}:T{
+0
+T}
+.TE
+.sp 1
 Either of these options can be used to specify the node ID of the node for which configuration information is to be obtained\&.
 \fB\-\-nodeid\fR
 is the preferred form\&.
@@ -686,7 +756,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -735,7 +805,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -778,7 +848,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.56\-ndb\-7\&.1\&.16
 T}
@@ -790,7 +860,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -834,7 +904,9 @@ l l s s
 l l s s
 ^ l l s
 ^ l l s
-^ l l s.
+^ lt l s
+^ ^ l s
+^ ^ l s.
 T{
 \fBCommand\-Line Format\fR
 T}:T{
@@ -843,7 +915,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -858,9 +930,11 @@ T}
 \fBValid Values\fR
 T}:T{
 ndbd
-.sp
+T}
+::T{
 mysqld
-.sp
+T}
+::T{
 ndb_mgmd
 T}
 .TE
@@ -898,13 +972,14 @@ T}:T{
 \-\-fields=string
 T}
 T{
+\ \&
 T}:T{
 \-f
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -969,13 +1044,14 @@ T}:T{
 \-\-rows=string
 T}
 T{
+\ \&
 T}:T{
 \-r
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -1142,7 +1218,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.34\-ndb\-7\&.0\&.6
 T}
@@ -1154,7 +1230,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -1182,7 +1258,7 @@ option, available beginning with MySQL Cluster NDB 6\&.3\&.25 and MySQL Cluster 
 .\}
 .nf
 shell> \fBndb_config \-\-configinfo \-\-xml\fR
-<configvariables protocolversion="1" ndbversionstring="5\&.1\&.63\-ndb\-7\&.1\&.25"
+<configvariables protocolversion="1" ndbversionstring="5\&.1\&.71\-ndb\-7\&.1\&.29"
                     ndbversion="458758" ndbversionmajor="7" ndbversionminor="0"
                     ndbversionbuild="6">
   <section name="SYSTEM">
@@ -1382,7 +1458,7 @@ options to place the values for each node on a new line in the output\&.
 .sp -1
 .IP "  2." 4.2
 .\}
-To produce a connectstring that can be used by data, SQL, and API nodes to connect to the management server:
+To produce a connection string that can be used by data, SQL, and API nodes to connect to the management server:
 .sp
 .if n \{\
 .RS 4
@@ -1473,7 +1549,7 @@ option\&.
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP
