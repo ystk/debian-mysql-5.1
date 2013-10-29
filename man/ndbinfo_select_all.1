@@ -2,12 +2,12 @@
 .\"     Title: \fBndbinfo_select_all\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBNDBINFO_SELECT_AL" "1" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBNDBINFO_SELECT_AL" "1" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -39,7 +39,7 @@ ndbinfo_select_all \- select from ndbinfo tables
 \fBndbinfo_select_all\fR
 is a client program that selects all rows and columns from one or more tables in the
 ndbinfo
-database\&. It is included with the MySQL Cluster NDB 7\&.1 and later distributions, starting with MySQL Cluster NDB 7\&.1\&.17\&.
+database\&. It is included with the MySQL Cluster distribution beginning with MySQL Cluster NDB 7\&.1\&.17\&.
 .PP
 Not all
 ndbinfo
@@ -130,7 +130,7 @@ Format
 T}:T{
 Description
 T}:T{
-Supported / Introduced / Removed
+Added / Removed
 T}
 .T&
 l l l
@@ -144,7 +144,7 @@ T}:T{
 Set the delay in seconds between loops\&. Default is 5\&.
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -155,7 +155,7 @@ T}:T{
 Set the number of times to perform the select\&. Default is 1\&.
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -166,7 +166,7 @@ T}:T{
 Name of the database where the table located\&.
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -177,7 +177,7 @@ T}:T{
 Set the degree of parallelism\&.
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 .TE
 .sp 1
@@ -207,7 +207,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -257,13 +257,14 @@ T}:T{
 \-\-loops=#
 T}
 T{
+\ \&
 T}:T{
 \-l
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -289,7 +290,7 @@ to set the time between loops\&.
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

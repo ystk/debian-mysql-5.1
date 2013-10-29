@@ -2,12 +2,12 @@
 .\"     Title: \fBmysqlslap\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBMYSQLSLAP\FR" "1" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBMYSQLSLAP\FR" "1" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -409,23 +409,6 @@ The file or string containing the statement to use for creating the table\&.
 .sp -1
 .IP \(bu 2.3
 .\}
-.\" mysqlslap: create-and-drop-schema option
-.\" create-and-drop-schema option: mysqlslap
-\fB\-\-create\-and\-drop\-schema=\fR\fB\fIvalue\fR\fR
-.sp
-The schema in which to run the tests\&.
-\fBmysqlslap\fR
-drops the schema at the end of the test run\&. This option was added in MySQL 5\&.1\&.57\&.
-.RE
-.sp
-.RS 4
-.ie n \{\
-\h'-04'\(bu\h'+03'\c
-.\}
-.el \{\
-.sp -1
-.IP \(bu 2.3
-.\}
 .\" mysqlslap: create-schema option
 .\" create-schema option: mysqlslap
 \fB\-\-create\-schema=\fR\fB\fIvalue\fR\fR
@@ -448,8 +431,8 @@ If the
 option is also given,
 \fBmysqlslap\fR
 drops the schema at the end of the test run\&. To avoid this, use the
-\fB\-\-create\-and\-drop\-schema\fR
-option instead\&.
+\fB\-\-no\-drop\fR
+option as well\&.
 .sp .5v
 .RE
 .RE
@@ -614,6 +597,23 @@ The number of times to run the tests\&.
 \fB\-\-lock\-directory=\fR\fB\fIpath\fR\fR
 .sp
 The directory to use for storing locks\&. This option was added in MySQL 5\&.1\&.5 and removed in 5\&.1\&.18\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+.\" mysqlslap: no-drop option
+.\" no-drop option: mysqlslap
+\fB\-\-no\-drop\fR
+.sp
+Prevent
+\fBmysqlslap\fR
+from dropping any schema it creates during the test run\&. This option was added in MySQL 5\&.1\&.57\&.
 .RE
 .sp
 .RS 4
@@ -1041,7 +1041,7 @@ Display version information and exit\&.
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

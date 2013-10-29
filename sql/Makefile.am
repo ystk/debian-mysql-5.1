@@ -1,4 +1,4 @@
-# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -146,7 +146,7 @@ DEFS =			-DMYSQL_SERVER \
 			-DHAVE_EVENT_SCHEDULER \
 			@DEFS@
 
-BUILT_MAINT_SRC =	sql_yacc.cc sql_yacc.h
+BUILT_MAINT_SRC =	sql_yacc.cc sql_yacc.$(YACC_HEXT)
 BUILT_SOURCES =		$(BUILT_MAINT_SRC) lex_hash.h link_sources
 EXTRA_DIST =		udf_example.c udf_example.def $(BUILT_MAINT_SRC) \
 			nt_servc.cc nt_servc.h \

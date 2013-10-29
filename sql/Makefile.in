@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -377,6 +377,7 @@ THREAD_LOBJECTS = @THREAD_LOBJECTS@
 VERSION = @VERSION@
 WRAPLIBS = @WRAPLIBS@
 YACC = @YACC@
+YACC_HEXT = @YACC_HEXT@
 ZLIB_DEPS = @ZLIB_DEPS@
 ZLIB_INCLUDES = @ZLIB_INCLUDES@
 ZLIB_LIBS = @ZLIB_LIBS@
@@ -632,7 +633,7 @@ gen_lex_hash_SOURCES = gen_lex_hash.cc
 gen_lex_hash_LDFLAGS = @NOINST_LDFLAGS@
 mysql_tzinfo_to_sql_SOURCES = tztime.cc
 mysql_tzinfo_to_sql_CXXFLAGS = -DTZINFO2SQL
-BUILT_MAINT_SRC = sql_yacc.cc sql_yacc.h
+BUILT_MAINT_SRC = sql_yacc.cc sql_yacc.$(YACC_HEXT)
 BUILT_SOURCES = $(BUILT_MAINT_SRC) lex_hash.h link_sources
 EXTRA_DIST = udf_example.c udf_example.def $(BUILT_MAINT_SRC) \
 			nt_servc.cc nt_servc.h \

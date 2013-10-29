@@ -11,8 +11,8 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place, Suite 330, Boston, MA 02111-1307 USA
+this program; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
+Fifth Floor, Boston, MA 02110-1301 USA
 
 *****************************************************************************/
 
@@ -1642,7 +1642,9 @@ buf_LRU_block_remove_hashed_page(
 				break;
 			case FIL_PAGE_INDEX:
 #ifdef UNIV_ZIP_DEBUG
-				ut_a(page_zip_validate(&bpage->zip, page));
+				ut_a(page_zip_validate(
+					     &bpage->zip, page,
+					     ((buf_block_t*) bpage)->index));
 #endif /* UNIV_ZIP_DEBUG */
 				break;
 			default:

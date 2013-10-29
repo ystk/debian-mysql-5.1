@@ -2,12 +2,12 @@
 .\"     Title: Options Common to MySQL Cluster Programs
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "OPTIONS COMMON TO MY" "1" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "OPTIONS COMMON TO MY" "1" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -97,7 +97,7 @@ The options in the following table are common to all MySQL Cluster executables (
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-.B Table\ \&17.28.\ \&Common MySQL Cluster Program Options and Variables: MySQL 5.1, MySQL Cluster NDB 6.3-7.1
+.B Table\ \&17.29.\ \&Common MySQL Cluster Program Options and Variables: MySQL 5.1, MySQL Cluster NDB 6.3-7.1
 .TS
 allbox tab(:);
 lB lB lB.
@@ -106,7 +106,7 @@ Format
 T}:T{
 Description
 T}:T{
-Supported / Introduced / Removed
+Added / Removed
 T}
 .T&
 l l l
@@ -130,7 +130,7 @@ T}:T{
 Display help message and exit
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -140,12 +140,12 @@ T{
 .PP
 -c
 T}:T{
-Set connectstring for connecting to ndb_mgmd\&. Syntax:
+Set connection string for connecting to ndb_mgmd\&. Syntax:
             [nodeid=<id>;][host=]<hostname>[:<port>]\&.
             Overrides entries specified in NDB_CONNECTSTRING or my\&.cnf\&.
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -155,7 +155,7 @@ Set the host (and port, if desired) for connecting to the management
             server
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -164,7 +164,7 @@ T}:T{
 Set node id for this node
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -183,7 +183,7 @@ T}:T{
 Select nodes for transactions in a more optimal way
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -192,7 +192,7 @@ T}:T{
 Directory where character sets are
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -202,7 +202,7 @@ Enable output from debug calls\&. Can be used only for versions compiled
             with debugging enabled
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -211,7 +211,7 @@ T}:T{
 Write core on errors (defaults to TRUE in debug builds)
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -222,7 +222,7 @@ T}:T{
 Output version information and exit
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 .TE
 .sp 1
@@ -260,10 +260,12 @@ T}:T{
 \-\-help
 T}
 T{
+\ \&
 T}:T{
 \-\-usage
 T}
 T{
+\ \&
 T}:T{
 \-?
 T}
@@ -297,7 +299,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -341,17 +343,19 @@ T}:T{
 \-\-ndb\-connectstring=connectstring
 T}
 T{
+\ \&
 T}:T{
 \-\-connect\-string=connectstring
 T}
 T{
+\ \&
 T}:T{
 \-c
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -365,7 +369,7 @@ localhost:1186
 T}
 .TE
 .sp 1
-This option takes a MySQL Cluster connectstring that specifies the management server for the application to connect to, as shown here:
+This option takes a MySQL Cluster connection string that specifies the management server for the application to connect to, as shown here:
 .sp
 .if n \{\
 .RS 4
@@ -378,7 +382,7 @@ shell> \fBndbd \-\-ndb\-connectstring="nodeid=2;host=ndb_mgmd\&.mysql\&.com:1186
 .\}
 .sp
 For more information, see
-Section\ \&17.3.2.3, \(lqThe MySQL Cluster Connectstring\(rq\&.
+Section\ \&17.3.2.3, \(lqMySQL Cluster Connection Strings\(rq\&.
 .RE
 .sp
 .RS 4
@@ -405,7 +409,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -458,7 +462,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -507,7 +511,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -550,7 +554,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -593,7 +597,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -632,6 +636,7 @@ T}:T{
 \-\-version
 T}
 T{
+\ \&
 T}:T{
 \-V
 T}
@@ -661,7 +666,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Removed\fR
+\fBRemoved\fR
 T}:T{
 5\&.1\&.47\-ndb\-7\&.1\&.5
 T}
@@ -673,7 +678,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -694,7 +699,7 @@ was removed from all MySQL Cluster programs beginning with MySQL Cluster NDB 7\&
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

@@ -2,12 +2,12 @@
 .\"     Title: \fBndb_mgmd\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBNDB_MGMD\FR" "8" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBNDB_MGMD\FR" "8" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -63,7 +63,7 @@ Format
 T}:T{
 Description
 T}:T{
-Supported / Introduced / Removed
+Added / Removed
 T}
 .T&
 l l l
@@ -95,7 +95,7 @@ Specify the cluster configuration file; in NDB\-6\&.4\&.0 and later, needs
             present
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -104,7 +104,7 @@ T}:T{
 Specify the cluster management server\*(Aqs configuration cache directory
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.4\&.0
+ADDED: NDB 6\&.4\&.0
 T}
 T{
 .PP
@@ -113,7 +113,7 @@ T}:T{
 Local bind address
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.2\&.5, NDB 6\&.3\&.2
+ADDED: NDB 6\&.2\&.5, NDB 6\&.3\&.2
 T}
 T{
 .PP
@@ -124,7 +124,7 @@ T}:T{
 Print full configuration and exit
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -135,7 +135,7 @@ T}:T{
 Run ndb_mgmd in daemon mode (default)
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -144,7 +144,7 @@ T}:T{
 Do not run ndb_mgmd as a daemon
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.8
+ADDED: NDB 7\&.0\&.8
 T}
 T{
 .PP
@@ -154,7 +154,7 @@ Run ndb_mgmd in interactive mode (not officially supported in
             production; for testing purposes only)
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -164,7 +164,7 @@ A name to use when writing messages applying to this node in the cluster
             log\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.8
+ADDED: NDB 7\&.0\&.8
 T}
 T{
 .PP
@@ -173,7 +173,7 @@ T}:T{
 Do not provide any node id checks
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -182,7 +182,7 @@ T}:T{
 Read cluster configuration data from the my\&.cnf file
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -192,7 +192,7 @@ Causes the management server to compare the configuration file with its
             configuration cache
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.4\&.0
+ADDED: NDB 6\&.4\&.0
 T}
 T{
 .PP
@@ -202,7 +202,7 @@ Causes the management server reload its configuration data from the
             configuration file, bypassing the configuration cache
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.4\&.0
+ADDED: NDB 6\&.4\&.0
 T}
 T{
 .PP
@@ -212,7 +212,7 @@ Do not wait for these management nodes when starting this management
             server\&. Also requires \-\-ndb\-nodeid to be used\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.10, NDB 7\&.1\&.0
+ADDED: NDB 7\&.0\&.10, NDB 7\&.1\&.0
 T}
 T{
 .PP
@@ -221,7 +221,7 @@ T}:T{
 Enable the management server configuration cache; ON by default\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.15, NDB 7\&.1\&.4
+ADDED: NDB 7\&.0\&.15, NDB 7\&.1\&.4
 T}
 T{
 .PP
@@ -231,7 +231,7 @@ Used to install the management server process as a Windows service\&. Does
             not apply on non\-Windows platforms\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
+ADDED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
 T}
 T{
 .PP
@@ -243,7 +243,7 @@ Used to remove a management server process that was previously installed
             platforms\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
+ADDED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
 T}
 .TE
 .sp 1
@@ -266,7 +266,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.22\-ndb\-6\&.3\&.2
 T}
@@ -278,7 +278,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -326,7 +326,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -361,7 +361,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.30\-ndb\-6\&.4\&.0
 T}
@@ -373,7 +373,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -538,6 +538,8 @@ allbox tab(:);
 l l s s
 l l s s
 l l s s
+^ l l s
+^ l l s
 l l s s
 ^ l l s
 ^ l l s.
@@ -547,17 +549,14 @@ T}:T{
 \-\-config\-file=file
 T}
 T{
+\ \&
 T}:T{
 \-f
 T}
 T{
-T}:T{
-\-c
-T}
-T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -569,6 +568,21 @@ T}
 T}:T{
 \&./config\&.ini
 T}
+T{
+\ \&
+T}:T{
+\fBPermitted Values\fR
+T}
+:T{
+\fBType\fR
+T}:T{
+file name
+T}
+:T{
+\fBDefault\fR
+T}:T{
+[none]
+T}
 .TE
 .sp 1
 Instructs the management server as to which file it should use for its configuration file\&. By default, the management server looks for a file named
@@ -577,7 +591,7 @@ in the same directory as the
 \fBndb_mgmd\fR
 executable; otherwise the file name and location must be specified explicitly\&.
 .sp
-Beginning with MySQL Cluster NDB 6\&.4\&.0, this option is ignored unless the management server is forced to read the configuration file, either because
+Beginning with MySQL Cluster NDB 6\&.4\&.0, this option has no default value, and is ignored unless the management server is forced to read the configuration file, either because
 \fBndb_mgmd\fR
 was started with the
 \fB\-\-reload\fR
@@ -588,6 +602,10 @@ option, or because the management server could not find any configuration cache\
 was started with
 \fB\-\-config\-cache=OFF\fR\&. See
 Section\ \&17.3.2, \(lqMySQL Cluster Configuration Files\(rq, for more information\&.
+.sp
+Formerly, using this option together with
+\fB\-\-initial\fR
+caused removal of the configuration cache even if the file was not found\&. This issue was resolved in MySQL Cluster NDB 7\&.0\&.38 and MySQL Cluster NDB 7\&.1\&.27\&. (Bug #1299289)
 .RE
 .sp
 .RS 4
@@ -615,7 +633,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -659,13 +677,14 @@ T}:T{
 \-\-daemon
 T}
 T{
+\ \&
 T}:T{
 \-d
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -712,7 +731,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -751,7 +770,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.30\-ndb\-6\&.4\&.0
 T}
@@ -763,7 +782,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -801,6 +820,10 @@ ignores
 unless it is the only management server running\&. This behavior has implications when performing a rolling restart of a MySQL Cluster with multiple management nodes\&. See
 Section\ \&17.5.5, \(lqPerforming a Rolling Restart of a MySQL Cluster\(rq, for more information\&.
 .sp
+Formerly, using this option together with the
+\fB\-\-config\-file\fR
+option caused removal of the configuration cache even if the file was not found\&. Starting with MySQL Cluster NDB 7\&.0\&.38 and MySQL Cluster NDB 7\&.1\&.27, the cache is cleared in such cases only if the configuration file is actually found\&. (Bug #1299289)
+.sp
 This option was introduced in MySQL Cluster NDB 6\&.4\&.0\&.
 .RE
 .sp
@@ -822,7 +845,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.37\-ndb\-7\&.0\&.8
 T}
@@ -834,7 +857,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -871,7 +894,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.37\-ndb\-7\&.0\&.8
 T}
@@ -883,7 +906,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -931,13 +954,14 @@ T}:T{
 \-\-print\-full\-config
 T}
 T{
+\ \&
 T}:T{
 \-P
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -976,7 +1000,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.30\-ndb\-6\&.4\&.0
 T}
@@ -988,7 +1012,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -1046,7 +1070,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.39\-ndb\-7\&.1\&.0
 T}
@@ -1058,7 +1082,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -1140,7 +1164,7 @@ option to specify the node ID of this
 \fBndb_mgmd\fR
 process\&.
 .sp
-You can then start each of the cluster\*(Aqs data nodes in the usual way\&. If you wish to start and use the second management server in addition to the first management server at a later time without restarting the data nodes, you must start each data node with a connectstring that references both management servers, like this:
+You can then start each of the cluster\*(Aqs data nodes in the usual way\&. If you wish to start and use the second management server in addition to the first management server at a later time without restarting the data nodes, you must start each data node with a connection string that references both management servers, like this:
 .sp
 .if n \{\
 .RS 4
@@ -1152,10 +1176,10 @@ shell> \fBndbd \-c 192\&.168\&.0\&.150,192\&.168\&.0\&.151\fR
 .RE
 .\}
 .sp
-The same is true with regard to the connectstring used with any
+The same is true with regard to the connection string used with any
 \fBmysqld\fR
 processes that you wish to start as MySQL Cluster SQL nodes connected to this cluster\&. See
-Section\ \&17.3.2.3, \(lqThe MySQL Cluster Connectstring\(rq, for more information\&.
+Section\ \&17.3.2.3, \(lqMySQL Cluster Connection Strings\(rq, for more information\&.
 .sp
 When used with
 \fBndb_mgmd\fR, this option affects the behavior of the management node with regard to other management nodes only\&. Do not confuse it with the
@@ -1187,10 +1211,10 @@ management server, its configuration must match that of the management server th
 This option was introduced in MySQL Cluster NDB 7\&.0\&.10 and MySQL Cluster NDB 7\&.1\&.0\&.
 .RE
 .PP
-It is not strictly necessary to specify a connectstring when starting the management server\&. However, if you are using more than one management server, a connectstring should be provided and each node in the cluster should specify its node ID explicitly\&.
+It is not strictly necessary to specify a connection string when starting the management server\&. However, if you are using more than one management server, a connection string should be provided and each node in the cluster should specify its node ID explicitly\&.
 .PP
 See
-Section\ \&17.3.2.3, \(lqThe MySQL Cluster Connectstring\(rq, for information about using connectstrings\&.
+Section\ \&17.3.2.3, \(lqMySQL Cluster Connection Strings\(rq, for information about using connection strings\&.
 \fBndb_mgmd\fR(8), describes other options for
 \fBndb_mgmd\fR\&.
 .PP
@@ -1217,7 +1241,7 @@ is the unique node identifier\&.
 .\" config.ini (MySQL Cluster)
 config\&.ini
 is the configuration file for the cluster as a whole\&. This file is created by the user and read by the management server\&.
-Section\ \&17.3, \(lqMySQL Cluster Configuration\(rq, discusses how to set up this file\&.
+Section\ \&17.3, \(lqConfiguration of MySQL Cluster NDB 6.1-7.1\(rq, discusses how to set up this file\&.
 .RE
 .sp
 .RS 4
@@ -1285,7 +1309,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.47\-ndb\-7\&.1\&.5
 T}
@@ -1297,7 +1321,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -1356,7 +1380,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.47\-ndb\-7\&.1\&.5
 T}
@@ -1368,7 +1392,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -1396,7 +1420,7 @@ This option became available in MySQL Cluster NDB 7\&.0\&.16 and MySQL Cluster N
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

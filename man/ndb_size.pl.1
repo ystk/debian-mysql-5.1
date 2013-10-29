@@ -2,12 +2,12 @@
 .\"     Title: \fBndb_size.pl\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBNDB_SIZE\&.PL\FR" "1" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBNDB_SIZE\&.PL\FR" "1" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -120,7 +120,7 @@ Options Common to MySQL Cluster Programs(1)\&.
 .nr an-no-space-flag 1
 .nr an-break-flag 1
 .br
-.B Table\ \&17.26.\ \&ndb_size\&.pl Options and Variables: MySQL 5.1, MySQL Cluster NDB 6.3-7.1
+.B Table\ \&17.27.\ \&ndb_size\&.pl Options and Variables: MySQL 5.1, MySQL Cluster NDB 6.3-7.1
 .TS
 allbox tab(:);
 lB lB lB.
@@ -129,7 +129,7 @@ Format
 T}:T{
 Description
 T}:T{
-Supported / Introduced / Removed
+Added / Removed
 T}
 .T&
 l l l
@@ -151,7 +151,7 @@ The database or databases to examine; accepts a comma\-delimited list;
             the default is ALL (use all databases found on the server)
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -160,7 +160,7 @@ T}:T{
 Specify host and optional port as host[:port]
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -169,7 +169,7 @@ T}:T{
 Specify a socket to connect to
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.2\&.5
+ADDED: NDB 6\&.2\&.5
 T}
 T{
 .PP
@@ -178,7 +178,7 @@ T}:T{
 Specify a MySQL user name
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -187,7 +187,7 @@ T}:T{
 Specify a MySQL user password
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -196,7 +196,7 @@ T}:T{
 Set output format (text or HTML)
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -205,7 +205,7 @@ T}:T{
 Skip any tables in a comma\-separated list of tables
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -214,7 +214,7 @@ T}:T{
 Skip any databases in a comma\-separated list of databases
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -223,7 +223,7 @@ T}:T{
 Saves all queries to the database into the file specified
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -233,7 +233,7 @@ Loads all queries from the file specified; does not connect to a
             database
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -242,7 +242,7 @@ T}:T{
 Designates a table to handle unique index size calculations
 T}:T{
 .PP
-INTRODUCED: NDB 6\&.2\&.5
+ADDED: NDB 6\&.2\&.5
 T}
 .TE
 .sp 1
@@ -445,7 +445,7 @@ For more information about this change, see Bug #28683 and Bug #28253\&.
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

@@ -1864,15 +1864,15 @@ char *ha_partition::update_table_comment(const char *comment)
     names of the partitions and the underlying storage engines.
 */
 
-uint ha_partition::del_ren_cre_table(const char *from,
+int ha_partition::del_ren_cre_table(const char *from,
 				     const char *to,
 				     TABLE *table_arg,
 				     HA_CREATE_INFO *create_info)
 {
   int save_error= 0;
-  int error;
+  int error= HA_ERR_INTERNAL_ERROR;
   char from_buff[FN_REFLEN], to_buff[FN_REFLEN], from_lc_buff[FN_REFLEN],
-       to_lc_buff[FN_REFLEN];
+       to_lc_buff[FN_REFLEN], buff[FN_REFLEN];
   char *name_buffer_ptr;
   const char *from_path;
   const char *to_path= NULL;
@@ -1884,24 +1884,28 @@ uint ha_partition::del_ren_cre_table(const char *from,
   if (create_info && create_info->options & HA_LEX_CREATE_TMP_TABLE)
   {
     my_error(ER_PARTITION_NO_TEMPORARY, MYF(0));
-    DBUG_RETURN(TRUE);
+    DBUG_RETURN(error);
+  }
+
+  fn_format(buff,from, "", ha_par_ext, MY_APPEND_EXT);
+  /* Check if the  par file exists */
+  if (my_access(buff,F_OK))
+  {
+    /*
+      If the .par file does not exist, return HA_ERR_NO_SUCH_TABLE,
+      This will signal to the caller that it can remove the .frm
+      file.
+    */
+    error= HA_ERR_NO_SUCH_TABLE;
+    DBUG_RETURN(error);
   }
 
   if (get_from_handler_file(from, ha_thd()->mem_root, false))
-    DBUG_RETURN(TRUE);
+    DBUG_RETURN(error);
   DBUG_ASSERT(m_file_buffer);
   DBUG_PRINT("enter", ("from: (%s) to: (%s)", from, to));
   name_buffer_ptr= m_name_buffer_ptr;
   file= m_file;
-  if (to == NULL && table_arg == NULL)
-  {
-    /*
-      Delete table, start by delete the .par file. If error, break, otherwise
-      delete as much as possible.
-    */
-    if ((error= handler::delete_table(from)))
-      DBUG_RETURN(error);
-  }
   /*
     Since ha_partition has HA_FILE_BASED, it must alter underlying table names
     if they do not have HA_FILE_BASED and lower_case_table_names == 2.
@@ -1940,6 +1944,18 @@ uint ha_partition::del_ren_cre_table(const char *from,
       save_error= error;
     i++;
   } while (*(++file));
+
+  if (to == NULL && table_arg == NULL)
+  {
+    DBUG_EXECUTE_IF("crash_before_deleting_par_file", DBUG_SUICIDE(););
+
+    /* Delete the .par file. If error, break.*/
+    if ((error= handler::delete_table(from)))
+      DBUG_RETURN(error);
+
+    DBUG_EXECUTE_IF("crash_after_deleting_par_file", DBUG_SUICIDE(););
+  }
+
   if (to != NULL)
   {
     if ((error= handler::rename_table(from, to)))
@@ -4077,6 +4093,7 @@ bool ha_partition::init_record_priority_queue()
     {
       if (bitmap_is_set(&m_part_info->used_partitions, i))
       {
+        DBUG_PRINT("info", ("init rec-buf for part %u", i));
         int2store(ptr, i);
         ptr+= m_rec_length + PARTITION_BYTES_IN_POS;
       }
@@ -4981,11 +4998,27 @@ int ha_partition::handle_ordered_index_scan(uchar *buf, bool reverse_order)
   m_top_entry= NO_CURRENT_PART_ID;
   queue_remove_all(&m_queue);
 
-  DBUG_PRINT("info", ("m_part_spec.start_part %d", m_part_spec.start_part));
-  for (i= m_part_spec.start_part; i <= m_part_spec.end_part; i++)
+  /*
+    Position part_rec_buf_ptr to point to the first used partition >=
+    start_part. There may be partitions marked by used_partitions,
+    but is before start_part. These partitions has allocated record buffers
+    but is dynamically pruned, so those buffers must be skipped.
+  */
+  uint first_used_part= bitmap_get_first_set(&m_part_info->used_partitions);
+  for (; first_used_part < m_part_spec.start_part; first_used_part++)
+  {
+    if (bitmap_is_set(&(m_part_info->used_partitions), first_used_part))
+      part_rec_buf_ptr+= m_rec_length + PARTITION_BYTES_IN_POS;
+  }
+  DBUG_PRINT("info", ("m_part_spec.start_part %u first_used_part %u",
+                      m_part_spec.start_part, first_used_part));
+  for (i= first_used_part; i <= m_part_spec.end_part; i++)
   {
     if (!(bitmap_is_set(&(m_part_info->used_partitions), i)))
       continue;
+    DBUG_PRINT("info", ("reading from part %u (scan_type: %u)",
+                        i, m_index_scan_type));
+    DBUG_ASSERT(i == uint2korr(part_rec_buf_ptr));
     uchar *rec_buf_ptr= part_rec_buf_ptr + PARTITION_BYTES_IN_POS;
     int error;
     handler *file= m_file[i];

@@ -11,8 +11,8 @@ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-this program; if not, write to the Free Software Foundation, Inc., 59 Temple
-Place, Suite 330, Boston, MA 02111-1307 USA
+this program; if not, write to the Free Software Foundation, Inc., 
+51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 *****************************************************************************/
 
@@ -725,6 +725,21 @@ ibool
 fil_tablespace_is_being_deleted(
 /*============================*/
 	ulint		id);	/*!< in: space id */
+
+/****************************************************************//**
+Generate redo logs for swapping two .ibd files */
+UNIV_INTERN
+void
+fil_mtr_rename_log(
+/*===============*/
+	ulint		old_space_id,	/*!< in: tablespace id of the old
+					table. */
+	const char*	old_name,	/*!< in: old table name */
+	ulint		new_space_id,	/*!< in: tablespace id of the new
+					table */
+	const char*	new_name,	/*!< in: new table name */
+	const char*	tmp_name);	/*!< in: temp table name used while
+					swapping */
 
 typedef	struct fil_space_struct	fil_space_t;
 

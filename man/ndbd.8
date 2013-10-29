@@ -2,12 +2,12 @@
 .\"     Title: \fBndbd\fR
 .\"    Author: [FIXME: author] [see http://docbook.sf.net/el/author]
 .\" Generator: DocBook XSL Stylesheets v1.77.1 <http://docbook.sf.net/>
-.\"      Date: 09/07/2012
+.\"      Date: 09/09/2013
 .\"    Manual: MySQL Database System
 .\"    Source: MySQL 5.1
 .\"  Language: English
 .\"
-.TH "\FBNDBD\FR" "8" "09/07/2012" "MySQL 5\&.1" "MySQL Database System"
+.TH "\FBNDBD\FR" "8" "09/09/2013" "MySQL 5\&.1" "MySQL Database System"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -68,9 +68,11 @@ Format
 T}:T{
 Description
 T}:T{
-Supported / Introduced / Removed
+Added / Removed
 T}
 .T&
+l l l
+l l l
 l l l
 l l l
 l l l
@@ -89,7 +91,7 @@ Perform initial start of ndbd, including cleaning the file system\&.
             Consult the documentation before using this option
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -101,7 +103,7 @@ Don\*(Aqt start ndbd immediately; ndbd waits for command to start from
             ndb_mgmd
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -112,7 +114,7 @@ T}:T{
 Start ndbd as daemon (default); override with \-\-nodaemon
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -121,7 +123,7 @@ T}:T{
 Do not start ndbd as daemon; provided for testing purposes
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -131,7 +133,7 @@ Run ndbd in foreground, provided for debugging purposes (implies
             \-\-nodaemon)
 T}:T{
 .PP
-SUPPORTED: All releases
+All MySQL 5\&.1 based releases
 T}
 T{
 .PP
@@ -141,7 +143,7 @@ Do not wait for these data nodes to start (takes comma\-separated list of
             node IDs)\&. Also requires \-\-ndb\-nodeid to be used\&.
 T}:T{
 .PP
-INTRODUCED: MySQL 5\&.1\&.9
+ADDED: 5\&.1\&.9
 T}
 T{
 .PP
@@ -150,7 +152,7 @@ T}:T{
 Perform partial initial start (requires \-\-nowait\-nodes)
 T}:T{
 .PP
-INTRODUCED: MySQL 5\&.1\&.11
+ADDED: 5\&.1\&.11
 T}
 T{
 .PP
@@ -159,7 +161,7 @@ T}:T{
 Local bind address
 T}:T{
 .PP
-INTRODUCED: MySQL 5\&.1\&.12
+ADDED: 5\&.1\&.12
 T}
 T{
 .PP
@@ -169,7 +171,7 @@ Used to install the data node process as a Windows service\&. Does not
             apply on non\-Windows platforms\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
+ADDED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
 T}
 T{
 .PP
@@ -179,7 +181,26 @@ Used to remove a data node process that was previously installed as a
             Windows service\&. Does not apply on non\-Windows platforms\&.
 T}:T{
 .PP
-INTRODUCED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
+ADDED: NDB 7\&.0\&.16, NDB 7\&.1\&.5
+T}
+T{
+.PP
+--connect-retries=#
+T}:T{
+Number of times to try contacting the management server; set to \-1 to
+            keep trying indefinitely
+T}:T{
+.PP
+ADDED: NDB 7\&.0\&.36, NDB 7\&.1\&.25
+T}
+T{
+.PP
+--connect-delay=#
+T}:T{
+Time to wait between attempts to contact a management server, in seconds
+T}:T{
+.PP
+ADDED: NDB 7\&.0\&.36, NDB 7\&.1\&.25
 T}
 .TE
 .sp 1
@@ -221,7 +242,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.12
 T}
@@ -233,7 +254,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -276,13 +297,14 @@ T}:T{
 \-\-daemon
 T}
 T{
+\ \&
 T}:T{
 \-d
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -334,7 +356,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -386,7 +408,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -440,7 +462,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -572,7 +594,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.11
 T}
@@ -584,7 +606,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -662,7 +684,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.9
 T}
@@ -674,7 +696,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -733,13 +755,14 @@ T}:T{
 \-\-nostart
 T}
 T{
+\ \&
 T}:T{
 \-n
 T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -782,7 +805,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.47\-ndb\-7\&.1\&.5
 T}
@@ -794,7 +817,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -858,7 +881,7 @@ l l s s
 ^ l l s
 ^ l l s.
 T{
-\fBVersion Introduced\fR
+\fBIntroduced\fR
 T}:T{
 5\&.1\&.47\-ndb\-7\&.1\&.5
 T}
@@ -870,7 +893,7 @@ T}
 T{
 \ \&
 T}:T{
-\fBPermitted Values \fR
+\fBPermitted Values\fR
 T}
 :T{
 \fBType\fR
@@ -894,6 +917,122 @@ The
 option has no effect on non\-Windows platforms\&.
 .sp
 This option became available in MySQL Cluster NDB 7\&.0\&.16 and MySQL Cluster NDB 7\&.1\&.5\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+.\" connect-retries option (ndbd)
+.\" connect-retries option (ndbmtd)
+\fB\-\-connect\-retries=\fR\fB\fI#\fR\fR
+.TS
+allbox tab(:);
+l l s s
+l l s s
+l l s s
+^ l l s
+^ l l s
+^ l l s.
+T{
+\fBIntroduced\fR
+T}:T{
+5\&.1\&.63\-ndb\-7\&.1\&.25
+T}
+T{
+\fBCommand\-Line Format\fR
+T}:T{
+\-\-connect\-retries=#
+T}
+T{
+\ \&
+T}:T{
+\fBPermitted Values\fR
+T}
+:T{
+\fBType\fR
+T}:T{
+numeric
+T}
+:T{
+\fBDefault\fR
+T}:T{
+12
+T}
+:T{
+\fBRange\fR
+T}:T{
+\-1 \&.\&. 65535
+T}
+.TE
+.sp 1
+Determines the number of times that the data node attempts to contact a management server when starting\&. Setting this option to \-1 causes the data node to keep trying to make contact indefinitely\&. The default is 12 attempts\&. The time to wait between attempts is controlled by the
+\fB\-\-connect\-delay\fR
+option\&.
+.sp
+This option was added in MySQL Cluster NDB 7\&.0\&.36 and MySQL Cluster 7\&.1\&.25\&.
+.RE
+.sp
+.RS 4
+.ie n \{\
+\h'-04'\(bu\h'+03'\c
+.\}
+.el \{\
+.sp -1
+.IP \(bu 2.3
+.\}
+.\" connect-delay option (ndbd)
+.\" connect-delay option (ndbmtd)
+\fB\-\-connect\-delay=\fR\fB\fI#\fR\fR
+.TS
+allbox tab(:);
+l l s s
+l l s s
+l l s s
+^ l l s
+^ l l s
+^ l l s.
+T{
+\fBIntroduced\fR
+T}:T{
+5\&.1\&.63\-ndb\-7\&.1\&.25
+T}
+T{
+\fBCommand\-Line Format\fR
+T}:T{
+\-\-connect\-delay=#
+T}
+T{
+\ \&
+T}:T{
+\fBPermitted Values\fR
+T}
+:T{
+\fBType\fR
+T}:T{
+numeric
+T}
+:T{
+\fBDefault\fR
+T}:T{
+5
+T}
+:T{
+\fBRange\fR
+T}:T{
+0 \&.\&. 3600
+T}
+.TE
+.sp 1
+Determines the time to wait between attempts to contact a management server when starting (the time between attempts is controlled by the
+\fB\-\-connect\-retries\fR
+option)\&. The default is 5 attempts\&.
+.sp
+This option was added in MySQL Cluster NDB 7\&.0\&.36 and MySQL Cluster 7\&.1\&.25\&.
 .RE
 .\" MySQL Cluster: log files
 .\" log files (MySQL Cluster)
@@ -1067,7 +1206,7 @@ shell> \fBndbd \-\-connect\-string="nodeid=2;host=ndb_mgmd\&.mysql\&.com:1186"\f
 .\}
 .PP
 See
-Section\ \&17.3.2.3, \(lqThe MySQL Cluster Connectstring\(rq, for additional information about this issue\&.
+Section\ \&17.3.2.3, \(lqMySQL Cluster Connection Strings\(rq, for additional information about this issue\&.
 \fBndbd\fR(8), describes other options for
 \fBndbd\fR\&.
 .PP
@@ -1097,7 +1236,7 @@ Section\ \&17.1.6, \(lqKnown Limitations of MySQL Cluster\(rq\&.
 .SH "COPYRIGHT"
 .br
 .PP
-Copyright \(co 1997, 2012, Oracle and/or its affiliates. All rights reserved.
+Copyright \(co 1997, 2013, Oracle and/or its affiliates. All rights reserved.
 .PP
 This documentation is free software; you can redistribute it and/or modify it only under the terms of the GNU General Public License as published by the Free Software Foundation; version 2 of the License.
 .PP

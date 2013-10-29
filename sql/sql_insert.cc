@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+   Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -3426,16 +3426,16 @@ int select_create::write_to_binlog(bool is_trans, int errcode)
     if (thd->lex->create_select_in_comment)
       query.append(STRING_WITH_LEN("/*! "));
     if (thd->lex->ignore)
-      query.append(STRING_WITH_LEN("INSERT IGNORE INTO `"));
+      query.append(STRING_WITH_LEN("INSERT IGNORE INTO "));
     else if (thd->lex->duplicates == DUP_REPLACE)
-      query.append(STRING_WITH_LEN("REPLACE INTO `"));
+      query.append(STRING_WITH_LEN("REPLACE INTO "));
     else
-      query.append(STRING_WITH_LEN("INSERT INTO `"));
+      query.append(STRING_WITH_LEN("INSERT INTO "));
 
-    query.append(create_table->db, db_len);
-    query.append(STRING_WITH_LEN("`.`"));
-    query.append(create_info->alias, table_len);
-    query.append(STRING_WITH_LEN("` "));
+    append_identifier(thd, &query, create_table->db, db_len);
+    query.append(STRING_WITH_LEN("."));
+    append_identifier(thd, &query, create_info->alias, table_len );
+    query.append(STRING_WITH_LEN(" "));
 
     /*
       The insert items.
@@ -3447,9 +3447,8 @@ int select_create::write_to_binlog(bool is_trans, int errcode)
       if (f != field)
         query.append(STRING_WITH_LEN(","));
 
-      query.append(STRING_WITH_LEN("`"));
-      query.append((*f)->field_name, strlen((*f)->field_name));
-      query.append(STRING_WITH_LEN("`"));
+      append_identifier(thd, &query, (*f)->field_name,
+                        strlen((*f)->field_name));
     }
     query.append(STRING_WITH_LEN(") "));
 

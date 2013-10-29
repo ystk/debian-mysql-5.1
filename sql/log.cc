@@ -1,4 +1,4 @@
-/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+/* Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA */
 
 
 /**
@@ -29,6 +29,7 @@
 #include "rpl_filter.h"
 #include "rpl_rli.h"
 
+#include "sql_show.h"
 #include <my_dir.h>
 #include <stdarg.h>
 #include <m_ctype.h>				// For test_if_number
@@ -1708,17 +1709,24 @@ static int binlog_savepoint_set(handlerton *hton, THD *thd, void *sv)
   DBUG_ENTER("binlog_savepoint_set");
 
   binlog_trans_log_savepos(thd, (my_off_t*) sv);
+
+  // buffer to store quoted identifier
+  char* buffer= (char *)my_malloc(sizeof("SAVEPOINT ")+ 1 + NAME_LEN * 2 + 2,
+                                  MYF(0));
+  String log_query(buffer, sizeof(buffer), system_charset_info);
+  log_query.length(0);
+
   /* Write it to the binary log */
 
-  String log_query;
-  if (log_query.append(STRING_WITH_LEN("SAVEPOINT ")) ||
-      log_query.append("`") ||
-      log_query.append(thd->lex->ident.str, thd->lex->ident.length) ||
-      log_query.append("`"))
+  if (log_query.append(STRING_WITH_LEN("SAVEPOINT ")))
     DBUG_RETURN(1);
+  else
+    append_identifier(thd, &log_query, thd->lex->ident.str,
+                      thd->lex->ident.length);
   int errcode= query_error_code(thd, thd->killed == THD::NOT_KILLED);
   Query_log_event qinfo(thd, log_query.c_ptr_safe(), log_query.length(),
                         TRUE, TRUE, errcode);
+  my_free(buffer, MYF(MY_WME));
   DBUG_RETURN(mysql_bin_log.write(&qinfo));
 }
 
@@ -1731,18 +1739,23 @@ static int binlog_savepoint_rollback(handlerton *hton, THD *thd, void *sv)
     non-transactional table. Otherwise, truncate the binlog cache starting
     from the SAVEPOINT command.
   */
-  if (unlikely(trans_has_updated_non_trans_table(thd) || 
+  if (unlikely(trans_has_updated_non_trans_table(thd) ||
                (thd->options & OPTION_KEEP_LOG)))
   {
-    String log_query;
-    if (log_query.append(STRING_WITH_LEN("ROLLBACK TO ")) ||
-        log_query.append("`") ||
-        log_query.append(thd->lex->ident.str, thd->lex->ident.length) ||
-        log_query.append("`"))
+    // buffer to store rollback query with quoted identifier
+    char* buffer= (char *)my_malloc(12 + 1 + NAME_LEN * 2 + 2, MYF(0));
+    String log_query(buffer, sizeof(buffer), system_charset_info);
+    log_query.length(0);
+
+    if (log_query.append(STRING_WITH_LEN("ROLLBACK TO ")))
       DBUG_RETURN(1);
+    else
+      append_identifier(thd, &log_query, thd->lex->ident.str,
+                        thd->lex->ident.length);
     int errcode= query_error_code(thd, thd->killed == THD::NOT_KILLED);
     Query_log_event qinfo(thd, log_query.c_ptr_safe(), log_query.length(),
                           TRUE, TRUE, errcode);
+    my_free(buffer, MYF(MY_WME));
     DBUG_RETURN(mysql_bin_log.write(&qinfo));
   }
   binlog_trans_log_truncate(thd, *(my_off_t*)sv);
@@ -4313,10 +4326,16 @@ MYSQL_BIN_LOG::flush_and_set_pending_rows_event(THD *thd,
     /*
       Write pending event to log file or transaction cache
     */
+    DBUG_EXECUTE_IF("simulate_disk_full_at_flush_pending",
+                    {DBUG_SET("+d,simulate_file_write_error");});
     if (pending->write(file))
     {
       pthread_mutex_unlock(&LOCK_log);
       set_write_error(thd);
+      delete pending;
+      trx_data->set_pending(NULL);
+      DBUG_EXECUTE_IF("simulate_disk_full_at_flush_pending",
+                    {DBUG_SET("-d,simulate_file_write_error");});
       DBUG_RETURN(1);
     }
 

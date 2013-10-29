@@ -1,4 +1,4 @@
-/* Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+/* Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,7 +11,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA */
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA */
 
 
 /**
@@ -2077,7 +2077,6 @@ void Item_func_interval::fix_length_and_dec()
             if (dec != &range->dec)
             {
               range->dec= *dec;
-              range->dec.fix_buffer_pointer();
             }
           }
           else
@@ -3045,6 +3044,15 @@ void Item_func_case::fix_length_and_dec()
           return;
       }
     }
+    /*
+      Set cmp_context of all WHEN arguments. This prevents
+      Item_field::equal_fields_propagator() from transforming a
+      zerofill argument into a string constant. Such a change would
+      require rebuilding cmp_items.
+    */
+    for (i= 0; i < ncases; i+= 2)
+      args[i]->cmp_context= item_cmp_type(left_result_type,
+                                          args[i]->result_type());
   }
 
   if (else_expr_num == -1 || args[else_expr_num]->maybe_null)
@@ -4032,6 +4040,16 @@ void Item_func_in::fix_length_and_dec()
       }
     }
   }
+  /*
+    Set cmp_context of all arguments. This prevents
+    Item_field::equal_fields_propagator() from transforming a zerofill integer
+    argument into a string constant. Such a change would require rebuilding
+    cmp_itmes.
+   */
+  for (arg= args + 1, arg_end= args + arg_count; arg != arg_end ; arg++)
+  {
+    arg[0]->cmp_context= item_cmp_type(left_result_type, arg[0]->result_type());
+  }
   max_length= 1;
 }
 
@@ -4238,7 +4256,7 @@ Item_cond::fix_fields(THD *thd, Item **ref)
       const_item_cache= FALSE;
     }  
     with_sum_func=	    with_sum_func || item->with_sum_func;
-    with_subselect|=        item->with_subselect;
+    with_subselect|=        item->has_subquery();
     if (item->maybe_null)
       maybe_null=1;
   }
@@ -4563,7 +4581,7 @@ longlong Item_func_isnull::val_int()
     Handle optimization if the argument can't be null
     This has to be here because of the test in update_used_tables().
   */
-  if (!used_tables_cache && !with_subselect)
+  if (const_item_cache)
     return cached_value;
   return args[0]->is_null() ? 1: 0;
 }
@@ -4860,6 +4878,7 @@ Item_func_regex::fix_fields(THD *thd, Item **ref)
        args[1]->fix_fields(thd, args + 1)) || args[1]->check_cols(1))
     return TRUE;				/* purecov: inspected */
   with_sum_func=args[0]->with_sum_func || args[1]->with_sum_func;
+  with_subselect= args[0]->has_subquery() || args[1]->has_subquery();
   max_length= 1;
   decimals= 0;
 

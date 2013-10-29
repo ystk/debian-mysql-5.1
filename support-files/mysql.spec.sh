@@ -1,4 +1,4 @@
-# Copyright (c) 2000, 2011, Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2000, 2012, Oracle and/or its affiliates. All rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -374,7 +374,7 @@ CXXFLAGS=${CXXFLAGS:-$RPM_OPT_FLAGS -felide-constructors -fno-exceptions -fno-rt
 # Evaluate current setting of $DEBUG
 if [ $DEBUG -gt 0 ] ; then
 	OPT_COMMENT='--with-comment="%{debug_comment}"'
-	OPT_DEBUG='--with-debug'
+	OPT_DEBUG='--with-debug --enable-mysql-maintainer-mode=no'
 	CFLAGS=`echo   " $CFLAGS "   | \
 	    sed -e 's/ -O[0-9]* / /' -e 's/ -unroll2 / /' -e 's/ -ip / /' \
 	        -e 's/^ //' -e 's/ $//'`
@@ -716,7 +716,7 @@ fi
 
 # We assume that if there is exactly one ".pid" file,
 # it contains the valid PID of a running MySQL server.
-NR_PID_FILES=`ls $PID_FILE_PATT 2>/dev/null | wc -l`
+NR_PID_FILES=`ls -1 $PID_FILE_PATT 2>/dev/null | wc -l`
 case $NR_PID_FILES in
 	0 ) SERVER_TO_START=''  ;;  # No "*.pid" file == no running server
 	1 ) SERVER_TO_START='true' ;;
@@ -753,13 +753,16 @@ if [ -d $mysql_datadir ] ; then
 	echo "MySQL RPM upgrade to version $NEW_VERSION"  > $STATUS_FILE
 	echo "'pre' step running at `date`"          >> $STATUS_FILE
 	echo                                         >> $STATUS_FILE
-	echo "ERR file(s):"                          >> $STATUS_FILE
-	ls -ltr $mysql_datadir/*.err                 >> $STATUS_FILE
-	echo                                         >> $STATUS_FILE
-	echo "Latest 'Version' line in latest file:" >> $STATUS_FILE
-	grep '^Version' `ls -tr $mysql_datadir/*.err | tail -1` | \
-		tail -1                              >> $STATUS_FILE
-	echo                                         >> $STATUS_FILE
+        fcount=`ls -ltr $mysql_datadir/*.err 2>/dev/null | wc -l`
+        if [ $fcount -gt 0 ] ; then
+             echo "ERR file(s):"                          >> $STATUS_FILE
+             ls -ltr $mysql_datadir/*.err                 >> $STATUS_FILE
+             echo                                         >> $STATUS_FILE
+             echo "Latest 'Version' line in latest file:" >> $STATUS_FILE
+             grep '^Version' `ls -tr $mysql_datadir/*.err | tail -1` | \
+                tail -1                              >> $STATUS_FILE
+             echo                                         >> $STATUS_FILE
+        fi
 
 	if [ -n "$SERVER_TO_START" ] ; then
 		# There is only one PID file, race possibility ignored
@@ -1024,6 +1027,7 @@ fi
 %attr(755, root, root) %{_sbindir}/rcmysql
 %if %{INNODB_BUILD}
 %if %{WITH_INNODB_PLUGIN}
+%attr(755, root, root) %{_libdir}/mysql/plugin/
 %attr(755, root, root) %{_libdir}/mysql/plugin/ha_innodb_plugin.so*
 %endif
 %endif
@@ -1191,6 +1195,14 @@ fi
 # merging BK trees)
 ##############################################################################
 %changelog
+* Mon Sep 09 2013 Balasubramanian Kandasamy <balasubramanian.kandasamy@oracle.com>
+- Updated logic to get the correct count of PID files
+
+* Tue Sep 11 2012 Joerg Bruehe <joerg.bruehe@oracle.com>
+
+- Disable "maintainer mode" in debug builds, there is a cast ulonglong -> int
+  in the sources (since 2007) that would cause builds to fail.
+
 * Wed Sep 14 2011 Joerg Bruehe <joerg.bruehe@oracle.com>
 
 - Let the RPM capabilities ("obsoletes" etc) ensure that an upgrade may replace
