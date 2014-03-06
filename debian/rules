@@ -37,7 +37,7 @@ endif
 
 USE_ASSEMBLER=--enable-assembler 
 
-ifneq (,$(filter $(ARCH), amd64 i386 ia64))
+ifneq (,$(filter $(ARCH), amd64 i386))
     TESTSUITE_FAIL_CMD=exit 1
 else
     TESTSUITE_FAIL_CMD=true

@@ -8,9 +8,10 @@
 ## DP: http://bugs.mysql.com/bug.php?id=6901
 
 @DPATCH@
---- old/scripts/mysql_system_tables_data.sql	2008-12-04 22:59:44.000000000 +0100
-+++ new/scripts/mysql_system_tables_data.sql	2008-12-04 23:00:07.000000000 +0100
-@@ -11,8 +11,6 @@
+diff -aur mysql-5.1-5.1.73.orig//scripts/mysql_system_tables_data.sql mysql-5.1-5.1.73/scripts/mysql_system_tables_data.sql
+--- mysql-5.1-5.1.73.orig//scripts/mysql_system_tables_data.sql	2013-11-04 18:52:27.000000000 +0000
++++ mysql-5.1-5.1.73/scripts/mysql_system_tables_data.sql	2014-01-14 10:47:34.499901783 +0000
+@@ -31,8 +31,6 @@
  -- Fill "db" table with default grants for anyone to
  -- access database 'test' and 'test_%' if "db" table didn't exist
  CREATE TEMPORARY TABLE tmp_db LIKE db;
@@ -19,11 +20,12 @@
  INSERT INTO db SELECT * FROM tmp_db WHERE @had_db_table=0;
  DROP TABLE tmp_db;
  
-@@ -24,7 +22,5 @@
+@@ -43,7 +41,5 @@
  INSERT INTO tmp_user VALUES ('localhost','root','','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0);
- REPLACE INTO tmp_user SELECT @current_hostname,'root','','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0 FROM dual WHERE LOWER( @current_hostname) != 'localhost';
+ REPLACE INTO tmp_user SELECT @current_hostname,'root','','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0 FROM dual WHERE @current_hostname != 'localhost';
  REPLACE INTO tmp_user VALUES ('127.0.0.1','root','','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','',0,0,0,0);
 -INSERT INTO tmp_user (host,user) VALUES ('localhost','');
--INSERT INTO tmp_user (host,user) SELECT @current_hostname,'' FROM dual WHERE LOWER(@current_hostname ) != 'localhost';
+-INSERT INTO tmp_user (host,user) SELECT @current_hostname,'' FROM dual WHERE @current_hostname != 'localhost';
  INSERT INTO user SELECT * FROM tmp_user WHERE @had_user_table=0;
  DROP TABLE tmp_user;
+Only in mysql-5.1-5.1.73/scripts: mysql_system_tables_data.sql~

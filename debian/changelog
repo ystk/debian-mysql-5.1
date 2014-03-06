@@ -1,3 +1,14 @@
+mysql-5.1 (5.1.73-1) oldstable-security; urgency=low
+
+  * New upstream release
+    http://dev.mysql.com/doc/relnotes/mysql/5.1/en/news-5-1-73.html
+  * Update patches
+  * Disable flaky test rpl.rpl_innodb_bug28430 breaking the build. It's  marked
+    as experimental by upstream and the internet is full of reports about it's
+    unrelialibity
+
+ -- Moritz Muehlenhoff <muehlenhoff@univention.de>  Tue, 14 Jan 2014 10:40:30 +0000
+
 mysql-5.1 (5.1.72-2) oldstable-security; urgency=low
 
   * Don't fail the build on test suite failures for ia64. Pretty much

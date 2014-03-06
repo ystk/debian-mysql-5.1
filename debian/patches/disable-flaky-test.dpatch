@@ -1,0 +1,17 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+##
+## Disable flaky test rpl.rpl_innodb_bug28430 breaking the build. It's  marked
+## as experimental by upstream and the internet is full of reports about it's
+## unrelialibity
+
+@DPATCH@
+diff -aur mysql-5.1-5.1.73.orig//mysql-test/suite/rpl/t/disabled.def mysql-5.1-5.1.73/mysql-test/suite/rpl/t/disabled.def
+--- mysql-5.1-5.1.73.orig//mysql-test/suite/rpl/t/disabled.def	2013-11-04 19:08:11.000000000 +0000
++++ mysql-5.1-5.1.73/mysql-test/suite/rpl/t/disabled.def	2014-01-15 10:20:34.998678124 +0000
+@@ -12,3 +12,4 @@
+ 
+ rpl_row_create_table : Bug#11759274 Feb 27 2010 andrei failed different way than earlier with bug#45576
+ rpl_get_master_version_and_clock : Bug#11766137 Jan 05 2011 joro Valgrind warnings rpl_get_master_version_and_clock
++rpl_innodb_bug28430 : Experimental test, flaky and causes random build failures
+
+
