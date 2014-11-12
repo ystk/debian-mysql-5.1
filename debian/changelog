@@ -1,3 +1,19 @@
+mysql-5.1 (5.1.73-1+deb6u1) squeeze-lts; urgency=medium
+
+  * Non-maintainer upload by the LTS team.
+  * Include upstream patch for CVE-2014-4274:
+    https://bazaar.launchpad.net/~mysql/mysql-server/5.5/revision/4638
+    This insecure handling of a temporary file could lead to arbitrary
+    execution of code because the attacker can use this to provide
+    a mysql configuration file that will point to his own plugin_dir.
+  * Fix CVE-2013-2162: Insecure creation of the credential file debian.cnf.
+    Set umask to 066 before creating debian.cnf file.
+  * Include upstream patch for CVE-2014-0001:
+    http://bazaar.launchpad.net/~mysql/mysql-server/5.5/revision/4601
+    Buffer overrun in MySQL client with long server versions strings.
+
+ -- Raphaël Hertzog <hertzog@debian.org>  Tue, 21 Oct 2014 11:43:01 +0200
+
 mysql-5.1 (5.1.73-1) oldstable-security; urgency=low
 
   * New upstream release

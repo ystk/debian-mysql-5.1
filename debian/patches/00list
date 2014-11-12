@@ -8,3 +8,5 @@
 44_scripts__mysql_config__libs.dpatch
 50_mysql-test__db_test.dpatch
 disable-flaky-test.dpatch
+60_CVE-2014-4274.dpatch
+61_CVE-2014-0001.dpatch
